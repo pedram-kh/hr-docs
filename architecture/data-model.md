@@ -65,6 +65,8 @@ These are the **closed, scoping facets**. New rows here only via a deliberate, l
 ### `provinces`
 The fixed set of provinces, derived from the convenio registry. The 2-digit code is the prefix of the convenio `numero` (`01` = Álava, `99` = Estatal, etc.).
 
+> **Known limitation (flagged in Sprint 0, to revisit in Sprint 1).** This table currently mixes **territorial scope levels** — national (`Estatal`/`99`), regional/autonomous-community (e.g. `Andalucía`, seeded with the placeholder code `AN`), and provincial (e.g. `Álava`/`01`). The `char(2)` `code` and single flat list cannot cleanly express the national → regional → provincial hierarchy. This is a candidate for a `territories` + explicit `level` restructure during the **Sprint 1 registry import**. Until then, do not hard-code logic around the `AN` placeholder.
+
 | column | type | notes |
 |---|---|---|
 | id | bigint PK | |

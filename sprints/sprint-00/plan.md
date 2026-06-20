@@ -1,9 +1,24 @@
 # Sprint 0 — Implementation Plan
 
 > Location: `hr-docs/sprints/sprint-00/plan.md`
-> Status: **plan for review — no code written yet**
+> Status: **approved with corrections — implemented in the Sprint 0 build**
 > Implements: `sprint-00/spec.md`. Read alongside `architecture.md`, `data-model.md`, `decisions/`, `glossary.md`.
 > Scope of this plan: the walking skeleton only (infra + schema + seeders + email-OTP login into empty shells + `hr-ai` scaffold). Nothing on the spec's "out of scope" list is built.
+
+---
+
+## Corrections applied (review round 1)
+
+The plan was approved with the following corrections; each is reflected in the relevant section below and mirrored in `spec.md`.
+
+- **C1 — Compose topology (resolves Q1):** `docker-compose.yml` defines **only the three infra services** (Postgres+pgvector, MinIO, MailHog). The app services (`hr-backend`, `hr-ai`, `hr-frontend`) run **on the host** in dev, not in compose. All env connection values use `localhost` + host-exposed ports (mail `localhost:1025`, Postgres `localhost:5432`, MinIO `localhost:9000`, backend `localhost:8000`, frontend `localhost:5173`). App containerization is **out of scope** for Sprint 0. → §2
+- **C2 — Compose location & image pinning (resolves Q7):** `docker-compose.yml` is committed in the **`hr-backend`** repo. **All image tags are pinned** (no floating `latest`). → §2
+- **C3 — Province seeding (resolves Q2):** seed **only the territorial scopes present in Sedena's actual data** — Álava, Andalucía, Asturias, Cantabria, Estatal, Gipuzkoa, Huesca, Madrid, Navarra, Salamanca, Valencia, Vizcaya — using the 2-digit `numero` prefix as `code`. Do **not** seed all Spanish provinces (aligns with ADR-0002: vocabulary derived from the registry). → §3.4
+- **C4 — Synchronous OTP mail:** OTP email is sent **synchronously**, not queued — no queue worker needed; it arrives immediately in MailHog. The queue dependency is removed from the login path. → §3.6
+- **C5 — CORS:** `config/cors.php` allows the frontend dev origin `http://localhost:5173` for the auth and `/me` routes. Auth stays token-based (Bearer); **no cookie/CSRF setup**. → §3.8
+- **C6 — Dev fixture labelling (confirms Q3):** the placeholder sector/convenio/job-category for the test employee is clearly labelled as a dev fixture (e.g. name `DEV FIXTURE — placeholder`). → §3.4
+
+**Confirmed as-planned (no change):** HNSW index created in an `hr-backend` migration (Q5); `/me` returns raw profile facets without computed scope (Q6); the `varchar + CHECK` enum strategy (§3.3).
 
 ---
 
@@ -24,7 +39,7 @@ These are the hard constraints from the docs; every decision below honours them.
 
 The backend is the dependency hub (it owns the schema and the auth the other two consume), so it is built first. Order:
 
-1. **Infrastructure (workspace root)** — `docker-compose.yml` (Postgres+pgvector, MinIO, MailHog), per-repo `.env.example`, `.gitignore`, READMEs. Brings the data/mail/object layers up so everything else has something to connect to.
+1. **Infrastructure (in `hr-backend`)** — `docker-compose.yml` (Postgres+pgvector, MinIO, MailHog only), per-repo `.env.example`, `.gitignore`, READMEs. Brings the data/mail/object layers up so everything else has something to connect to. App services run on the host (C1).
 2. **`hr-backend` (Laravel)** — scaffold → Postgres connection → enable `pgvector` → **all migrations** → enum strategy → seeders → Sanctum (24h) → mail transport → email-OTP request/verify endpoints → protected `GET /me`. This is the backbone; the schema and auth must exist before anything depends on them.
 3. **`hr-ai` (FastAPI)** — scaffold → `GET /health` → read-only DB connectivity check → config placeholders. Depends only on Postgres being up; **no AI logic** (explicit, see §5). Can proceed in parallel with the tail of step 2.
 4. **`hr-frontend` (React + Vite + TS)** — scaffold → centralized API client → login flow (email → request code → enter code → store token → redirect) → two empty protected shells calling `/me`. Built last because it consumes the backend's OTP endpoints and `/me`.
@@ -33,33 +48,31 @@ Rationale: frontend cannot be exercised end-to-end until the backend OTP endpoin
 
 ---
 
-## 2. `docker-compose.yml` (infrastructure)
+## 2. `docker-compose.yml` (infrastructure only) — C1, C2
 
-A single `docker-compose.yml` at the `hr-platform/` workspace root (the root is not version-controlled per ADR-0008; the file is checked into **`hr-docs`**, or kept at root and documented — see open question Q7). One shared network so service-name DNS works.
+`docker-compose.yml` is committed in the **`hr-backend`** repo (C2) and defines **only the three infra services**. The app services run on the host in dev (C1) — there are no app containers, no Dockerfiles, no shared compose network this sprint. App containerization is explicitly out of scope for Sprint 0.
 
-### Services
+### Services (all image tags pinned — C2)
 
-| Service | Image | Ports (host:container) | Notes |
+| Service | Image (pinned) | Ports (host:container) | Notes |
 |---|---|---|---|
 | `postgres` | `pgvector/pgvector:pg16` | `5432:5432` | Postgres 16 with the `pgvector` extension preinstalled. Named volume `pgdata`. Healthcheck `pg_isready`. Env: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`. |
-| `minio` | `minio/minio:latest` | `9000:9000` (S3 API), `9001:9001` (console) | `command: server /data --console-address ":9001"`. Named volume `miniodata`. Env: `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`. |
-| `minio-init` | `minio/mc:latest` | — | One-shot: waits for MinIO, creates the bucket (e.g. `hr-documents`). Exits 0. Keeps bucket creation reproducible from a clean checkout. |
-| `mailhog` | `mailhog/mailhog:latest` | `1025:1025` (**SMTP**), `8025:8025` (**web UI**) | Local SMTP catcher. OTP emails viewable at `http://localhost:8025`. No auth, no TLS. |
+| `minio` | `minio/minio:RELEASE.2024-01-16T16-07-38Z` | `9000:9000` (S3 API), `9001:9001` (console) | `command: server /data --console-address ":9001"`. Named volume `miniodata`. Env: `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`. |
+| `minio-init` | `minio/mc:RELEASE.2024-01-13T08-44-48Z` | — | One-shot: waits for MinIO, creates the bucket (`hr-documents`). Exits 0. Keeps bucket creation reproducible from a clean checkout. |
+| `mailhog` | `mailhog/mailhog:v1.0.1` | `1025:1025` (**SMTP**), `8025:8025` (**web UI**) | Local SMTP catcher. OTP emails viewable at `http://localhost:8025`. No auth, no TLS. |
 
-Versions are pinned (Postgres `pg16`; images otherwise pinned to a known-good tag rather than floating `latest` where practical — see Q7).
+No floating `latest` tags are used (C2).
 
-### How the app connects
+### How the apps connect (host topology — C1)
 
-The three infra services run in compose on a shared network. **Decision (Q1):** for Sprint 0 the app services (`hr-backend`, `hr-ai`, `hr-frontend`) are **also defined in `docker-compose.yml`** with minimal Dockerfiles, so the connection strings documented in the spec resolve verbatim:
+The three infra services run in compose; the apps run on the host and connect over `localhost` to the host-exposed ports:
 
-- `hr-backend` → Postgres: `DB_HOST=postgres`, `DB_PORT=5432`. Mail: `MAIL_HOST=mailhog`, `MAIL_PORT=1025` (exactly the spec's wording "host `mailhog`, port `1025`"). S3: `AWS_ENDPOINT=http://minio:9000`.
-- `hr-ai` → Postgres: `postgres:5432` (read-only DSN).
-- `hr-frontend` → backend: `VITE_API_BASE_URL=http://localhost:8000` (browser talks to the host-exposed backend port).
-- Host-exposed app ports: backend `8000`, `hr-ai` `8001`, frontend `5173`.
+- `hr-backend` → Postgres `DB_HOST=localhost`, `DB_PORT=5432`. Mail `MAIL_HOST=localhost`, `MAIL_PORT=1025`. S3 `AWS_ENDPOINT=http://localhost:9000`.
+- `hr-ai` → Postgres read-only DSN against `localhost:5432`.
+- `hr-frontend` → backend `VITE_API_BASE_URL=http://localhost:8000`; the dev server runs on `localhost:5173`.
+- Host ports in play: Postgres `5432`, MinIO `9000`/`9001`, MailHog `1025`/`8025`, backend `8000`, frontend `5173`.
 
-This is the literal reading of the spec ("host `mailhog`"). If review prefers apps-on-host for Sprint 0 (infra-only compose, apps connecting via `localhost`), that is a one-line env swap (`mailhog`→`localhost`, `postgres`→`localhost`); flagged in Q1.
-
-`.env.example` in each repo carries these values; the real `.env` is git-ignored.
+`.env.example` in each repo carries these `localhost` values; the real `.env` is git-ignored.
 
 ---
 
@@ -70,7 +83,7 @@ This is the literal reading of the spec ("host `mailhog`"). If review prefers ap
 - Initialize latest stable Laravel, PHP 8.3+.
 - Configure the `pgsql` connection from env (host/port/db/user/password as above).
 - **Enable pgvector** via the first custom migration: `DB::statement('CREATE EXTENSION IF NOT EXISTS vector')`. This runs before any migration that uses the `vector` type.
-- Remove Laravel's default `create_users_table` and `create_password_reset_tokens_table` migrations (we use `employees`/`admins`, and there are **no passwords**). Keep the framework `cache` and `jobs` tables (jobs is useful for queued OTP mail).
+- Remove Laravel's default `create_users_table` and `create_password_reset_tokens_table` migrations (we use `employees`/`admins`, and there are **no passwords**). Keep the framework `cache` and `jobs` tables (they ship with Laravel; OTP mail is sent **synchronously**, so no queue worker is required this sprint — see §3.6/C4).
 
 ### 3.2 Migration list (one file per table, in dependency order)
 
@@ -131,14 +144,14 @@ Laravel runs migrations in timestamp order; the timestamps below are sequenced s
 
 Run after migrations (`php artisan db:seed`). One seeder per concern, orchestrated by `DatabaseSeeder`.
 
-- **`ProvinceSeeder`** — the fixed province set including **`Estatal` (code `99`, `is_national = true`)**. **Decision (Q2):** seed the canonical Spanish province codes `01`–`52` plus `99` Estatal, with `name` and `aliases` (e.g. Álava ← `Araba`, `ALABA`). The real registry import (which prunes to provinces actually present) is Sprint 1.
+- **`ProvinceSeeder`** — **C3:** seed **only the territorial scopes present in Sedena's actual data**, using the 2-digit `numero` prefix as `code` (vocabulary derived from the registry, ADR-0002): Álava (`01`), Huesca (`22`), Madrid (`28`), Navarra (`31`), Salamanca (`37`), Asturias (`33`), Cantabria (`39`), Gipuzkoa (`20`), Vizcaya (`48`), Valencia (`46`), Andalucía (`AN`/regional), and **Estatal** (`99`, `is_national = true`). `aliases` carries known alternates (e.g. Álava ← `Araba`, `ALABA`; Gipuzkoa ← `Guipúzcoa`; Vizcaya ← `Bizkaia`). The full provincial set is **not** seeded. (Andalucía is an autonomous community rather than a single 2-digit province; its code is recorded as it appears in the source data — flagged for review, see Q2.)
 - **`DocumentTypeSeeder`** — the 8 closed codes: `convenio_text`, `salary_tables`, `changes`, `partial_agreement`, `summary`, `national_law`, `internal_hr_ruling`, `other`.
 - **`TopicSeeder`** — the 11 FAQ categories, all `status = approved`, `proposed_by = NULL`: jornada, vacaciones, festivos, permisos retribuidos, bajas médicas, conciliación, excedencias, retribución, permisos no retribuidos, normativa/derechos, formación.
 - **`RoleSeeder`** — the 4 spatie roles: `super_admin`, `hr_agent`, `knowledge_editor`, `auditor`. (Roles only this sprint; granular permissions are deferred to the sprints that need them — spec asks for roles.)
 - **`TestUserSeeder`** —
   - One **admin** (real email the tester controls, from `.env`), `status = active`, assigned `super_admin`.
   - One **employee** (real email the tester controls), `status = active`, `employment_type = full_time`.
-  - **Decision (Q3):** `employees.convenio_id` / `province_id` are NOT NULL, but the real convenio registry is Sprint 1. So this seeder also creates a **single clearly-labelled dev-fixture sector + convenio + job category** (e.g. sector "Ocio Educativo", a placeholder convenio `numero` with province `01`, one job category) purely to satisfy the test employee's FKs. This is a dev fixture, **not** the real registry, and is documented as such. No schema relaxation is done silently.
+  - **C6 (confirms Q3):** `employees.convenio_id` / `province_id` are NOT NULL, but the real convenio registry is Sprint 1. So this seeder also creates a **single clearly-labelled dev fixture**: a sector, convenio, and job category whose names carry the literal marker **`DEV FIXTURE — placeholder`** (e.g. sector `DEV FIXTURE — placeholder`, convenio `name = "DEV FIXTURE — placeholder"` with a sentinel `numero` and province `01`, job category `DEV FIXTURE — placeholder`), purely to satisfy the test employee's FKs. This is a dev fixture, **not** the real registry, and is unmistakable in any UI or query. No schema relaxation is done silently.
 
 ### 3.5 Sanctum setup
 
@@ -153,7 +166,7 @@ Run after migrations (`php artisan db:seed`). One seeder per concern, orchestrat
   - **Local dev:** `MAIL_MAILER=smtp`, `MAIL_HOST=mailhog`, `MAIL_PORT=1025`, no encryption/auth. OTP emails land in MailHog UI at `http://localhost:8025`.
   - **Production:** `MAIL_MAILER=postmark` (install `symfony/postmark-mailer`; `POSTMARK_TOKEN` in env).
 - A single `LoginCodeMail` Mailable renders the 6-digit code; the same Mailable is used regardless of transport.
-- Mail is queued (uses the `jobs` table) so the request endpoint returns fast; queue worker documented in the README.
+- **C4 — synchronous send:** the OTP email is sent **synchronously** on the request (`Mail::to(...)->send(...)`, not `->queue(...)`). No queue worker is needed and the code appears in MailHog immediately. The login path has **no queue dependency**. (Cost: the request blocks on SMTP to MailHog, which is local and instant; acceptable for this flow.)
 
 ### 3.7 Email-OTP endpoints
 
@@ -179,6 +192,15 @@ Routes (unauthenticated except `/me`):
 - **`GET /me`** — `auth:sanctum`. Returns the authenticated identity (`uuid`, `email`, `full_name`, `account_type`). For **employees**, also the resolved profile fields used by scoping later: `convenio`, `province`, `job_category`, `employment_type`. (Scope *resolution logic* itself is a later sprint; here `/me` just echoes the profile so the shells have something to show and the contract is established.)
 
 Hashing summary: **6-digit codes are hashed with bcrypt (`Hash::make`) and verified with `Hash::check`; plaintext never touches the DB or logs.** TTL 10 min, single-use, attempts-capped, prior codes invalidated on re-request, rate-limited per email and per email+IP.
+
+### 3.8 CORS — C5
+
+The frontend dev server (`http://localhost:5173`) is a different origin from the backend (`http://localhost:8000`), so the browser needs CORS to call the auth and `/me` routes. Configure `config/cors.php`:
+
+- `paths`: `auth/*` and `me` (plus `api/*` for future use).
+- `allowed_origins`: `http://localhost:5173` (the Vite dev origin), driven by a `FRONTEND_URL` env var.
+- `allowed_methods` / `allowed_headers`: permit `GET, POST, OPTIONS` and the `Authorization` + `Content-Type` headers.
+- `supports_credentials`: **false** — auth is **token-based (Bearer)**, so there is **no cookie/CSRF setup** (no Sanctum SPA stateful-domain cookies, no `withCredentials`). The token is sent in the `Authorization` header.
 
 ---
 
@@ -223,7 +245,7 @@ Hashing summary: **6-digit codes are hashed with bcrypt (`Hash::make`) and verif
 
 | # | Criterion | Covered by |
 |---|---|---|
-| 1 | `docker compose up` brings up Postgres+pgvector, MinIO, MailHog | §2 |
+| 1 | `docker compose up` (in `hr-backend`) brings up Postgres+pgvector, MinIO, MailHog | §2 |
 | 2 | Migrations run clean; every data-model table exists; `embedding` is `vector(1024)` | §3.1–3.2 |
 | 3 | Seeders populate provinces, document_types, topics, two test users, roles | §3.4 |
 | 4 | Employee OTP login end-to-end; expired/used rejected; attempts capped; rate-limited | §3.5–3.7, §5 |
@@ -234,16 +256,18 @@ Hashing summary: **6-digit codes are hashed with bcrypt (`Hash::make`) and verif
 
 ---
 
-## 8. Assumptions & open questions for review
+## 8. Question resolutions (review round 1)
 
-1. **App services in docker-compose vs host (Q1).** The spec says mail "host `mailhog`, port `1025`", which only resolves if the backend runs inside the compose network. **Assumption:** define all six services (3 infra + 3 app) in compose with minimal Dockerfiles. If you prefer infra-only compose with apps run on the host, the env values become `localhost`/exposed ports — small change. **Which do you want?**
-2. **Province seed set (Q2).** Docs give only examples (`01`, `20`, `28`, `31`, `99`). **Assumption:** seed canonical Spanish codes `01`–`52` + `99` Estatal now; the real registry prunes/confirms in Sprint 1. OK, or seed only the handful named in the docs?
-3. **Test employee's mandatory `convenio_id`/`province_id` (Q3).** Registry import is Sprint 1, but `employees.convenio_id` is NOT NULL. **Assumption:** seed one clearly-labelled **dev-fixture** sector+convenio+job-category solely to satisfy the test employee's FKs (not the real registry). Acceptable? (Alternative would be relaxing the FK to nullable, which I will **not** do silently as it contradicts data-model.)
-4. **Same email in both `employees` and `admins` (Q4).** **Assumption:** treat the two account types as distinct; resolve `account_type` by lookup, employee table first. If an email exists in both, prefer requiring/accepting an explicit `account_type` in the request. Is a collision possible in your data?
-5. **`document_chunks` ANN index ownership (Q5).** Since `hr-ai` never migrates, the HNSW/IVFFlat index must be created by an `hr-backend` migration. **Assumption:** create an **HNSW** index on the empty `embedding` column now (cheap, valid on empty tables), rather than deferring. IVFFlat would need data to train, so HNSW is the better Sprint-0 choice. Confirm HNSW.
-6. **`/me` profile depth (Q6).** **Assumption:** `/me` returns identity for both account types and, for employees, the raw profile facets (convenio/province/job_category/employment_type) — but **not** any computed eligibility/scope (that logic is a later sprint). Sufficient for the empty shells?
-7. **Where `docker-compose.yml` lives & image pinning (Q7).** The workspace root is not version-controlled (ADR-0008). **Assumption:** keep `docker-compose.yml` + `.env.example` for infra in **`hr-docs`** (or a documented root location) and pin image tags (`pg16`, fixed MinIO/MailHog tags) rather than floating `latest`. Where would you like it committed?
+- **Q1 — compose topology → RESOLVED (C1).** Infra-only compose; apps on host; `localhost` connection values. See §2.
+- **Q2 — province seed set → RESOLVED (C3).** Seed only the territorial scopes present in Sedena's data (12 listed), not all Spanish provinces. See §3.4. *Remaining nuance:* Andalucía is an autonomous community, not a single 2-digit province; its `code` is recorded as it appears in the source data and re-confirmed at the Sprint 1 registry import.
+- **Q3 — dev fixture → RESOLVED (C6).** Seed one fixture sector/convenio/job-category labelled `DEV FIXTURE — placeholder` to satisfy the test employee's NOT-NULL FKs. See §3.4.
+- **Q4 — email in both account types → standing assumption.** Resolve `account_type` by lookup (employees first); if an email exists in both, an explicit `account_type` can be supplied. Not contradicted by review; no collision expected in seed data.
+- **Q5 — ANN index ownership → CONFIRMED as planned.** HNSW index created on the empty `embedding` column by an `hr-backend` migration. See §3.2.
+- **Q6 — `/me` depth → CONFIRMED as planned.** `/me` returns raw profile facets, no computed scope. See §3.7.
+- **Q7 — compose location & pinning → RESOLVED (C2).** `docker-compose.yml` lives in `hr-backend`; all image tags pinned. See §2.
+
+Plus **C4** (synchronous OTP mail, §3.6) and **C5** (CORS for the dev origin, §3.8).
 
 ---
 
-**This plan is ready for review.** No application code, migrations, or config has been written — only this `plan.md`. I will wait for your review before building.
+**Plan approved with corrections and now implemented.** The build is recorded in `review.md`; any deviations forced during the build are noted there and in the named canonical doc.
