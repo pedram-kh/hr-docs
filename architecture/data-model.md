@@ -34,7 +34,9 @@ This defines the relational schema (PostgreSQL + pgvector) for the HR knowledge 
 
 ```mermaid
 erDiagram
-  PROVINCES ||--o{ CONVENIOS : "scopes"
+  TERRITORIES ||--o{ CONVENIOS : "scopes"
+  TERRITORIES ||--o{ EMPLOYEES : "locates"
+  TERRITORIES ||--o| TERRITORIES : "parent"
   SECTORS ||--o{ CONVENIOS : "scopes"
   CONVENIOS ||--o{ CONVENIO_JOB_CATEGORIES : "defines"
   CONVENIOS ||--o{ DOCUMENTS : "groups"
@@ -62,18 +64,21 @@ erDiagram
 
 These are the **closed, scoping facets**. New rows here only via a deliberate, logged admin action — never created by the AI or as a side effect of tagging.
 
-### `provinces`
-The fixed set of provinces, derived from the convenio registry. The 2-digit code is the prefix of the convenio `numero` (`01` = Álava, `99` = Estatal, etc.).
+### `territories`
+The fixed set of territorial scopes, derived from the convenio registry. Renamed from `provinces` in the **Sprint 1 restructure** to express the national → regional → provincial hierarchy that the flat `provinces` table could not. The 2-digit `code` is the prefix of the convenio `numero` for provincial scopes (`01` = Álava, `20` = Gipuzkoa…); regional/national scopes use a registry code (`71` = Andalucía, `99` = Estatal).
 
-> **Known limitation (flagged in Sprint 0, to revisit in Sprint 1).** This table currently mixes **territorial scope levels** — national (`Estatal`/`99`), regional/autonomous-community (e.g. `Andalucía`, seeded with the placeholder code `AN`), and provincial (e.g. `Álava`/`01`). The `char(2)` `code` and single flat list cannot cleanly express the national → regional → provincial hierarchy. This is a candidate for a `territories` + explicit `level` restructure during the **Sprint 1 registry import**. Until then, do not hard-code logic around the `AN` placeholder.
+> **Sprint 1 restructure (was `provinces`).** `is_national` (boolean) was replaced by `level` (enum `national` \| `regional` \| `provincial`), and a self-referential `parent_territory_id` was added. The Sprint 0 backfill mapped `is_national = true → national`, the Andalucía placeholder (`code 'AN'` → `regional`, re-coded to `71` at import), and everything else → `provincial`. **No precedence/rollup logic is built this sprint** — `parent_territory_id` is recorded where obvious but how a national doc overrides/augments a provincial one is **deferred to the scoping/RAG sprint**. The registry import is authoritative and populates each territory's `aliases` with the Basque/Spanish spelling variants (`Bizkaia`/`Vizcaya`, `Gipuzkoa`/`Guipúzcoa`, `Araba`/`Álava`, plus the sheet's own `PROVINCIA` spelling) so the filename parser never false-conflicts.
+
+> **Level classification (registry import) — numero-prefix range rule (authoritative).** The import derives a territory's `level` from the 2-digit `numero` prefix, **not** by matching the `PROVINCIA` string: `99` → `national`; `01`–`52` → `provincial`; any other 2-digit prefix (the autonomic range, e.g. Andalucía's `71`) → `regional`. The `PROVINCIA` string is used **only as a cross-check**. If the prefix-derived level disagrees with the `PROVINCIA`-implied level, or the prefix falls outside all known ranges (e.g. `00`), the row is **not silently defaulted** — it is logged and surfaced in the import summary as a **flagged** classification for human confirmation (consistent with ADR-0011's managed-growth: the import may create vocabulary, but an ambiguous classification must be visible, not guessed). This replaces the earlier name-match (`ESTATAL`/`ANDALUCIA`/else) approach, which would have silently mislabeled a second autonomous-community convenio as provincial.
 
 | column | type | notes |
 |---|---|---|
 | id | bigint PK | |
-| code | char(2) UNIQUE | `01`, `20`, `28`, `31`, `99`… |
+| code | varchar(8) UNIQUE NULL | `01`, `20`, `28`, `99`, `71`… (NULL allowed for codeless scopes) |
 | name | varchar | canonical spelling (e.g. `Álava`) |
-| aliases | jsonb | alternate spellings to absorb on ingest (`Araba`, `ALABA`) |
-| is_national | boolean | true for `Estatal` (code `99`) |
+| level | enum | `national` \| `regional` \| `provincial` |
+| parent_territory_id | bigint FK → territories NULL | hierarchy link; **no precedence logic this sprint** |
+| aliases | jsonb | alternate spellings matched on ingest (`Araba`, `ALABA`, `Bizkaia`, `Vizcaia`…) |
 
 ### `sectors`
 The activity sectors (Ocio Educativo, Deporte, Agencias de Viajes, Acción e Intervención Social, …).
@@ -85,14 +90,15 @@ The activity sectors (Ocio Educativo, Deporte, Agencias de Viajes, Acción e Int
 | aliases | jsonb | alternate spellings/codes |
 
 ### `convenios`
-The authoritative registry, sourced from the `LABOUR AGREEMENTS` index sheet. The central scoping object: a convenio fixes province + sector + headline conditions.
+The authoritative registry, sourced from the `LABOUR AGREEMENTS` sheet of `01_listado_convenios.xlsx` (headers: `NUMERO`, `CONVENIO`, `PROVINCIA`, `HORAS ANUALES`, `HORAS SEMANA`, `NUMERO A3`, `COMPLEMENTO IT`). The central scoping object: a convenio fixes territory + sector + headline conditions. Import is idempotent (keyed on `numero`).
 
 | column | type | notes |
 |---|---|---|
 | id | bigint PK | |
-| numero | varchar UNIQUE | official code, e.g. `71103505012022` |
-| name | varchar | sector/title as in the index |
-| province_id | bigint FK → provinces | |
+| numero | varchar UNIQUE | official code, e.g. `71103505012022`; the registry is treated as **one convenio per numero** |
+| name | varchar | the canonical `CONVENIO` title (the more formal/longer spelling when duplicate-numero rows disagree) |
+| aliases | jsonb NULL | name variants for the same convenio (folded duplicate-numero spellings), consistent with `territories.aliases` / `sectors.aliases`; the convenio resolver matches `name` **and** `aliases` so either spelling resolves to the one convenio |
+| territory_id | bigint FK → territories | renamed from `province_id` in Sprint 1; the territory `level` is derived by the **numero-prefix range rule** (see `territories`), with the `PROVINCIA` column used only as a cross-check |
 | sector_id | bigint FK → sectors | |
 | annual_hours | numeric(7,2) NULL | headline value; per-category overrides live in `convenio_job_categories` |
 | weekly_hours | numeric(5,2) NULL | headline value |
@@ -101,6 +107,8 @@ The authoritative registry, sourced from the `LABOUR AGREEMENTS` index sheet. Th
 | notes | text NULL | for multi-value headline cells e.g. `1742 (1698)` |
 
 > **Multi-value cells** (`1742 / 1652,13`, `38,5 / 36,5`) are *not* stored as text here for retrieval. The split values belong to specific job categories — see `convenio_job_categories`. The raw headline is preserved in `notes` for reference.
+
+> **Duplicate-numero rows are merged (registry import).** The registry contains real cases where one numero appears on two rows under different `CONVENIO` spellings (a formal title + a colloquial one — e.g. `20000785011981` as `LIMPIEZA EDIFICIOS Y LOCALES` and `LIMPIEZA DE GIPUZKOA`). The import collapses them into **one** convenio, keyed on `numero`: it keeps the canonical (more formal/longer) name, folds every other distinct spelling into `aliases` (no name is lost), and for every other field prefers the **non-null / more-complete** value (so a populated `COMPLEMENTO IT` is never overwritten by a NULL duplicate row). Every merge is **logged** (import summary + `Log::warning`) — an ambiguous merge is surfaced, not silent (ADR-0011 managed growth). The merge is idempotent: re-running yields the same single convenio, same aliases, and the same logged summary.
 
 ### `convenio_job_categories`
 The sub-category granularity that the split cells imply, and that the salary tables enumerate (Director/a Gerente, Jefe/a de Departamento, Técnico/a, Animador/a Sociocultural, …). This is what lets scoping resolve to the *correct* value, not just the convenio.
@@ -148,6 +156,7 @@ One row per source document (the main convenio PDF, a Tablas PDF, a Cambios PDF,
 | title | varchar | |
 | source_filename | varchar NULL | original filename (parser input) |
 | storage_path | varchar | object-storage key for the original file |
+| content_hash | varchar(64) NULL, indexed | sha256 of the file bytes — **primary idempotency key** for re-upload (Sprint 1); `(source_filename + convenio_id)` is the fallback |
 | convenio_id | bigint FK → convenios NULL | NULL for universal docs (Estatuto, national law) |
 | document_type_id | bigint FK → document_types | |
 | validity_start | date NULL | |
@@ -155,7 +164,7 @@ One row per source document (the main convenio PDF, a Tablas PDF, a Cambios PDF,
 | retrieval_status | enum | `draft` \| `active` \| `historical` |
 | authority_level | enum | `national_law` \| `official_convenio` \| `internal_hr_ruling` |
 | predecessor_document_id | bigint FK → documents NULL | version lineage (e.g. 2020–2023 → 2024–2027) |
-| language | varchar | `es`, `eu`, … — **metadata only**: recorded for citation/display, **never** used to filter or scope retrieval (search runs across all languages) |
+| language | varchar | `es`, `eu`, … — **metadata only** (ADR-0006): recorded for citation/display, **never** used to filter or scope retrieval. Sprint 1 sets `es` for every document. Some documents are **bilingual** (Euskara + Spanish in parallel columns, e.g. Gipuzkoa bulletin convenios); all carry full Spanish text, so no `eu` splitting/detection is attempted this sprint |
 | tagging_status | enum | `auto_proposed` \| `under_review` \| `verified` |
 | tagging_confidence | numeric(4,3) NULL | min confidence across auto-assigned facets; drives the review queue |
 | ingested_at | timestamp | |
@@ -163,6 +172,9 @@ One row per source document (the main convenio PDF, a Tablas PDF, a Cambios PDF,
 
 > **Retrieval rule:** only `retrieval_status = active` documents are cited as current. `historical` docs are still retrievable for time-scoped questions ("what were my hours in 2022?") but never presented as current. `draft` docs are excluded from employee-facing retrieval entirely.
 > **Authority rule:** on conflict, `national_law` < `official_convenio` is the floor; `internal_hr_ruling` must not override an `official_convenio` for the same scope — if they conflict, re-escalate.
+
+> **Document scope is derived via the convenio (Sprint 1 decision).** A document's **territory** and **sector** are **not** columns on `documents` — they are reached through the document's `convenio` (which fixes both). The only **re-assignable document facets** are therefore `convenio` and `document_type`; the filename parser's territory/sector resolution is used **only for conflict detection + provenance**, with the **convenio authoritative**. This deliberately makes a document-vs-convenio territory contradiction structurally impossible, at the cost of a small deviation from ADR-0001's independent-facet framing (here territory/sector are dependent on the convenio facet). National-law docs carry **universal** scope via `authority_level = national_law` (`convenio_id` and any territory are NULL).
+> **Known limitation:** a document that is **territory-scoped but has no convenio** (a regional/provincial *non-convenio* policy doc) cannot currently carry its scope, since scope rides on the convenio. The corpus has no such case today (the only no-convenio docs are national: the Estatuto / national law). Revisit — e.g. an optional direct `territory_id` on `documents`, or a lightweight scope-tag — only if such a document appears.
 
 ### `document_pages`
 Mirrors the per-page text + image structure already produced by ingestion. Enables citations that show the exact source page.
@@ -202,7 +214,7 @@ Prose chunks for RAG. Scope columns are **denormalized** on purpose so the vecto
 | token_count | int | |
 | embedding | vector(1024) | pgvector; **EMBED_DIM = 1024** (BGE-M3, multilingual, self-hostable). Locked after a first-task retrieval test in `hr-ai` on real ES + EU convenios. |
 | convenio_id | bigint NULL | denormalized scope filter |
-| province_id | bigint NULL | denormalized scope filter |
+| territory_id | bigint NULL | denormalized scope filter (renamed from `province_id` in Sprint 1; unused this sprint — no chunking yet) |
 | sector_id | bigint NULL | denormalized scope filter |
 | validity_start | date NULL | denormalized scope filter |
 | validity_end | date NULL | denormalized scope filter |
@@ -260,7 +272,7 @@ Email is mandatory and unique — it is the identity and lookup key.
 | employee_external_id | varchar NULL | Sedena's own ID if any |
 | convenio_id | bigint FK → convenios | |
 | job_category_id | bigint FK → convenio_job_categories NULL | resolves split-value granularity |
-| province_id | bigint FK → provinces | employee's **own** location province (may differ from an Estatal convenio) |
+| territory_id | bigint FK → territories | renamed from `province_id` in Sprint 1; employee's **own** location scope (may differ from an Estatal convenio) |
 | work_location | varchar NULL | town/centre, e.g. "CaixaForum Palma" |
 | employment_type | enum | `full_time` \| `part_time` (affects e.g. vacation calc) |
 | start_date | date NULL | antigüedad |
@@ -274,7 +286,7 @@ Because the profile determines which legal answers an employee receives, every p
 |---|---|---|
 | id | bigint PK | |
 | employee_id | bigint FK → employees | |
-| field_changed | varchar | e.g. `province_id`, `convenio_id`, `email` |
+| field_changed | varchar | e.g. `territory_id`, `convenio_id`, `email` |
 | old_value | text NULL | |
 | new_value | text NULL | |
 | changed_by | bigint FK → admins | |
@@ -379,7 +391,7 @@ The resolution, and the link to the knowledge article it becomes (the flywheel).
 | converted_to_document_id | bigint FK → documents NULL | the new article, if converted |
 | created_at | timestamp | |
 
-> When converted, the new `documents` row defaults to `authority_level = internal_hr_ruling` and **inherits the original asker's scope** (convenio/province) — scope must be confirmed before publish.
+> When converted, the new `documents` row defaults to `authority_level = internal_hr_ruling` and **inherits the original asker's scope** (convenio/territory) — scope must be confirmed before publish.
 
 ---
 
@@ -393,7 +405,7 @@ The complete history behind every facet decision. This is what powers the change
 | id | bigint PK | |
 | entity_type | varchar | `document` \| `document_topic` \| … |
 | entity_id | bigint | |
-| facet | varchar | `convenio` \| `province` \| `sector` \| `document_type` \| `topic` \| `validity` |
+| facet | varchar | `convenio` \| `territory` \| `sector` \| `document_type` \| `topic` \| `validity` |
 | old_value | text NULL | |
 | new_value | text NULL | |
 | source | enum | `filename_parse` \| `ai_agent` \| `admin_manual` \| `system` |
@@ -410,16 +422,20 @@ Tracks human handoffs surfaced to admins. The **expiry queue is primarily a quer
 | id | bigint PK | |
 | document_id | bigint FK → documents | |
 | type | enum | `expiry` \| `tag_review` \| `conflict` |
+| reason | enum NULL | `unresolved` (parser had nothing to resolve — **LLM-eligible** later) \| `conflict` (resolved-but-contradicts-registry — **human-adjudicated**). Added Sprint 1 per ADR-0011 |
+| raw_unmatched_values | jsonb NULL | the literal string(s) the parser could not resolve (`[{facet, value}, …]`), so a human/agent can later decide "fold into aliases" vs "propose a new vocabulary value" (ADR-0011) |
 | status | enum | `open` \| `resolved` \| `dismissed` |
 | due_date | date NULL | |
 | resolved_by | bigint FK → admins NULL | |
 | resolved_at | timestamp NULL | |
 
+> **Two-reason routing (ADR-0011).** `reason` is set at ingest: a `conflict` is written when parsed values contradict the registry (territory disagreement, unknown convenio, sector disagreement) and a `system` `tag_events` row is logged on each conflicting facet; `unresolved` is written when the parser had nothing to resolve or hit an unmatched controlled value (e.g. a no-numero PDF). Conflict outranks unresolved. The LLM rescue path and propose-new-value UI are **deferred** to the LLM-tagging-tier sprint — Sprint 1 only lays these two fields.
+
 ---
 
 ## 11. How scoping resolves (read path)
 
-1. Authenticated employee → `employees` row (via email) → profile: `convenio_id`, `job_category_id`, `province_id`, `employment_type`, plus the question date (default = today).
+1. Authenticated employee → `employees` row (via email) → profile: `convenio_id`, `job_category_id`, `territory_id`, `employment_type`, plus the question date (default = today).
 2. **Eligible documents** = those where:
    - `convenio_id` matches the employee's convenio, **or** `authority_level = national_law` (universal, e.g. Estatuto), **and**
    - `retrieval_status = active`, **and**
@@ -439,7 +455,7 @@ This is the deterministic part of the pipeline (Laravel resolves the scope, then
 1. **Embedding model & dimension.** `BGE-M3` (multilingual, self-hostable, open-weight), `EMBED_DIM = 1024`. Confirmed by a retrieval test on real ES + Euskara convenios as the **first task in `hr-ai`** before the `vector(1024)` column is locked.
 2. **Language handling.** `documents.language` is recorded for citation and display only. Retrieval **never** filters or scopes by language — search runs across all languages. Language is therefore **not** a facet and **not** a lens.
 3. **Admin authentication.** Same email-OTP flow as employees. No schema change — `login_codes.account_type` already covers both.
-4. **`work_location`.** Stays **free text** for now. It is descriptive, not legally load-bearing (province + convenio drive scoping, and both are controlled). Promote to a controlled `locations` vocabulary only if a future "by location" lens is wanted.
+4. **`work_location`.** Stays **free text** for now. It is descriptive, not legally load-bearing (territory + convenio drive scoping, and both are controlled). Promote to a controlled `locations` vocabulary only if a future "by location" lens is wanted.
 5. **Object storage.** **S3-compatible storage.** Original files and page images live in an S3 bucket; `storage_path` / `image_path` hold opaque object keys. A single storage adapter (used by `hr-backend` for uploads and `hr-ai` for reads) wraps the S3 client, so swapping bucket/provider or pointing at an S3-compatible service (e.g. MinIO for local dev) never touches the schema or callers.
 
 _All open questions are now resolved; the schema is ready to build from._
