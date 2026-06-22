@@ -338,6 +338,8 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 
 ## 8. Group E — Chat & traces
 
+> **Populated by `hr-backend` from Sprint 2b-1 (ADR-0007: `hr-backend` owns ALL writes).** Each employee turn writes, in one transaction: the `user` + `assistant` `chat_messages`, the assistant turn's `message_citations` (answer turns only), its `message_traces` row (every turn — answer *and* escalation), and an `escalation_cards` row on escalate. Sessions continue the employee's most-recent session within a 24h window, else start a new one (no session list/picker until Sprint 5). **Role-scoping-ready shape:** every row keys back to `employee_id` (via `chat_sessions`), so the Sprint-5 role-scoped access (`hr_agent` sees escalated conversations, not every history) is a query filter, not a reshape — no enforcement is built in 2b-1.
+
 ### `chat_sessions`
 | column | type | notes |
 |---|---|---|
@@ -374,6 +376,29 @@ The expandable "how I got here" trace — stored **structured**, so it doubles a
 | message_id | bigint FK → chat_messages | |
 | trace | jsonb | profile detected, scope filters applied, router decision, retrieved chunks + scores, guardrail result, confidence |
 
+**`trace` shape (Sprint 2b-1)** — a strict **superset** of the 2a `retrieval:probe` shape (adds the guardrail, synthesis, floor-decision, and `authority_used` blocks):
+- `profile`, `scope_filters` — as resolved (convenio, `include_national_law`, `retrieval_status`, `as_of_date`).
+- `router_decision` — `null` in 2b-1 (no router until 2b-2).
+- `guardrail_check` — `{ fired, reason, rule }`. When `fired`, the pipeline short-circuited *before* any `hr-ai` call (no `retrieval`/`synthesis` blocks).
+- `retrieval` — `{ eligible_total, returned, top_score, chunks:[…] }`. `eligible_total` + `top_score` distinguish **no eligible chunks** from **eligible but too weak**.
+- `synthesis` — `{ provider, model, citation_count, confidence, grounding_signal, authority_used, trace_fragment }` (absent when the guardrail or Check A short-circuited).
+- `floor_decision` — `{ retrieval_score_floor, answer_confidence_floor, check_a_retrieval, check_b_citations, check_c_confidence_tiebreaker, figure_grounding, authority_used, outcome, escalation_reason, note }`. Check C carries `used_as_gate:false` (tiebreaker only). **`figure_grounding`** (Correction-01) — `{ checked, grounded, figures:[…], ungrounded:[…] }` — the deterministic backstop to Check B: every load-bearing figure (number + unit) in the answer, and which (if any) were absent from all cited chunks in both digit and spelled-out Spanish form. When `grounded:false` the turn escalates with `note:"answer figure not grounded in cited chunk"`.
+- **`authority_used`** — which authority level(s) the answer drew on (`official_convenio`, `national_law`, `internal_hr_ruling`), computed deterministically from the *cited* chunks so an auditor can see **"answered from the convenio"** vs **"answered from the baseline."**
+
+### `answer_model_settings`
+Single-row external answer-model config (ADR-0015). The raw key is **never** an attribute, never serialized, never returned by any endpoint.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | single row (id = 1) |
+| provider | varchar | `claude` (pluggable) |
+| api_key_encrypted | text NULL | `Crypt::encryptString` ciphertext (app-key); never the plaintext |
+| key_last_four | varchar(4) NULL | last 4 of the raw key — renders `••••1234` **without decrypting** |
+| configured_at | timestamp NULL | |
+| updated_by | bigint FK → admins NULL | |
+
+> Set once via the admin "Answer model" screen → encrypted at rest → masked → rotatable (replace, never read back) → decrypted only in `ChatService` immediately before a `/synthesise` call and passed to `hr-ai` in the request **body**. The browser never sees the key and never calls the provider.
+
 ---
 
 ## 9. Group F — Escalations
@@ -392,6 +417,8 @@ The expandable "how I got here" trace — stored **structured**, so it doubles a
 | topic_id | bigint FK → topics NULL | |
 | created_at | timestamp | |
 | resolved_at | timestamp NULL | |
+
+> **Sprint 2b-1 is decide-and-queue:** on any escalate outcome `hr-backend` creates the card with `status = new`, `assigned_to = null`, linked to the session + source `user` message, with the `reason` (`sensitive_topic` from the guardrail, else `low_confidence`). The board that *works* cards is Sprint 4.
 
 ### `escalation_resolutions`
 The resolution, and the link to the knowledge article it becomes (the flywheel).

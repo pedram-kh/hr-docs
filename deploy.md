@@ -12,13 +12,13 @@ This file exists so deploy-time obligations are **on the record and can't be los
 
 The employee chat (Sprint 2b) sends the **employee's question + retrieved convenio text** to an external LLM provider (default **Claude API**) to synthesise the answer. That means personal data of Sedena staff is processed by a third party on every answer, which triggers EU/Spanish GDPR obligations. **All three must be satisfied before go-live:**
 
-- [ ] **EU / approved endpoint.** Use the provider's EU-region (or otherwise approved-for-EU) API endpoint, so data isn't processed in a region without an adequate-protection basis.
+- [ ] **EU / approved endpoint.** Use the provider's EU-region (or otherwise approved-for-EU) API endpoint, so data isn't processed in a region without an adequate-protection basis. *(Sprint 2b-1 wired this as non-secret config: `HR_AI_ANSWER_MODEL` / `HR_AI_ANSWER_ENDPOINT` on `hr-backend` — passed to `hr-ai /synthesise` per call. These **must** point at an EU-available model/endpoint before go-live.)*
 - [ ] **Signed Data Processing Agreement (DPA).** A signed DPA must be in place with the answer-model provider — the contract (legally required when a third party processes personal data on your behalf) committing them to: use the data only to provide the service (**no training on it**), keep it secure, not retain it, and act only on Sedena's instructions as controller. Anthropic offers a standard DPA — sign it.
 - [ ] **Zero data retention enabled.** Turn on the provider's zero-retention / no-logging option so the question + convenio text are not stored by the provider after the answer is returned. (DPA + zero-retention go together.)
 
 **Why:** Spain's data-protection authority (**AEPD**) and Sedena's **comité de empresa (works council)** will expect a signed DPA and a clear data-flow story; a missing DPA is a common go-live blocker (see `roadmap.md` Sprint 9 — privacy/GDPR hardening, and the works-council sign-off that can gate deployment).
 
-**Note (not a deploy item — design fact):** the API key is **never** in the browser and **never** in plaintext — it's set once in the admin "Answer model" screen, encrypted at rest, shown masked (`••••1234`), and rotatable but not readable back (Sprint 2b). The frontend never calls the provider directly; only `hr-backend` does.
+**Note (not a deploy item — design fact, built in Sprint 2b-1):** the API key is **never** in the browser and **never** in plaintext — it's set once in the admin "Answer model" screen, encrypted at rest (`Crypt`, app-key, in `answer_model_settings`), shown masked (`••••1234`, reconstructed from `key_last_four` without decrypting), and rotatable but not readable back. The frontend never calls the provider directly; only `hr-backend` does, decrypting the key in `ChatService` immediately before each `/synthesise` call and passing it in the request **body** (never a header), never persisted by `hr-ai`.
 
 ---
 

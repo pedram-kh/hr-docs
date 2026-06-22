@@ -15,8 +15,10 @@ This document exists because the full scope nearly got lost to a chat compaction
 | **Sprint 0** | Foundation & walking skeleton (3 services, 24-table schema + pgvector, email-OTP login into empty shells) | ✅ **committed** |
 | **Sprint 1** | Knowledge-ingestion backbone (territories restructure, registry import, PDF ingestion via `hr-ai /extract`, deterministic filename parser, conflict detection, tag provenance, basic admin documents table) | ✅ **committed** (spec, plan, build, review, corrections 01–02) |
 | **Design-system adoption** | Vanilla-CSS token system, light-default + dark toggle, Inter, two existing screens refactored (ADR-0012) | 🔄 **built; pending real-app eyes-on + commit** |
+| **Sprint 2a** | Ingestion-to-vectors: article-aware bilingual chunking, BGE-M3 / `vector(1024)` into `document_chunks`, structured salary-row extraction, the scope-prefilter `/retrieve` primitive + `retrieval:probe` harness | ✅ **built** (pending final commit) |
+| **Sprint 2b-1** | The narrow answer vertical: `hr-ai /synthesise` (pluggable Claude) with the **authority-precedence** rule, `hr-backend` pipeline + answer-or-escalate floor + hardcoded guardrail baseline + external-key handling (ADR-0015), chat UI + admin "Answer model" screen, citations + trace + history | 🔄 **built; pending eyes-on (real key) + commit** |
 
-Two sprints done; the design system is a near-complete interstitial that needs the browser eyes-on pass before it commits. Everything below is **ahead of us**.
+Sprint 2b is **split into two slices** (an honest-scoping split, like 1→1+corrections and RAG→2a/2b): **2b-1** is the single prose answer path (this slice); **2b-2** adds the router, full per-claim grounding check, salary-in-chat, and history search. Everything below 2b-2 is **ahead of us**.
 
 ---
 
@@ -39,14 +41,22 @@ Turn ingested documents into retrievable knowledge.
 - Historical/`draft` documents excluded from current retrieval; `active` only.
 - **Out:** the chat surface, the answer LLM, the router (that's 2b).
 
-### Sprint 2b — Scoped RAG chat + answer loop  · size **L**
-The first surface a real employee uses.
-- The employee **chat UI**, built fresh on the design system (proves the design language on a from-scratch screen).
-- The retrieval pipeline end to end (`architecture.md §5`): deterministic **scope resolver** (`hr-backend`) → **router** (small LLM) → **salary SQL** *or* **pre-filtered vector search** → **cited synthesis** (LLM) → **grounding/guardrail check** → answer **or escalate**.
-- **Citations** back to source document + page; the expandable **"how I got here" trace**.
-- **The structured trace** (`message_traces.trace`) written per step — built in from day one (it doubles as the eval dataset; pillar §4.1).
+### Sprint 2b — Scoped RAG chat + answer loop  · size **L**  · *split into 2b-1 + 2b-2*
+The first surface a real employee uses. Split into two slices so the answer vertical proves end-to-end before the router/grounding complexity lands.
+
+**Sprint 2b-1 — the narrow answer vertical (built).**
+- The employee **chat UI**, built fresh on the design system (proves the design language on a from-scratch screen): message list, input, answer + citations + expandable **"how I got here" trace**, escalation state via the signature badges.
+- The **single prose path, no router** (`architecture.md §5`): deterministic **scope resolver** (`hr-backend`) → **hardcoded guardrail baseline** (fires before any `hr-ai` call) → **pre-filtered vector search** (2a `/retrieve`) → **cited synthesis** (`hr-ai /synthesise`, pluggable Claude) → **answer-or-escalate floor** (`hr-backend`) → answer **or escalate**.
+- **Authority precedence in synthesis** (legal-weight): convenio chunks ordered before `national_law`, the precedence rule encoded in the prompt, `authority_used` recorded in the trace — the convenio governs where it speaks; the Estatuto is the baseline only where it is silent (ADR-0015).
+- **External answer model + key handling** (ADR-0015): pluggable provider in `hr-ai`; the admin "Answer model" screen sets the key once, encrypted at rest, masked, rotatable, never read back; the key is passed decrypted per call, never reaches the browser.
+- **Citations** back to source document + page (uncited answers never reach the employee); **the structured trace** written per turn (pillar §4.1); full **chat history** stored, role-scoping-ready, auditable.
 - **Hardcoded guardrail baseline** lands here (no legal/medical advice, sensitive-topic auto-escalation) — the *config UI* for additive rules is later (Sprint 6).
-- Full **chat history stored, searchable, auditable** (pillar §4.1).
+
+**Sprint 2b-2 — the router + full grounding (ahead).**
+- The **router** (small LLM): salary-table lookup vs prose-policy vs off-domain.
+- **Salary-in-chat** (the 2a salary SQL surfaced through the pipeline).
+- The **full per-claim grounding check** (beyond 2b-1's citation-coverage + retrieval-score proxy). This must **supersede** 2b-1's deterministic *figure-grounding guard* (Correction-01) — the cheap number-with-unit backstop is a stopgap that only checks load-bearing figures, **not** a per-claim entailment check, and must not be mistaken for the real grounding model.
+- **History search** UI.
 
 ### Sprint 3 — Lens-hierarchy admin UI  · size **L**
 The rich Knowledge-Center surface deferred from the original Sprint 1.
