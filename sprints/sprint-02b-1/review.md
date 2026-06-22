@@ -296,3 +296,67 @@ Guard validated on synthetic cases: a fabricated "6 meses" cited to a chunk with
 **Net:** the fabrication risk is closed (synthesis abstains; the figure guard escalates any
 load-bearing figure not present in a cited chunk), the precedence pass is preserved, and the
 Art. 14 ET recall gap is logged for 2b-2.
+
+---
+
+## Correction-02 — deterministic salary-topic guard
+
+**Trigger.** An adversarial behavioral probe of the prose answer path (11 questions across
+the two seeded profiles) returned 9 PASS and surfaced two issues. The load-bearing one
+(Q5) is a live safety bug fixed here; the other (Q10, a compound-query recall gap causing
+baseline-over-convenio on one sub-topic) is the same recall class already parked for 2b-2.
+
+### The Q5 finding (the bug)
+`test-gipuzkoa`, *"¿Cuál es el salario base de un limpiador según mi convenio?"* was
+**answered** (not escalated). The figures came from cited convenio **p32 chunks that are
+the embedded wage tables** (`SOLDATA TAULAK / TABLAS SALARIALES`) — i.e. salary read from
+prose. Worse, the year→figure mapping was **misattributed**: the table rows sit at chunk
+starts while each year header lands at the chunk end, so the model reported **2024 =
+1.330,80 €** when the real 2024 Limpiador/a row is **1.244,74 €** (1.330,80 is the 2025
+row). The `figure_grounding` guard (Correction-01) passed it `grounded:true` because the
+digits exist *somewhere* in the cited text — it validates digit presence, **not** row/
+column/year alignment, so it gives false confidence on tabular data. This violates ADR-0006
+(salary lives in `salary_tables`, never a vector chunk; a figure must be exact) and must
+never reach an employee.
+
+### The fix
+A deterministic **salary-topic guard** in `hr-backend` `GuardrailService`, in the same
+spirit as the hardcoded sensitive-topic baseline:
+- Detects salary/wage/retribution questions (`salario`, `sueldo`, `nómina`, `retribución`,
+  `remuneración`, `tablas salariales`, `pagas extra`, `cuánto gano/gana/cobra/me pagan…`)
+  **before** synthesis.
+- On match → escalate with the **new, distinct reason `salary_not_in_chat`** (separate from
+  `low_confidence` / `sensitive_topic` for the trace + future analytics), a clear
+  employee-facing message that a person will handle salary questions, and **no `/synthesise`
+  call** (no synthesis block in the trace).
+- Conservative-by-design and additive — like the sensitive baseline it can only cause
+  escalation, never a weaker answer. The bare verb "paga" is intentionally **not** matched,
+  so "¿la empresa me paga el gimnasio?" is not treated as a salary question.
+- The `salary_not_in_chat` value ships as a **standalone additive migration**
+  (`…_add_salary_not_in_chat_to_escalation_cards_reason`) — the historical
+  `create_escalation_cards_table` migration is left untouched (committed migrations are
+  immutable). The new migration introspects the actual `reason` CHECK constraint name (not
+  guessed), `DROP … IF EXISTS` then re-adds it with the complete value set, with a `down()`
+  that restores the prior 5-value set. It is idempotent and applies cleanly on fresh
+  installs, already-migrated environments, and this dev DB (replacing the interim manual
+  ALTER). Verified: post-migrate the constraint accepts `salary_not_in_chat` and rejects an
+  unknown value; `git diff` of `database/migrations/` shows only the new file added.
+
+### Explicit deferral (accepted, not fixed here)
+The 2a wage-table pages embedded as prose chunks are **left in the index**. This guard stops
+salary questions from reaching them, but a non-salary question could still retrieve a table
+chunk. We knowingly accept this residual; the deeper 2a cleanup (excluding wage-table pages
+from prose chunking) is parked — see roadmap 2b-2.
+
+### Re-verify
+- **Guard unit-scan over all 11 probes + 3 gold questions + extras:** only the salary
+  question and salary variants (`¿cuánto gano?`, `nómina`) fire `salary_not_in_chat`;
+  `despido` still fires `sensitive_topic`; `¿cuánto gana Pedro García?` still fires
+  `other_employee_data` (privacy takes precedence); **no other probe trips it** — including
+  Q9 *"¿la empresa me paga el gimnasio?"* and Q4 *"…seguro médico privado pagado…"*.
+- **Q5 end-to-end:** `outcome = escalate`, `reason = salary_not_in_chat`, **synthesis block
+  ABSENT** (provider never called), 0 citations, salary-deferral message surfaced — no
+  salary figure reaches the employee.
+- **Regression — gold tests intact:** Gipuzkoa vacaciones → answer, `official_convenio`,
+  31/26 días; Navarra periodo de prueba → answer, `official_convenio`, 15/30 días; Navarra
+  trabajo a distancia → answer, `national_law`. None trips the salary guard.

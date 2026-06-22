@@ -379,7 +379,7 @@ The expandable "how I got here" trace — stored **structured**, so it doubles a
 **`trace` shape (Sprint 2b-1)** — a strict **superset** of the 2a `retrieval:probe` shape (adds the guardrail, synthesis, floor-decision, and `authority_used` blocks):
 - `profile`, `scope_filters` — as resolved (convenio, `include_national_law`, `retrieval_status`, `as_of_date`).
 - `router_decision` — `null` in 2b-1 (no router until 2b-2).
-- `guardrail_check` — `{ fired, reason, rule }`. When `fired`, the pipeline short-circuited *before* any `hr-ai` call (no `retrieval`/`synthesis` blocks).
+- `guardrail_check` — `{ fired, reason, rule }`. When `fired`, the pipeline short-circuited *before* any `hr-ai` call (no `retrieval`/`synthesis` blocks). `rule` ∈ `sensitive_topic` \| `legal_medical` \| `other_employee_data` \| `salary_topic`; the salary rule (Correction-02) carries `reason:"salary_not_in_chat"`.
 - `retrieval` — `{ eligible_total, returned, top_score, chunks:[…] }`. `eligible_total` + `top_score` distinguish **no eligible chunks** from **eligible but too weak**.
 - `synthesis` — `{ provider, model, citation_count, confidence, grounding_signal, authority_used, trace_fragment }` (absent when the guardrail or Check A short-circuited).
 - `floor_decision` — `{ retrieval_score_floor, answer_confidence_floor, check_a_retrieval, check_b_citations, check_c_confidence_tiebreaker, figure_grounding, authority_used, outcome, escalation_reason, note }`. Check C carries `used_as_gate:false` (tiebreaker only). **`figure_grounding`** (Correction-01) — `{ checked, grounded, figures:[…], ungrounded:[…] }` — the deterministic backstop to Check B: every load-bearing figure (number + unit) in the answer, and which (if any) were absent from all cited chunks in both digit and spelled-out Spanish form. When `grounded:false` the turn escalates with `note:"answer figure not grounded in cited chunk"`.
@@ -411,14 +411,14 @@ Single-row external answer-model config (ADR-0015). The raw key is **never** an 
 | chat_session_id | bigint FK → chat_sessions NULL | |
 | source_message_id | bigint FK → chat_messages NULL | |
 | employee_id | bigint FK → employees | |
-| reason | enum | `low_confidence` \| `sensitive_topic` \| `off_domain` \| `explicit_request` \| `conflict` |
+| reason | enum | `low_confidence` \| `sensitive_topic` \| `off_domain` \| `explicit_request` \| `conflict` \| `salary_not_in_chat` |
 | status | enum | `new` \| `assigned` \| `in_progress` \| `resolved` \| `closed` |
 | assigned_to | bigint FK → admins NULL | |
 | topic_id | bigint FK → topics NULL | |
 | created_at | timestamp | |
 | resolved_at | timestamp NULL | |
 
-> **Sprint 2b-1 is decide-and-queue:** on any escalate outcome `hr-backend` creates the card with `status = new`, `assigned_to = null`, linked to the session + source `user` message, with the `reason` (`sensitive_topic` from the guardrail, else `low_confidence`). The board that *works* cards is Sprint 4.
+> **Sprint 2b-1 is decide-and-queue:** on any escalate outcome `hr-backend` creates the card with `status = new`, `assigned_to = null`, linked to the session + source `user` message, with the `reason` (`sensitive_topic` or `salary_not_in_chat` from the guardrail, else `low_confidence`). `salary_not_in_chat` (Correction-02) is kept **distinct** from `low_confidence`/`sensitive_topic` so the trace and future analytics can tell "salary deferred to a human" apart from a genuine low-confidence escalation. The board that *works* cards is Sprint 4.
 
 ### `escalation_resolutions`
 The resolution, and the link to the knowledge article it becomes (the flywheel).

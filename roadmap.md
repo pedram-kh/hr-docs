@@ -54,7 +54,8 @@ The first surface a real employee uses. Split into two slices so the answer vert
 
 **Sprint 2b-2 — the router + full grounding (ahead).**
 - The **router** (small LLM): salary-table lookup vs prose-policy vs off-domain.
-- **Salary-in-chat** (the 2a salary SQL surfaced through the pipeline).
+- **Salary-in-chat** (the 2a salary SQL surfaced through the pipeline). This **supersedes** the 2b-1 *salary-topic guard* (Correction-02): instead of escalating salary questions with `salary_not_in_chat`, 2b-2 answers them from the structured `salary_tables` via SQL (exact figures), so the deterministic guard is retired once the grounded salary path exists.
+- **Parked — 2a wage-table-chunk cleanup (accepted residual from Correction-02):** convenio PDFs ingested in 2a embedded their wage-table pages as prose `document_chunks`. The 2b-1 salary guard stops *salary questions* from reaching them, but a non-salary question could still retrieve a table chunk. The deeper fix — excluding wage-table pages from prose chunking at ingest (ADR-0006: salary is never a vector chunk) — is not done yet and should be addressed alongside salary-in-chat.
 - The **full per-claim grounding check** (beyond 2b-1's citation-coverage + retrieval-score proxy). This must **supersede** 2b-1's deterministic *figure-grounding guard* (Correction-01) — the cheap number-with-unit backstop is a stopgap that only checks load-bearing figures, **not** a per-claim entailment check, and must not be mistaken for the real grounding model.
 - **History search** UI.
 
