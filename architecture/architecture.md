@@ -88,6 +88,12 @@ A **controlled pipeline**, not an autonomous multi-agent swarm. Legal sensitivit
 
 Eligibility rule (from `data-model.md` §11): a document is eligible if it matches the employee's convenio **or** is `national_law` (universal), **and** `retrieval_status = active`, **and** the question date falls within its validity window. `historical` documents answer time-scoped questions but are never cited as current.
 
+> **Sprint 2a built the deterministic substrate (steps 1, 3a, 3b only).** The router (2), synthesise (4), and guardrail (5) — every LLM step — are **2b**.
+> - **3b — Vector primitive (`hr-ai POST /retrieve`).** Request: `{ query, convenio_id?, include_national_law, retrieval_status[], as_of_date?, k }`. `hr-ai` embeds the query (BGE-M3/1024), applies the scope `WHERE` on the denormalized `document_chunks` columns, ranks by cosine with a **forced exact (flat) scan** so the ANN/HNSW layer can never drop an eligible chunk (full recall — a legal-weight requirement), and returns `{ chunks:[{ document_id, chunk_index, page_from, page_to, content, score, authority_level, … }], eligible_total }`. It does **no** routing or answering.
+> - **3a — Salary primitive (deterministic SQL in `hr-backend`).** `salary_tables` for the convenio + year → `salary_table_rows` filtered by job category. Never embedded (ADR-0006). A convenio with no rows yet returns a **visible coverage-gap** signal, not a blank (ADR-0014).
+> - **1 — Scope resolver (`hr-backend`).** Resolves convenio/territory/sector/validity/job-category from the profile and **passes** scope to `hr-ai`; `hr-ai` never derives scope (ADR-0007).
+> - The **`retrieval:probe`** command exercises all three for a profile + question + date (resolved scope, eligible chunks with scores + source, eligible salary rows), seeding 2b's `message_traces.trace` shape.
+
 ---
 
 ## 6. AI-assisted tagging (advisory, never autonomous)

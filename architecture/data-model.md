@@ -122,6 +122,8 @@ The sub-category granularity that the split cells imply, and that the salary tab
 | annual_hours | numeric(7,2) NULL | category-specific override |
 | weekly_hours | numeric(5,2) NULL | category-specific override |
 
+> **Population (Sprint 2a — ADR-0002/0014).** Job categories are created by the **`salary:import`** command from the salary `.xlsx` rows — a **deliberate, logged, idempotent** admin action, never minted by the AI at tag time. Matching is per-convenio on the normalized category name (no global dedup — `Director/a Gerente` under two convenios are two rows); a new name is created and logged, an existing one reused. `group_code` is captured where the source has one (e.g. Cantabria `2.1`, an Estatal `Grupo`). **Label normalization:** the parser collapses embedded newlines/whitespace and **strips wrapping quotes/apostrophes** from both `name` and `group_code`, so a spreadsheet cell stored as `2.1'` (a literal trailing apostrophe, common in Excel text-typed numeric codes) lands as `2.1`.
+
 ### `document_types`
 Closed vocabulary: `convenio_text`, `salary_tables`, `changes` (Cambios), `partial_agreement` (Acuerdo Parcial), `summary` (Resumen), `national_law` (Estatuto), `internal_hr_ruling`, `other`.
 
@@ -212,17 +214,25 @@ Prose chunks for RAG. Scope columns are **denormalized** on purpose so the vecto
 | page_to | int NULL | |
 | content | text | chunk text |
 | token_count | int | |
-| embedding | vector(1024) | pgvector; **EMBED_DIM = 1024** (BGE-M3, multilingual, self-hostable). Locked after a first-task retrieval test in `hr-ai` on real ES + EU convenios. |
-| convenio_id | bigint NULL | denormalized scope filter |
-| territory_id | bigint NULL | denormalized scope filter (renamed from `province_id` in Sprint 1; unused this sprint — no chunking yet) |
-| sector_id | bigint NULL | denormalized scope filter |
-| validity_start | date NULL | denormalized scope filter |
-| validity_end | date NULL | denormalized scope filter |
-| retrieval_status | enum | denormalized scope filter |
-| authority_level | enum | denormalized scope filter |
+| embedding | vector(1024) | pgvector; **EMBED_DIM = 1024** (BGE-M3, multilingual, self-hosted in-process in `hr-ai`). **Locked** — the Sprint 2a first-task retrieval sanity test passed on real ES + EU chunks (Gipuzkoa eu+es + Estatuto es), so the dimension stands (ADR-0006). |
+| convenio_id | bigint NULL | denormalized scope filter (copied from the source document's convenio) |
+| territory_id | bigint NULL | denormalized scope filter (renamed from `province_id` in Sprint 1; **populated in Sprint 2a** from the convenio's territory) |
+| sector_id | bigint NULL | denormalized scope filter (from the convenio's sector) |
+| validity_start | date NULL | denormalized scope filter (from the source document) |
+| validity_end | date NULL | denormalized scope filter (from the source document) |
+| retrieval_status | enum | denormalized scope filter (from the source document) |
+| authority_level | enum | denormalized scope filter (from the source document) |
 
-> Index: an IVFFlat/HNSW index on `embedding`, plus btree indexes on the scope columns. Salary tables are **never** chunked into this table.
-> Note: `language` is deliberately **not** a scope column — retrieval never filters by language (see §5 `documents.language`).
+> Index: **HNSW** index on `embedding` (`document_chunks_embedding_hnsw`, cosine) from Sprint 0; btree indexes on `convenio_id`/`territory_id`/`sector_id`/`retrieval_status`/`authority_level` from Sprint 0, plus `validity_start`/`validity_end` btrees added additively in **Sprint 2a** (`2026_06_22_100001_create_hr_ai_role_and_chunk_indexes`). Salary tables are **never** chunked into this table.
+> Note: `language` is deliberately **not** a column here — retrieval never filters by language (ADR-0006). Euskara and Spanish are split into **separate chunks** (a chunk is never bilingual, ADR-0013), but the language label is internal to the chunker and not stored; a display-only language column, if 2b wants it, is a future hr-backend migration.
+
+> **Population (Sprint 2a — ADR-0013).** `document_chunks` is the one table written at runtime by `hr-ai`, via a **dedicated, scoped `hr_ai` Postgres role** (SELECT on registry/scope tables + INSERT/UPDATE/DELETE on `document_chunks` only — ADR-0007 enforced at the database, created by `2026_06_22_100001_create_hr_ai_role_and_chunk_indexes`). `hr-backend` (`chunks:embed`) selects the in-scope prose documents, **resolves each document's scope, and passes it to `hr-ai`**, which copies it verbatim into the denormalized columns (`hr-ai` never derives scope). `hr-ai` re-extracts the original PDF column-aware (Euskara left / Spanish right via PyMuPDF block bboxes, after stripping repeating page furniture so a bilingual footer can never blend languages), normalizes the BOG intra-word spacing artifact, chunks on article boundaries (`Artículo N` / `N. artikulua`, plus the Estatuto's `Disposición adicional/transitoria`) with a ~400–512-token cap, embeds with BGE-M3, and writes the chunks. Re-embedding is **idempotent** (a document's chunks are deleted and rewritten in one transaction).
+> **Column/furniture heuristics bias toward KEEPING TEXT (Sprint 2a Correction-01).** For a legal-weight system the safe failure direction is to keep a stray bit of furniture (mild retrieval noise) rather than delete an article (a silent legal gap), so every uncertain call defaults to keep-text / single-column:
+> - **Two-column split needs positive evidence of a real two-column prose body** — two tall, balanced, vertically-overlapping columns with a clear central gutter, made of long PROSE cells (not short, row-aligned table/TOC cells). An article index/TOC (titles left, thin page-numbers right → unbalanced) and `GRUPO/CATEGORÍA`/salary-style tables (short row-paired cells) do **not** trip it. When evidence is weak → **single column** (one Spanish stream).
+> - **Language gate before tagging `eu`.** A *monolingual* two-column Spanish layout (newspaper-style, e.g. Valencia) is geometrically identical to a bilingual page, so geometry alone cannot prevent tagging left-column Spanish as `eu`. The chunker measures each column's Spanish-function-word ratio (`de/la/el/que/en/…`, ≈0 in Basque) and splits `eu`/`es` only when one column reads as Basque and the other as Spanish; otherwise both columns stay in the Spanish stream (column-ordered, never blended). This is an extraction aid, **not** a retrieval filter (ADR-0006). Net: `eu` appears only on genuinely bilingual pages (the Gipuzkoa BOG); monolingual Spanish docs never emit spurious `eu`.
+> - **Furniture requires repetition, not width.** A block is furniture only when it **repeats** across pages in a top/bottom margin band (the reliable signal — the bilingual Gipuzkoa footer recurs on every page) or matches known gazette boilerplate in that band. A non-repeating full-width block in the body (e.g. a *preámbulo* paragraph spanning the page) is **prose → kept**. The bare “full-width ⇒ furniture” rule was removed (it had been silently eating full-width bodies, e.g. the Navarra cluster).
+> - **Over-strip is self-reporting.** `chunks:embed` flags any document where furniture-stripped blocks exceed kept blocks, or where chunk yield is implausibly low for the page count (< 1 chunk / 3 pages on a non-scanned doc), and surfaces these in the run summary + log — the same audit-first way coverage gaps are surfaced — so over-stripping can never silently recur.
+> **Embedding requires `tagging_status ≠ under_review` (ADR-0013).** The selection is: `document_type ∈ {convenio_text, national_law, partial_agreement}`, `retrieval_status ∈ {active, historical}` (excludes `draft`), and `tagging_status ≠ under_review` (conflicted/unresolved scope is not yet trustworthy to denormalize onto chunks). `document_pages` (Sprint 1 per-page text + page images) are **untouched** — they remain the citation surface; `document_chunks.content` is the normalized retrieval surface.
 
 ---
 
@@ -238,7 +248,9 @@ A versioned salary table belonging to a convenio and a year/validity.
 | year | int NULL | e.g. 2025, 2026 |
 | validity_start | date NULL | |
 | validity_end | date NULL | |
-| source_document_id | bigint FK → documents NULL | the Tablas PDF/xlsx it came from |
+| source_document_id | bigint FK → documents NULL | the salary `.xlsx` it came from |
+
+> **One document → many year tables (Sprint 2a).** A single salary `.xlsx` may carry **multiple year sheets** (e.g. COEAS Andalucía `smi 25` + `smi 26`; COEAS Estatal three sheets) — each sheet becomes its **own** `salary_tables` row (keyed on `convenio_id` + `year`, idempotent). Salary is extracted from **`.xlsx` only** this sprint (ADR-0014); in-PDF salary grids are deferred, so their convenios appear as **coverage gaps** (no `salary_tables` rows) rather than silent blanks.
 
 ### `salary_table_rows`
 One row per job category. Common concepts are typed columns (for reliable queries); the convenio-specific long tail is preserved in `raw_values`.
@@ -248,13 +260,15 @@ One row per job category. Common concepts are typed columns (for reliable querie
 | id | bigint PK | |
 | salary_table_id | bigint FK → salary_tables | |
 | job_category_id | bigint FK → convenio_job_categories | |
-| gross_annual | numeric(10,2) NULL | |
-| base_salary_monthly | numeric(10,2) NULL | |
-| extra_pay | numeric(10,2) NULL | pagas extra |
-| num_payments | int NULL | 12 / 14 |
-| hourly_rate | numeric(8,4) NULL | €/hora |
-| night_plus | numeric(10,2) NULL | plus nocturno |
-| raw_values | jsonb | every original column verbatim (SB, COMP, SMI comp, totals…) |
+| gross_annual | numeric(10,2) NULL | the annual total (`TOTAL` / `Total anual` / `Bruto anual` / `Bruto año`) |
+| base_salary_monthly | numeric(10,2) NULL | **canonical = `gross_annual / 14`** (see 14/12 note) |
+| extra_pay | numeric(10,2) NULL | pagas extra (where the source has a dedicated column) |
+| num_payments | int NULL | **14 when a gross annual is present** (Spanish 12-monthly-plus-2-extras norm) |
+| hourly_rate | numeric(8,4) NULL | €/hora (`€/hora` / `precio/hora` / `bruto/hora` / `salario hora`, or the bare annual-hours-labelled column e.g. `1742`) |
+| night_plus | numeric(10,2) NULL | plus nocturno / nocturnidad |
+| raw_values | jsonb | every original column verbatim (SB, COMP, Comp. SMI, totals, **and both the `14` and `12` figures**…) |
+
+> **14/12 canonical mapping (Sprint 2a — ADR-0014, plan-review catch 3).** Salary `.xlsx` express the monthly figure over **14** payments (12 months + 2 extras) and/or **12**; the column labels vary (`14`/`12`, `Bruto/mes 14 pagas`, `Salario Base` vs `Bruto mes`). To keep the typed columns comparable across formats, the **canonical** typed value is `base_salary_monthly = gross_annual / 14` with `num_payments = 14`. The original `/12` figure, the source's own `14` figure, and **all** other original columns are preserved **verbatim** in `raw_values` (nothing is lost). Decimal commas are normalized (`1.652,13 → 1652.13`), as the registry import does. `hr-ai` computes the typed columns and returns them; `hr-backend` (`salary:import`) writes the rows.
 
 ---
 
@@ -446,13 +460,15 @@ Tracks human handoffs surfaced to admins. The **expiry queue is primarily a quer
 
 This is the deterministic part of the pipeline (Laravel resolves the scope, then calls `hr-ai` with the query + scope filters). It carries the legal weight, so it is **not** left to LLM reasoning.
 
+> **Full-recall scope prefilter (Sprint 2a — plan-review catch 2).** The `hr-ai /retrieve` primitive applies the scope `WHERE` (the denormalized columns) and then ranks by similarity using an **exact (flat) scan** — it forces `enable_indexscan/enable_bitmapscan = off` for the query so the HNSW ANN index can **never post-filter and silently drop an eligible chunk**. For a legal-weight answer the eligible set must be returned in full; correctness is **never** traded for ANN speed. At the current corpus size the exact scan is trivially fast — **HNSW is not yet warranted**, and is kept only for when the corpus grows (at which point pgvector iterative index scan is the upgrade path). The verification harness asserts `returned == eligible_total` whenever `eligible_total ≤ k`. The retrieval primitive itself does **no** routing or answering (that is 2b); `hr-backend` resolves + passes scope and calls `hr-ai`.
+
 ---
 
 ## 12. Resolved decisions & remaining open item
 
 **Resolved (fold into Sprint 0):**
 
-1. **Embedding model & dimension.** `BGE-M3` (multilingual, self-hostable, open-weight), `EMBED_DIM = 1024`. Confirmed by a retrieval test on real ES + Euskara convenios as the **first task in `hr-ai`** before the `vector(1024)` column is locked.
+1. **Embedding model & dimension.** `BGE-M3` (multilingual, self-hosted in-process, open-weight), `EMBED_DIM = 1024`. **Confirmed in Sprint 2a** — the retrieval sanity test on real ES + Euskara chunks passed (89% same-language self-retrieval, threshold 85%; cross-language alignment present but not filtered), so `vector(1024)` is **locked**.
 2. **Language handling.** `documents.language` is recorded for citation and display only. Retrieval **never** filters or scopes by language — search runs across all languages. Language is therefore **not** a facet and **not** a lens.
 3. **Admin authentication.** Same email-OTP flow as employees. No schema change — `login_codes.account_type` already covers both.
 4. **`work_location`.** Stays **free text** for now. It is descriptive, not legally load-bearing (territory + convenio drive scoping, and both are controlled). Promote to a controlled `locations` vocabulary only if a future "by location" lens is wanted.
