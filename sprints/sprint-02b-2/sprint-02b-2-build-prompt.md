@@ -1,0 +1,46 @@
+# Sprint 2b-2 — Cursor build-authorization prompt
+
+> Paste the block below into the Sprint 2b-2 Cursor thread (the one that wrote `plan.md`). The plan is approved; this authorizes the **build**. Every `plan.md` §9 question is resolved below; apply them exactly. Build in the Phase A→B→C order, update the named docs in the same change, write `review.md`, and **STOP — do not commit**.
+
+---
+
+The Sprint 2b-2 plan (`hr-docs/sprints/sprint-02b-2/plan.md`) is approved. Build it now in the Phase A→B→C order. Honour **ADR-0006** (salary is SQL, exact, year-aligned — never a prose/embedded-table figure), **ADR-0007** (synthesis + router + grounding in `hr-ai`; scope + all writes + the decision in `hr-backend`; `hr-ai` writes only `document_chunks` + S3, never migrates), **ADR-0012/0013/0015**, and **ADR-0016** (router after the guardrail baseline, fail-safe). All `plan.md` §9 questions are resolved as follows.
+
+## Resolved open questions (apply exactly)
+
+1. **§9 E — mint a new escalation reason `salary_coverage_gap`** (one additive migration, the Correction-02 pattern: introspect the constraint, `DROP … IF EXISTS` then re-`ADD` with the full value set, working `down()`). Route salary coverage-gap escalations to `salary_coverage_gap`. **Retire `salary_not_in_chat`** — it is no longer emitted (after this sprint salary *is* in chat, so that name would lie in the trace/analytics). Leave the old value in the enum for historical rows; just stop emitting it. This is the **only** schema change this sprint.
+2. **§5 — `/ground` (the per-claim entailment check) uses the capable ANSWER model, not the small router model.** Entailment is subtle; do not judge grounding with the cheap classifier. The router (`/route`) uses `ROUTER_MODEL` (small/fast); `/ground` uses the answer model (`ANSWER_MODEL`).
+3. **§9 B — grounding granularity: any ungrounded claim → escalate the turn** (`low_confidence`), conservative/audit-first; the trace records which claim failed. Do not implement drop-and-re-evaluate.
+4. **§9 C — as-of year:** most-recent `salary_tables` row with `year ≤ as-of` (mirror `RetrievalProbe::probeSalary()`), year **stated explicitly** in the answer. **Future-only table (year > as-of) → escalate** (don't quote a not-yet-effective figure). **Older-only table → answer with the year stated** (transparent) — but **report at eyes-on** whether a staleness cutoff is wanted (a 2019 table quoted in 2026, even with the year shown, may mislead).
+5. **§9 D — single-turn constrained category pick** (the `needs_category` outcome): a closed pick from the convenio's `convenio_job_categories` (FK-validated, free text impossible), treated as **unverified**, shown in the answer ("según tu indicación"). No card, no multi-turn clarifier (parked → `roadmap.md` §7).
+6. **§9 F — recall hardening stays in `hr-backend`** (issue 2–3 `/retrieve` calls + union, dedupe by `chunk_id` keeping max score); `/retrieve` is unchanged. The `min_national_law` knob is the fallback **only if** the two-pass merge proves insufficient — report if you need it.
+7. **§9 A/G — router model:** a smaller/faster Claude via the ADR-0015 key path, EU endpoint; if its endpoint differs from the answer model, add the `deploy.md` §1 checkbox (still EU, signed DPA, zero-retention). Non-streaming retained.
+
+## Required addition — prove compound-decomposition is robust (do not skip)
+
+The Q10 fix depends on the router reliably emitting `subqueries` for a compound question; **if it classifies a compound question as single-topic prose, the Q10 baseline flip returns** (and the national-law pass does NOT help, because Q10's missing chunk was a *convenio* article). Therefore:
+- **Make the Q10 gate robust:** test **2–3 different compound phrasings** (e.g. "vacaciones y periodo de prueba", "¿cuántos días de vacaciones tengo y cuánto dura mi periodo de prueba?", a three-part one), not a single canned string. Each must decompose and ground **both/all** sub-topics from the **convenio** (no baseline flip). Report the decomposition reliability across phrasings in `review.md`.
+- **If decomposition proves flaky:** add a cheap **deterministic pre-split** (split on coordinating conjunctions / multiple clauses / multiple question marks) as a backstop feeding the per-sub-query retrieval — the LLM decomposition is primary, the deterministic split is the safety net. Report whether you needed it.
+
+## Hard constraints (from the docs + spec)
+- **Salary is SQL, exact, year-aligned** (ADR-0006) — the figure is the typed `salary_table_rows` cell bound to its category + year by construction; **never** read from a prose/embedded-table chunk; the answer states category + year explicitly and cites the salary-table source document (`chunk_id = null`). Coverage gap → escalate `salary_coverage_gap`, never guess.
+- **Router runs after the guardrail baseline** (sensitive / legal-medical / other-employee escalate first; the router never sees them — `"¿cuánto gana Pedro García?"` stays `other_employee_data`), and is **fail-safe** (uncertain/error/no-key → safe prose+floor path or escalate, never silent misroute). The deterministic salary pre-classifier (moved from `GuardrailService`) routes obvious salary to the SQL path **without** escalating (supersedes Correction-02).
+- **Self-reported facts never silently ground a cited answer** — the picked category is FK-constrained, unverified, and shown.
+- **The per-claim entailment grounding is the real gate** (Check A ∧ B ∧ figure-guard pre-check ∧ entailment); table-aware (digit-presence ≠ entailment); ungrounded → escalate. Salary answers are SQL-grounded and skip `/ground`.
+- **`hr-ai` never writes the DB / never migrates**; `hr-backend` owns all writes + the decision; the browser never sees the key and never calls a provider.
+- Build **nothing** out-of-scope: no history-search UI / role-scope enforcement (Sprint 5), no agentic multi-turn clarifier (parked), no lens UI (3), no board (4), no guardrails-config UI (6), no LLM tagging (7), no analytics (8); do **not** do the parked 2a wage-table-chunk cleanup.
+
+## Eyes-on / stress-test gates (run on the live stack with a real EU key; report each in `review.md`)
+- **Salary year-alignment — THE most important check.** On a **COEAS profile that has xlsx `salary_tables`** (the seeded salary-answerable profile, not `test-gipuzkoa`), ask for a category's salary → the answer's figure must be the **exact typed row** for the **stated year**, and you must **cross-check it against the actual `.xlsx`** (e.g. the COEAS Andalucía table: confirm the year's row matches the source cell — the literal antithesis of the Q5 misattribution). Plus: `test-gipuzkoa` salary (PDF-only) → **escalate `salary_coverage_gap`**; a covered-convenio-but-uncovered-category → escalate; a no-profile-category profile → the constrained pick → then a correct, "según tu indicación"-labelled answer.
+- **Router:** salary q → SQL; policy q → prose; off-domain q → escalate `off_domain`; a deliberately **ambiguous** q → **fail-safe** (prose+floor, not a confident misroute). `"¿cuánto gana Pedro García?"` still `other_employee_data` before the router.
+- **Grounding:** a **constructed non-numeric over-claim** (a prose answer asserting something the cited chunk doesn't support) → **escalate**; confirm the figure-guard pre-check still short-circuits an absent figure before the `/ground` call.
+- **Recall (the robust Q10 gate above):** 2–3 compound phrasings → both/all sub-topics grounded from the convenio; **trabajo a distancia** (silent) still → `national_law`.
+- **Citation numbering:** in-text `[Fuente N]` ↔ the FUENTES list, **1:1**, on a multi-source prose answer.
+- **Regression:** the **three gold tests** (Gipuzkoa vacaciones 31/26 → `official_convenio`; Navarra periodo de prueba 15/30/6 → `official_convenio`; trabajo a distancia → `national_law`) each now also passing the **entailment** gate; the **nine passing adversarial probes** unchanged (esp. Q8 `despido` → `sensitive_topic` before the router, provider never called). Both stopgaps verified **superseded**: salary answers (or gap-escalates) instead of blanket-escalating; entailment grounding is the gate, figure-guard demoted to pre-check.
+
+## When done
+Update `architecture.md` §5/§7, `data-model.md` §8 (the `router_decision` / `grounding` / `salary` trace blocks; the `salary_coverage_gap` reason; salary citation via `message_citations` `chunk_id=null`; the `needs_category` outcome), `roadmap.md` (**2b complete**; the agentic multi-turn clarifier parked in §7; the 2a wage-table-chunk cleanup still parked), `deploy.md` §1 (if a distinct router endpoint), `ADR-0016` (record the deterministic-pre-classifier-feeds-router consequence), and both code READMEs. Write `hr-docs/sprints/sprint-02b-2/review.md` documenting: the salary year-alignment cross-check (with the xlsx evidence), the router/grounding/recall/citation gate results, the decomposition-reliability report, and the regression. Then **STOP — do not commit until I review.**
+
+---
+
+After Cursor builds and writes `review.md`, paste it back. I'll review against the spec's acceptance criteria — verifying the **salary year-alignment against the real xlsx** (the Q5 antithesis) and the **compound-decomposition robustness** first — then you do your running-app eyes-on, then we commit and **2b is complete**.

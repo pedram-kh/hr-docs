@@ -364,8 +364,8 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 | id | bigint PK | |
 | message_id | bigint FK → chat_messages | |
 | document_id | bigint FK → documents | |
-| chunk_id | bigint FK → document_chunks NULL | |
-| page_number | int NULL | for source-page display |
+| chunk_id | bigint FK → document_chunks NULL | `null` for a **salary** citation (2b-2) — salary is structured `salary_table_rows`, never a chunk (ADR-0006); the citation points at the salary-table source document with no chunk/page |
+| page_number | int NULL | for source-page display (`null` for a salary citation) |
 
 ### `message_traces`
 The expandable "how I got here" trace — stored **structured**, so it doubles as an eval/QA dataset.
@@ -376,13 +376,15 @@ The expandable "how I got here" trace — stored **structured**, so it doubles a
 | message_id | bigint FK → chat_messages | |
 | trace | jsonb | profile detected, scope filters applied, router decision, retrieved chunks + scores, guardrail result, confidence |
 
-**`trace` shape (Sprint 2b-1)** — a strict **superset** of the 2a `retrieval:probe` shape (adds the guardrail, synthesis, floor-decision, and `authority_used` blocks):
+**`trace` shape (Sprint 2b-1, extended in 2b-2)** — a strict **superset** of the 2a `retrieval:probe` shape (adds the guardrail, router, salary, synthesis, grounding, floor-decision, and `authority_used` blocks):
 - `profile`, `scope_filters` — as resolved (convenio, `include_national_law`, `retrieval_status`, `as_of_date`).
-- `router_decision` — `null` in 2b-1 (no router until 2b-2).
-- `guardrail_check` — `{ fired, reason, rule }`. When `fired`, the pipeline short-circuited *before* any `hr-ai` call (no `retrieval`/`synthesis` blocks). `rule` ∈ `sensitive_topic` \| `legal_medical` \| `other_employee_data` \| `salary_topic`; the salary rule (Correction-02) carries `reason:"salary_not_in_chat"`.
-- `retrieval` — `{ eligible_total, returned, top_score, chunks:[…] }`. `eligible_total` + `top_score` distinguish **no eligible chunks** from **eligible but too weak**.
-- `synthesis` — `{ provider, model, citation_count, confidence, grounding_signal, authority_used, trace_fragment }` (absent when the guardrail or Check A short-circuited).
-- `floor_decision` — `{ retrieval_score_floor, answer_confidence_floor, check_a_retrieval, check_b_citations, check_c_confidence_tiebreaker, figure_grounding, authority_used, outcome, escalation_reason, note }`. Check C carries `used_as_gate:false` (tiebreaker only). **`figure_grounding`** (Correction-01) — `{ checked, grounded, figures:[…], ungrounded:[…] }` — the deterministic backstop to Check B: every load-bearing figure (number + unit) in the answer, and which (if any) were absent from all cited chunks in both digit and spelled-out Spanish form. When `grounded:false` the turn escalates with `note:"answer figure not grounded in cited chunk"`.
+- `router_decision` — **populated as of 2b-2** (ADR-0016); `null` only for a guardrail-escalated turn that never reached the router. Shape: `{ label, confidence, source, subqueries:[…], model, note, cross_path, trace_fragment }` where `label` ∈ `salary` \| `prose` \| `off_domain` and `source` ∈ `deterministic_salary` (the pre-classifier short-circuit, no LLM) \| `deterministic_salary_crosspath` (Correction-03 — a salary+prose compound) \| `llm` \| `fail_safe` (uncertainty/error/no-key → safe prose path). `subqueries` is non-empty only for a compound question (the recall-hardening sub-queries); for a `*_crosspath` decision it carries the **non-salary (prose) clauses**. **`cross_path`** (Correction-03) is `true` when a salary keyword matched but the question also has a clear non-salary clause → the turn is **escalated-with-note** (the prose half is surfaced, not silently dropped) rather than answered SQL-only.
+- `guardrail_check` — `{ fired, reason, rule }`. When `fired`, the pipeline short-circuited *before* the router and any `hr-ai` call (no `router_decision`/`retrieval`/`synthesis` blocks). `rule` ∈ `sensitive_topic` \| `legal_medical` \| `other_employee_data`. *(The 2b-1 `salary_topic` rule was removed in 2b-2 — salary now routes, it is not guarded.)*
+- `salary` — **2b-2**, present on a salary-routed turn: `{ convenio_id, as_of_date, outcome, year, year_selection, table_id, job_category_id, category_source, row:{…}, note }`. `year_selection` ∈ `exact` \| `most_recent_le` \| `future_only` \| `no_table`; `category_source` ∈ `profile` \| `picked_unverified` \| (`needs_pick`/`invalid`). `outcome` ∈ `answer` \| `needs_category` \| `escalate`. Salary answers are SQL-grounded and carry **no** `synthesis`/grounding block.
+- `retrieval` — `{ eligible_total, returned, top_score, passes:[…], rerank:{…}, chunks:[…] }`. **`passes`** (2b-2 recall hardening) records each `/retrieve` call (`kind` ∈ `main` \| `subquery` \| `national_law`, its `query`, `returned`, `eligible_total`, `top_score`) over a **widened candidate pool** (`retrieval_pool_k`, ~25; national-law pass `retrieval_national_law_k`, ~8) before the union (dedupe by `chunk_id`, max score). **`rerank`** (Correction-03, Fix 1) — `{ pool_k, pool_size, epsilon, synthesis_cap, boosted:[{ chunk_id, topics:[…], from_score, to_effective, above_national_law_chunk_id }] }` — the widened-pool **precedence re-rank**: each governing convenio chunk that shares a topic anchor with a `national_law` chunk is lifted just above the highest same-topic baseline (`to_effective`), so the convenio's governing chunk **displaces** the baseline; `synthesis_cap = SYNTHESIS_CHUNK_CAP + 2·|subqueries|` (grows for a compound union so a sub-topic isn't truncated below its recall). A `national_law` chunk whose topic has no convenio counterpart is **not** boosted (silent-convenio topics still fall back to the baseline). `eligible_total` + `top_score` distinguish **no eligible chunks** from **eligible but too weak**.
+- `synthesis` — `{ provider, model, citation_count, confidence, grounding_signal, authority_used, trace_fragment }` (absent when the guardrail/router/Check A short-circuited).
+- `aggregation_guard` — **Correction-03 (Fix 2)**, present (`{ fired:true, shape:"vague_total_dias_libres" }`) only when a vague "total días libres" aggregation escalated **before** retrieval (no `retrieval`/`synthesis` block); the turn is `low_confidence`.
+- `floor_decision` — `{ path?, retrieval_score_floor, answer_confidence_floor, check_a_retrieval, check_b_citations, check_c_confidence_tiebreaker, figure_grounding, grounding, authority_used, outcome, escalation_reason, note }`. `path:"salary_sql"` marks a salary turn (no A/B checks); **`path:"salary_prose_crosspath"`** (Correction-03, Fix 3) marks a salary+prose cross-path compound escalated-with-note, carrying `cross_path:{ detected_by, prose_subqueries:[…] }`. Check C carries `used_as_gate:false` (tiebreaker only). **`figure_grounding`** (Correction-01, now a **pre-check** feeding the entailment gate) — `{ checked, grounded, figures:[…], ungrounded:[…] }` — every load-bearing figure (number + unit) and which were absent from all cited chunks in both digit and spelled-out Spanish form; an absent figure short-circuits *before* the `/ground` call. **`grounding`** (2b-2 §5, the real gate) — `{ checked, grounded, claims:[{ claim, kind, grounded, supporting_source }], ungrounded:[…], gate:"entailment", error?, trace_fragment }` — the per-claim entailment verdict from the capable answer model; any ungrounded **substantive** claim → escalate (`low_confidence`). **`kind`** (Correction-01) ∈ `substantive` \| `provenance`: a *substantive* claim (rule/figure/entitlement/duration/condition/scope) must be entailed; a pure *provenance* claim ("según tu convenio") is exempt (the citation carries the origin). The precision guard defaults anything not explicitly tagged provenance to `substantive`, so a fabricated figure under an attributive wrapper is still gated. `ungrounded` lists only failed *substantive* claims; `trace_fragment` carries `substantive_count` / `provenance_count`. `outcome` ∈ `answer` \| `escalate` \| `needs_category`.
 - **`authority_used`** — which authority level(s) the answer drew on (`official_convenio`, `national_law`, `internal_hr_ruling`), computed deterministically from the *cited* chunks so an auditor can see **"answered from the convenio"** vs **"answered from the baseline."**
 
 ### `answer_model_settings`
@@ -397,7 +399,7 @@ Single-row external answer-model config (ADR-0015). The raw key is **never** an 
 | configured_at | timestamp NULL | |
 | updated_by | bigint FK → admins NULL | |
 
-> Set once via the admin "Answer model" screen → encrypted at rest → masked → rotatable (replace, never read back) → decrypted only in `ChatService` immediately before a `/synthesise` call and passed to `hr-ai` in the request **body**. The browser never sees the key and never calls the provider.
+> Set once via the admin "Answer model" screen → encrypted at rest → masked → rotatable (replace, never read back) → decrypted only in `ChatService` for the turn and passed to `hr-ai` in the request **body** for `/route`, `/synthesise`, and `/ground` (2b-2 reuses the same key path for all three; the router uses `ROUTER_MODEL`, grounding the answer `ANSWER_MODEL`). The browser never sees the key and never calls the provider.
 
 ---
 
@@ -411,14 +413,14 @@ Single-row external answer-model config (ADR-0015). The raw key is **never** an 
 | chat_session_id | bigint FK → chat_sessions NULL | |
 | source_message_id | bigint FK → chat_messages NULL | |
 | employee_id | bigint FK → employees | |
-| reason | enum | `low_confidence` \| `sensitive_topic` \| `off_domain` \| `explicit_request` \| `conflict` \| `salary_not_in_chat` |
+| reason | enum | `low_confidence` \| `sensitive_topic` \| `off_domain` \| `explicit_request` \| `conflict` \| `salary_coverage_gap` (2b-2) \| ~~`salary_not_in_chat`~~ (retired in 2b-2 — kept in the enum for historical rows, no longer emitted) |
 | status | enum | `new` \| `assigned` \| `in_progress` \| `resolved` \| `closed` |
 | assigned_to | bigint FK → admins NULL | |
 | topic_id | bigint FK → topics NULL | |
 | created_at | timestamp | |
 | resolved_at | timestamp NULL | |
 
-> **Sprint 2b-1 is decide-and-queue:** on any escalate outcome `hr-backend` creates the card with `status = new`, `assigned_to = null`, linked to the session + source `user` message, with the `reason` (`sensitive_topic` or `salary_not_in_chat` from the guardrail, else `low_confidence`). `salary_not_in_chat` (Correction-02) is kept **distinct** from `low_confidence`/`sensitive_topic` so the trace and future analytics can tell "salary deferred to a human" apart from a genuine low-confidence escalation. The board that *works* cards is Sprint 4.
+> **Decide-and-queue (2b-1, extended 2b-2):** on any escalate outcome `hr-backend` creates the card with `status = new`, `assigned_to = null`, linked to the session + source `user` message, with the `reason` (`sensitive_topic` from the guardrail; `off_domain` or `salary_coverage_gap` from the router/salary path; else `low_confidence`). **2b-2:** the salary route now **answers** in chat from `salary_tables` (or asks the single-turn category pick — *not* an escalation, no card); only a genuine coverage gap escalates, with the renamed reason **`salary_coverage_gap`** (kept distinct from `low_confidence` so analytics can tell "salary unavailable" from a weak-retrieval escalation). The old `salary_not_in_chat` is **retired** (no longer emitted — after 2b-2 salary *is* in chat, so the name would lie) but left in the enum for historical 2b-1 rows. The board that *works* cards is Sprint 4.
 
 ### `escalation_resolutions`
 The resolution, and the link to the knowledge article it becomes (the flywheel).
