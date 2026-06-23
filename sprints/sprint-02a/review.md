@@ -464,6 +464,13 @@ Limpieza Navarra p46 = salary table); spurious `eu` is gone corpus-wide.
   Limpieza (eu=78), Alojamientos 2020–24 (eu=65) & 2025–28 (eu=74), Gestores
   información (eu=69). **Every other document is `eu=0`.** The bilingual footer is
   still stripped on all of them (catch-1 win intact).
+  > **Correction (Sprint 2c, registry cut as-of 2026):** of those four BOG docs,
+  > **three are now registry-`active`** — Limpieza (id 46), Alojamientos 2025–28
+  > (id 48), Gestores información (id 50) — and **one is `historical`**:
+  > Alojamientos 2020–24 (id 41), expired and superseded by id 48. The standing
+  > corpus assertion is therefore **"`eu` only on the three active bilingual docs
+  > (46/48/50) + one historical (41)"**; id 41 is untouched by the 2c re-chunk but
+  > still counts in the corpus-wide "`eu` only on genuinely bilingual docs" rule.
 - **Over-strip sanity flag (Change 3) fired on 1 doc:** `[29] COEAS Andalucía`
   (`322 stripped vs 277 kept`). **Reviewed → benign:** BOJA is a verbose gazette
   with many short *repeating* header/footer lines per page (masthead, depósito

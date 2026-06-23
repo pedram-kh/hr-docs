@@ -38,7 +38,14 @@ The employee chat (Sprint 2b) sends the **employee's question + retrieved conven
 - [ ] Chunk embed (`chunks:embed`) and salary import (`salary:import`) run against production (they populate the prod database; dev vectors do **not** carry over).
 - [ ] Employee directory loaded (CSV bulk upload / manual), per ADR-0004 (Sprint 5).
 
-## 4. Operational readiness (placeholder — see roadmap pre-go-live phase)
+## 5. Corpus coverage — unanswerable / expired convenios (added: Sprint 2c)
+
+The Sprint 2c re-chunk used the **registry** as the arbiter of the active set; doing so surfaced two go-live coverage risks. Neither blocks a build; both must be **resolved or explicitly accepted** before serving employees in the affected province×sector cells.
+
+- [ ] **Scanned, no-extractable-text convenios → currently unanswerable.** Some registry-`active` convenios are **image-only PDFs** with no extractable text, so they produce **no chunks** and the chat cannot answer from them: **`CONVENIO DEPORTE NAVARRA 2025–2028` (id 89)** and **`PACTO CULTURA NAVARRA` (id 91)** (both also `under_review`). They need **OCR** before go-live, or an **explicit scope exclusion** so the gap is acknowledged rather than silent. *(Same family as any other scan in the corpus.)*
+- [ ] **Expired convenios with no loaded active successor → coverage gaps.** The registry holds these convenio **prose texts only as `historical`** (validity ended 2024/2025) with **no `active` successor loaded**, so their province×sector has **no current document** to answer from: Andalucía **COEAS** (id 29), Vizcaya **Intervención Social** (id 18 + family 13/16), Huesca **Hostelería** (id 33), Salamanca **Oficinas** (id 51), Gipuzkoa **Intervención Social** (id 45), Navarra **Hostelería** (id 75) and **Oficinas-despachos prose** (id 93, where only a salary-table PDF id 94 is active), Deporte **Estatal** (id 69), Asturias **Deportes** (id 52), Navarra **Deporte** (id 80). Two further successors exist but are stuck `under_review` (not yet trustworthy): **COEAS Estatal** (id 72), **COEAS Madrid** (id 24). Before go-live: **load/activate the current text**, **clear the `under_review` ones**, or **accept the gap** per cell. (Feeds Sprint 8 coverage-gap detection — see `roadmap.md`.)
+
+## 6. Operational readiness (placeholder — see roadmap pre-go-live phase)
 
 - [ ] Monitoring + alerting (service-down, escalation-rate spikes).
 - [ ] Rate limits (abuse / cost protection — especially the external answer API).
