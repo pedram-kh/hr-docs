@@ -183,7 +183,7 @@ Navarra terse `¿qué vacaciones tengo?` ×13 (5 + 8 diagnostic):
 ## 6. Findings logged
 
 1. **Substrate fix succeeds.** The buried-grant artifact is fixed at the chunk shape: the Navarra vacaciones grant ranks **#1 on raw score** and is **not boosted** → the precedence re-rank is de-crutched to defence-in-depth; **0 baseline (30 naturales) leakage** across all runs.
-2. **Terse answer-rate residual is answer-loop, not substrate (action item for review).** The terse vacaciones gate sits ~50% because the **per-claim grounding gate** escalates the richer multi-claim synthesis (Check A passes 100%). Fix belongs in the **answer loop** (synthesis citation-binding / grounding tolerance), explicitly out of this task. Surfaced here so it isn't lost.
+2. **Terse answer-rate residual is answer-loop, not substrate** — **now fixed in Correction-04 (§8).** The terse vacaciones gate sat ~50% because the **per-claim grounding gate** escalated the richer multi-claim synthesis; the root cause was **`/ground` output-token truncation** (a fully-grounded answer whose per-claim JSON exceeded the 1024-tok cap), not retrieval, binding, or entailment. The fix (budget bump + retry-once-on-truncation) restored the rate to **8/8** with the fabrication gate intact — see §8.
 3. **Registry shrinks the live convenio answerable set to 12** — many province×sector cells are **expired with no active successor** (§1.2) or **scanned/`under_review`** (§1.3, §6 of deploy.md). This is a **go-live coverage** matter (now in `deploy.md` §5; feeds Sprint 8 coverage-gap detection).
 4. **Salary-table mistag (id 94)** typed `convenio_text`/`active` — excluded per ADR-0006, flagged for retag (roadmap follow-up).
 5. **Dev-infra:** `host.docker.internal` is unreliable in this Docker Desktop session; `hr_ai` S3 must use the bridge gateway `172.17.0.1:9900` (the `.env`-documented remedy). Recorded in §0.
@@ -193,5 +193,76 @@ Navarra terse `¿qué vacaciones tengo?` ×13 (5 + 8 diagnostic):
 - **Code:** `hr-ai/app/chunking/chunker.py` (rewritten — article-boundary detector + 3 guards + size fallback; packing removed), `hr-ai/app/config.py` (cap 400/512 → **512/800**). New tool `hr-ai/scripts/rechunk_survey.py` (2c regression/recompute harness). `extract_columns.py` and the whole answer loop **unchanged**.
 - **Docs:** `architecture.md` (§5 Sprint-2c block), new **ADR-0017**, ADR-0013 supersession note, `data-model.md` (population note), `roadmap.md` (2c row done + Correction-03 residual closed + Estatuto Sprint-8 follow-up + id-94 retag), `deploy.md` (§5 coverage: scans + expired-no-successor), `sprint-02a/review.md` ("four bilingual" → three active + one historical id 41), `hr-ai/README.md`.
 - **Data:** `document_chunks` re-embedded for the 12 active prose convenios (idempotent). No migrations. No other table written.
+
+---
+
+## 8. Correction-04 (answer-loop) — `/ground` truncation (the terse-vacaciones residual)
+
+Closes the §5.2 / finding-2 follow-up. This is an **answer-loop** change (the grounding adapter), deliberately *outside* the 2c substrate boundary — approved separately. The chunker, retrieval, precedence re-rank, and synthesis prompt are unchanged.
+
+### 8.1 Root cause (decision-trace diagnosis)
+A read-only trace of the escalating terse runs showed the escalation is **not** retrieval, citation-binding, or entailment:
+- **Retrieval:** the clean Art. 9 chunks rank #1/#2/#3 (9403/9404/9405) every run — Check A passes 100%.
+- **Binding:** synthesis binds a `[Fuente N]` to every substantive claim, resolving to the right sub-chunks (37 días→9403, 9/4 adicionales→9404 [9.3], bloques/IT→9403/9405).
+- **The real cause:** `claude.py::ground()` capped the `/ground` response at **`max_tokens=1024`**. A richer per-article answer decomposes into ~13–16 atomic claims needing **~1,150 tok** of claim-by-claim JSON, so the response hit **`stop_reason=max_tokens`**, `_extract_json` failed, and the conservative *"unparseable → not grounded"* branch escalated a **fully-grounded** answer.
+
+Deterministic confirmation — the exact long escalating answer (1,942 chars, 16 claims) fed back through `/ground`:
+
+| `/ground` max_tokens | stop_reason | output_tokens | result |
+|----------------------|-------------|---------------|--------|
+| 1024 (old) | **max_tokens** | 1024 (capped) | JSON truncated → **UNPARSEABLE** → escalate |
+| 4096 (new) | end_turn | 1,152 | **PARSES, all_grounded=true, 16 claims** |
+
+The 2c re-chunk *amplified* this (and is why it surfaced now): per-article chunks made 9.1/9.3/9.7 individually retrievable, so synthesis writes a longer, more complete answer → tips `/ground`'s JSON over the old cap. Short answers (≤~9 claims) always fit, hence the ~50% split.
+
+### 8.2 Fix (`hr-ai/app/providers/claude.py::ground()` + a distinct hr-backend trace note)
+- **Budget bump:** `/ground` output cap **1024 → 4096** tok (`GROUND_MAX_TOKENS`); worst observed ground response ≈1,152 tok → comfortable headroom.
+- **Retry-once-on-truncation (safety hardening, not optional):** if the response *still* stops at `max_tokens`, retry **once** at **8192** (`GROUND_MAX_TOKENS_RETRY`). Only if it truncates **again** does it escalate — and then as a **distinct outcome**: `grounded=false`, `ungrounded=["<grounding check truncated>"]`, `trace_fragment.grounding_truncated=true` / `retried_on_truncation=true`, and `floor_decision.note = "grounding check truncated after retry (escalated)"`. A truncation is **never** conflated with a genuine ungrounded claim.
+- **The floor is unchanged — never weakened:** the "unparseable/truncated → escalate" branch stays as the conservative floor; we only give the gate room to finish. `/ground` still runs on the **answer model** (`claude-sonnet-4-5`), table-aware, per-claim.
+
+Deterministic unit proof of the new control paths (fake provider responses, no key):
+
+| scenario | calls | result |
+|----------|-------|--------|
+| both attempts truncate | 2 | `grounded=false`, `grounding_truncated=true`, `retried_on_truncation=true`, `max_tokens=8192` (escalates, distinct note) |
+| truncate → retry succeeds | 2 | `grounded=true`, `retried_on_truncation=true` (recovered) |
+| no truncation | 1 | normal path, `max_tokens=4096` |
+
+### 8.3 Both-directions re-verify (live stack, real key, re-chunked corpus)
+
+**Direction A — terse rate restored:**
+
+| check | result |
+|-------|--------|
+| terse `¿qué vacaciones tengo?` (Navarra) ×8 | **8/8 answer**, every one **37 días laborables**, cited to the clean Art. 9 chunk (**doc 95**), **0/8 baseline** (30 naturales never appears) |
+| natural compound (vacaciones + periodo de prueba) ×5 | **5/5 answer**, 37 + 15/30, doc 95 |
+
+The previously-truncating rich answers now show `completion_tokens` up to **1,296** and ground cleanly at 4096 (`retried_on_truncation` never needed to fire on live traffic — 4096 alone absorbs the real distribution).
+
+**Direction B — the gate still catches real fabrication (critical — bigger budget must not pass bad answers):**
+
+| fabrication probe | result |
+|-------------------|--------|
+| non-numeric over-claim ("seguro médico gratuito / coche de empresa"), each sentence forced `[Fuente 1]` to a real but non-supporting chunk | **grounded=false** — both substantive claims F |
+| attributive-wrapped fabricated figure ("Según tu convenio, **9 días** adicionales… asuntos propios") forced to an unrelated chunk | **grounded=false** — "Según tu convenio" `provenance/T` (exempt), the figure `substantive/F` (caught); precision guard holds |
+| P10 cross-context "9 días adicionales 2024–2027" cited against chunks that don't contain it | **grounded=false** — the real "37 días" grounds (T), the cross-context adicionales claim flagged (F) |
+
+All three escalate `grounded=false` on the answer model. **A larger budget only removes truncation failures; it never lets a genuinely ungrounded claim through.**
+
+**Direction C — no regression:**
+
+| gold / round-2 | result |
+|----------------|--------|
+| Gipuzkoa vacaciones | **31/26**, cited **only doc 46** (scope isolation) |
+| Navarra periodo de prueba | **15/30**, doc 95 |
+| trabajo a distancia (Navarra & Gipuzkoa) | **national_law**, doc 73 (Ley 10/2021) |
+| salary exact-from-SQL (Andalucía) | **router=salary, path=salary_sql**, exact € |
+| sensitive (acoso) | **escalate before router** (guardrail, router=null) |
+| off-domain | **escalate, off_domain** |
+
+### 8.4 Correction-04 changes
+- **Code:** `hr-ai/app/providers/claude.py` (`ground()` — `GROUND_MAX_TOKENS=4096`, `GROUND_MAX_TOKENS_RETRY=8192`, retry-once-on-truncation, `grounding_truncated`/`retried_on_truncation` trace fields). `hr-backend/app/Services/ChatService.php` (distinct `floor_decision.note` on a truncated check). No DB/migration; `/ground` HTTP contract unchanged (the flags ride the existing free-form `trace_fragment`).
+- **Docs:** this §8; `data-model.md` (the `grounding.grounding_truncated` trace note).
+- **Ops:** `hr_ai` restarted so uvicorn loaded the new `claude.py` (no `--reload`); `/health` 200, BGE-M3/1024 + `claude-sonnet-4-5` confirmed.
 
 **STOP — awaiting review; not committed.**
