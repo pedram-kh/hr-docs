@@ -73,6 +73,16 @@ The view form, expand state, and card placement are pure front-end state — the
 
 Each document's card shows: title and scope breadcrumb; facet tags **with inline provenance** (a confirmed tag looks different from an unverified AI-proposed one); validity window with an expiry countdown; retrieval status (active / historical / draft); authority level; version lineage (predecessor/successor); the change-log timeline; and a "test a question against this document" action. Provenance and history come from `tag_events`; lifecycle fields come from `documents`.
 
+### Knowledge Center — bounded edit, append-only provenance, read-only sandbox (Sprint 3)
+
+The lens hierarchy (§4) and document card are realized in the admin console as **Knowledge → Map**. Three rules govern this surface:
+
+- **Bounded edit, never restructure.** The card edits only a fixed set of facets — convenio, document_type, topics, validity, retrieval_status, tagging_status — and only via **FK pickers into the existing controlled vocabulary**. Territory and sector are **derived** from the convenio and are not editable. The UI never creates, renames, merges, re-scopes, or approves vocabulary; that stays in the deliberate `registry:import` path (ADR-0011). The topic picker offers only `approved` topics; AI topic *proposal* is Sprint 7.
+- **Append-only provenance.** Every label edit is a `DB::transaction` that writes the lifecycle column **and** appends an `admin_manual` row to `tag_events` (old→new, actor_id). History is never UPDATE/DELETE-d. A **scope-affecting** save (convenio reassign, retrieval_status flip, validity edit — each moves *which employees receive the document*) requires an explicit `confirm_scope_change` (the UI shows a system-behavior warning; the API returns 409 without it). Sprint 3 is the **first writer of `document_topics`** (human topic-tagging).
+- **Read-only sandbox; the answer loop is frozen.** "Test a question against this document" reuses the answer pipeline scoped to one document via an additive, read-only hr-ai `POST /sandbox-retrieve` (ranks `document_chunks WHERE document_id = :id`) orchestrated by an **independent `SandboxService`** (retrieve → /synthesise → /ground, same per-call answer-model key path). It **persists nothing** — no chat/escalation rows. `ChatService` and the employee `/retrieve` are **not** modified (the 2b answer loop carries legal weight and is durably closed); the small orchestration duplication in `SandboxService` is accepted on purpose. hr-ai remains read-only here (writes only `document_chunks` + S3, never migrates).
+
+Coverage gaps (deploy.md §5) are surfaced as first-class map markers, derived from existing data (active-but-0-chunk = unanswerable; expired-with-no-active-successor = a hole; convenio-text named like a salary "tabla" = suspected mistag). A `date_expired_active` *staleness* signal is kept **distinct** from a hole (it is `--neutral`, not `--warning`/`--danger`) so an answerable scope is never mislabeled as a gap.
+
 ---
 
 ## 5. The retrieval pipeline

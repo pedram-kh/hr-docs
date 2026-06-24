@@ -449,7 +449,7 @@ The complete history behind every facet decision. This is what powers the change
 | id | bigint PK | |
 | entity_type | varchar | `document` \| `document_topic` \| … |
 | entity_id | bigint | |
-| facet | varchar | `convenio` \| `territory` \| `sector` \| `document_type` \| `topic` \| `validity` |
+| facet | varchar | `convenio` \| `territory` \| `sector` \| `document_type` \| `topic` \| `validity` \| `retrieval_status` \| `tagging_status` |
 | old_value | text NULL | |
 | new_value | text NULL | |
 | source | enum | `filename_parse` \| `ai_agent` \| `admin_manual` \| `system` |
@@ -457,6 +457,20 @@ The complete history behind every facet decision. This is what powers the change
 | confidence | numeric(4,3) NULL | for parse/AI |
 | note | text NULL | |
 | created_at | timestamp | |
+
+> **Sprint-3 facet-string conventions (bounded edit).** The Knowledge-Center card adds three editable lifecycle facets, written as `admin_manual` events (no schema change):
+> - `retrieval_status` — `old_value`/`new_value` are the enum (`draft`/`active`/`historical`).
+> - `tagging_status` — the enum (`auto_proposed`/`under_review`/`verified`).
+> - `validity` — a single event with `old_value`/`new_value` = `"{start}..{end}"` (e.g. `2024-01-01..2027-12-31`), covering an edit to either bound.
+> - `topic` — add = `old_value NULL`, `new_value` = topic name; remove = `old_value` = topic name, `new_value NULL`. The matching `document_topics` row is created/deleted in the same transaction (Sprint 3 is its first writer; `source = admin_manual`, `verified_by`/`verified_at` set).
+>
+> Every such event is append-only (never UPDATE/DELETE). A scope-affecting edit (`convenio`, `retrieval_status`, `validity`) is gated behind an explicit confirmation in the write path.
+
+> **Coverage-gap derivations (Sprint 3, deploy.md §5).** The map's gap markers are **queries over existing data**, not a new pipeline or any new column:
+> - **unanswerable** — prose-type (`convenio_text`/`national_law`/`partial_agreement`) + `retrieval_status = active` + **0** rows in `document_chunks`.
+> - **expired_no_successor** — a convenio with `historical` prose but **no** `active` prose (a real coverage hole).
+> - **suspected_mistag** — `document_type = convenio_text` + `active` + title/`source_filename ILIKE '%tabla%'` (conservative; never auto-applied).
+> - **date_expired_active** *(staleness, distinct from a hole)* — `active` prose whose `validity_end < current_date`. Rendered `--neutral`: the scope is still answerable, so it is **not** a gap. Kept separate so an answerable scope is never mislabeled.
 
 ### `document_review_tasks`
 Tracks human handoffs surfaced to admins. The **expiry queue is primarily a query** over `documents.validity_end` + `retrieval_status = active`; this table tracks the resulting tasks and the successor-handoff confirmation.
