@@ -162,6 +162,37 @@ Layered (ADR-0002 covers the vocabulary side; guardrails are configured in the a
 
 When the pipeline can't answer confidently — or the topic is sensitive, off-domain, or the asker requests it — an `escalation_card` is created carrying the conversation context and trace. HR works it on a board (New → Assigned → In Progress → Resolved). On resolution, HR is prompted to **turn the answer into a knowledge article**: a new `documents` row, `authority_level = internal_hr_ruling`, that **inherits the original asker's scope** (scope confirmed before publish). This makes the system smarter with use. Authority rule: an internal ruling must not override an official convenio for the same scope — on conflict, re-escalate.
 
+### 8.1 The board (Sprint 4)
+
+`hr-backend` owns every write; `EscalationController` exposes the board. Reads (`GET /admin/escalations`, `GET /admin/escalations/{uuid}`) are open to any admin; writes (assign/move/reply/resolve) are gated by the **`escalation.work`** ability (super_admin + hr_agent; denied to auditor and knowledge_editor). Status moves are **server-validated** against a legal-transition map, and **every** status change, assignment, reply, resolution, conversion, and blocked publish is appended to **`escalation_events`** (append-only — never an UPDATE/DELETE of history; the same posture as `tag_events`).
+
+**Card-scoped conversation viewing only.** The card detail serves the messages of `card.chat_session_id` and the escalating turn's trace — keyed strictly to the card's own session, with **no caller-supplied employee/session parameter**. That keying *is* the access guard this sprint. There is no full-history browser and no role-scoped-access enforcement yet (Sprint 5).
+
+### 8.2 The two-way surface — a human reply into the employee's chat
+
+The chat becomes two-way via a new message-author kind. `chat_messages.role` gains **`hr_agent`** (additive CHECK migration) plus a nullable **`author_admin_id`** FK → `admins`. An `hr_agent` message is a **human turn**: no `message_traces`, no `message_citations` (it is not a synthesised answer). The reply endpoint writes the `hr_agent` message into the card's session and audits a `replied` event.
+
+The employee sees it through `GET /chat/session` (employee-auth, **self-scoped** to the caller's own most-recent session). The chat screen hydrates on mount and **polls (~25 s) + re-hydrates on window focus** — no websockets, no notifications this sprint. A human reply is attributed as **"Recursos Humanos"** with a distinct bubble (`chat-bubble--agent`) — **never the admin's name/email/PII**, and never mistakable for a bot answer. (The admin board view shows the authoring admin's name — internal attribution.)
+
+A follow-up question continues the same session (the card-scoped view shows it, since it is session-bound); a follow-up that independently escalates creates a **new** card. No auto-reopen/threading.
+
+### 8.3 Save-as-knowledge — publish-time enforcement of the no-silent-override rule
+
+On resolve, HR may convert the resolution into a published `internal_hr_ruling`. Two non-negotiable gates fire, in order:
+
+1. **Scope-confirm (409).** Publishing inherits the asker's convenio (territory + sector ride it) and changes who is answered, so it cannot publish without `confirm_scope_change` — reusing the Sprint-3 bounded-edit confirm pattern. The ruling is **single-convenio scoped**; a national/multi-scope ruling is out of scope (Structured Reference Knowledge, Sprint 7).
+2. **No-override conflict fence (409).** A conservative **scope+topic** block: publish is blocked when an **active `official_convenio`** in the asker's convenio scope shares the ruling's assigned topic. The agent assigns a topic at publish (the Sprint-3 approved-topic picker) — this sharpens the gate and seeds the topic lens. With **no topic**, the gate falls back to a **scope-only** block (any active official convenio in scope → block) — it over-blocks, the *safe* failure direction (a false block routes to a human; a false "no conflict" is the exact harm). On a block: nothing is published, a `publish_blocked` event is recorded, and the card is returned to **In Progress** (routed to a human). The rule is **enforced at publish — never advisory**.
+
+The guardrail baseline still fires first: a published ruling on a genuinely sensitive topic is unreachable, because the 2b-1 guardrail escalates *before* retrieval. (Whether to restrict `convert` by escalation reason is a Sprint-6 guardrails-policy matter — noted, not built.)
+
+### 8.4 A1 — how a published ruling becomes retrievable (hr-ai untouched)
+
+The ruling is made retrievable through the **existing** ingestion path, with **no change to hr-ai or the 2b answer loop** (both frozen/durably-closed). `hr-backend` renders the agent's `resolution_text` to a clean, deterministic PDF (`RulingPdf` — single column, no header/footer, WinAnsi encoding, widened word-spacing, no end-of-line hyphenation), stores it to S3, sets `storage_path`, then runs the same `/extract` (→ `document_pages`, the citation surface) and `/embed` (→ `document_chunks`, scope resolved by hr-backend) calls every prose document uses. `internal_hr_ruling` was added to `ChunksEmbed::IN_SCOPE_TYPES` (a code change, not a migration). The PDF is engineered so the 2a heuristics (de-spacing, repetition-furniture, two-column detection) cannot mangle it; **publish verifies the round-trip is lossless** (embedded chunk text == typed text, whitespace-normalised) and reports it — if a clean PDF were ever mangled, the documented fallback is A2 (a tiny additive hr-ai inline-text branch). The ruling's chunks carry `authority_level = internal_hr_ruling` and flow through the unchanged retrieve/synthesise/ground path.
+
+### 8.5 Known boundary (Q-F) — the symmetric convenio-side re-check
+
+The publish gate covers conflicts **at publish time**. A convenio added or edited **later** that conflicts with an already-published ruling is **not** auto-demoted at retrieval (2b precedence is frozen; precedence treats a ruling as governing, like a convenio). This is an accepted, documented boundary. The symmetric check — publishing/editing an `official_convenio` should re-scan existing rulings for new conflicts — belongs in a later precedence/guardrails sprint and is largely latent until a self-service convenio-upload path exists.
+
 ---
 
 ## 9. Authentication & sessions

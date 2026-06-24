@@ -339,7 +339,7 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 
 ## 8. Group E — Chat & traces
 
-> **Populated by `hr-backend` from Sprint 2b-1 (ADR-0007: `hr-backend` owns ALL writes).** Each employee turn writes, in one transaction: the `user` + `assistant` `chat_messages`, the assistant turn's `message_citations` (answer turns only), its `message_traces` row (every turn — answer *and* escalation), and an `escalation_cards` row on escalate. Sessions continue the employee's most-recent session within a 24h window, else start a new one (no session list/picker until Sprint 5). **Role-scoping-ready shape:** every row keys back to `employee_id` (via `chat_sessions`), so the Sprint-5 role-scoped access (`hr_agent` sees escalated conversations, not every history) is a query filter, not a reshape — no enforcement is built in 2b-1.
+> **Populated by `hr-backend` from Sprint 2b-1 (ADR-0007: `hr-backend` owns ALL writes).** Each employee turn writes, in one transaction: the `user` + `assistant` `chat_messages`, the assistant turn's `message_citations` (answer turns only), its `message_traces` row (every turn — answer *and* escalation), and an `escalation_cards` row on escalate. Sessions continue the employee's most-recent session within a 24h window, else start a new one (no session list/picker until Sprint 5). **Role-scoping-ready shape:** every row keys back to `employee_id` (via `chat_sessions`), so the Sprint-5 role-scoped access (`hr_agent` sees escalated conversations, not every history) is a query filter, not a reshape — no enforcement is built in 2b-1. **Sprint 4** makes the chat two-way: HR replies are stored as `hr_agent` `chat_messages` in the same session, and the employee re-reads its own session via the self-scoped `GET /chat/session` (hydrate on mount + poll). Card-scoped viewing only — no full-history browser yet (Sprint 5).
 
 ### `chat_sessions`
 | column | type | notes |
@@ -355,9 +355,12 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 |---|---|---|
 | id | bigint PK | |
 | session_id | bigint FK → chat_sessions | |
-| role | enum | `user` \| `assistant` |
+| role | enum | `user` \| `assistant` \| **`hr_agent`** *(Sprint 4, additive)* |
+| author_admin_id | bigint FK → admins NULL | **Sprint 4 (additive):** the admin who wrote an `hr_agent` (human) reply; `null` for `user`/`assistant` rows |
 | content | text | |
 | created_at | timestamp | |
+
+> **Sprint 4 additive migration (two-way chat).** `role` gains **`hr_agent`** — a **human** turn (HR replies into the employee's chat), distinct from a synthesised `assistant` answer: it carries **no** `message_traces` and **no** `message_citations`. The value is added to the `role` CHECK via the proven introspect-drop-readd idiom (reversible, idempotent; the `…add_salary_coverage_gap…` pattern), alongside the nullable **`author_admin_id`** FK. The employee never sees the admin identity — a human reply surfaces as **"Recursos Humanos"** (no PII); the admin board view shows the authoring admin.
 
 ### `message_citations`
 | column | type | notes |
@@ -436,6 +439,24 @@ The resolution, and the link to the knowledge article it becomes (the flywheel).
 | created_at | timestamp | |
 
 > When converted, the new `documents` row defaults to `authority_level = internal_hr_ruling` and **inherits the original asker's scope** (convenio/territory) — scope must be confirmed before publish.
+
+> **Sprint 4 is the first writer** of this table (schema-only since Sprint 0). One row per card (upsert by `card_id`). On resolve-without-convert, `converted_to_document_id` stays `null`. On Save-as-knowledge it links the `internal_hr_ruling` the conversion produces — which stays **`draft`** while the no-override conflict fence blocks publish (a `conflict` `document_review_tasks` row is opened on that draft and the card returns to In Progress; a retry reuses the same draft), and is flipped to **`active`** once the scope-confirmed, conflict-clear ruling publishes.
+
+### `escalation_events` *(Sprint 4, additive — append-only)*
+The card's activity/audit log — every board action. Kept **distinct** from `tag_events` (whose facet is document-vocabulary); this reads cleanly as "what happened to this card." Never updated or deleted.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| escalation_card_id | bigint FK → escalation_cards | |
+| type | varchar | `status_change` \| `assigned` \| `replied` \| `resolved` \| `converted` \| `publish_blocked` |
+| old_value | text NULL | e.g. prior status / assignee |
+| new_value | text NULL | e.g. new status / assignee / ruling uuid / conflicting convenio uuids |
+| actor_id | bigint FK → admins NULL | the admin who acted |
+| note | text NULL | human-readable detail |
+| created_at | timestamp | (no `updated_at` — append-only) |
+
+> **`internal_hr_ruling` retrievability (Q-A "A1").** A published ruling is made retrievable through the **existing** path with **hr-ai untouched**: hr-backend renders `resolution_text` to a clean PDF (`RulingPdf`) in S3, sets `storage_path`, then runs the same `/extract` (→ `document_pages`) and `/embed` (→ `document_chunks`, scope resolved by hr-backend) calls every prose doc uses. `internal_hr_ruling` is in `ChunksEmbed::IN_SCOPE_TYPES` (code, not schema). Publish verifies the embedded chunk text round-trips the typed text losslessly (whitespace-normalised). The ruling's chunks carry `authority_level = internal_hr_ruling` and flow through the frozen 2b retrieve/synthesise/ground path.
 
 ---
 
