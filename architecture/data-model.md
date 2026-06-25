@@ -301,16 +301,18 @@ Because the profile determines which legal answers an employee receives, every p
 |---|---|---|
 | id | bigint PK | |
 | employee_id | bigint FK → employees | |
-| field_changed | varchar | e.g. `territory_id`, `convenio_id`, `email` |
+| field_changed | varchar | e.g. `territory_id`, `convenio_id`, `email`; **`*`** marks the creation event |
 | old_value | text NULL | |
-| new_value | text NULL | |
+| new_value | text NULL | `created` on the `*` marker row |
 | changed_by | bigint FK → admins | |
 | changed_at | timestamp | |
 
-> Editing `email` changes how the employee logs in — flag this in the admin UI.
+> **Sprint 5 — now written (the schema existed since Sprint 0 with no writer).** `EmployeeAuditLogger` writes **one row per changed field**, inside the **same transaction** as the employee write (CRUD *and* CSV-applied rows) — the row and its audit never diverge. On create it writes a `*`=`created` marker plus a row per initial non-null field. `mark-reviewed` is audited too. **`profile_last_reviewed_at` is NOT bumped by an edit** (Q9) — "reviewed" is an explicit attestation via the mark-reviewed action, kept distinct from "edited" so the staleness signal stays honest.
+>
+> Editing `email` changes how the employee logs in (it is the login key). **Sprint 5 adds a server confirm gate**: an email change returns **409 `email_change_confirmation_required`** unless `confirm_email_change=true` — the UI warns *and* the server enforces deliberateness; the change is audited regardless.
 
 ### `admins`, roles & permissions
-Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package** — we do not hand-roll those tables; the package supplies `roles`, `permissions`, and pivots. Conceptual roles: `super_admin`, `hr_agent` (handles escalations), `knowledge_editor` (edits docs/tags, no chat access), `auditor` (read-only).
+Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package** — we do not hand-roll those tables; the package supplies `roles`, `permissions`, and pivots. Conceptual roles: `super_admin`, `hr_agent` (handles escalations + directory), `knowledge_editor` (edits docs/tags, **no chat access**), `auditor` (read-only history).
 
 | column (admins) | type | notes |
 |---|---|---|
@@ -320,7 +322,17 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 | full_name | varchar | |
 | status | enum | `active` \| `inactive` |
 
-> Privacy: `hr_agent` sees escalated conversations, not every employee's full chat history. Enforced via permissions, documented in the architecture doc.
+**Ability → role assignment (Sprint 5; spatie permissions attached to roles, surfaced in `IdentityPresenter.abilities`):**
+
+| ability | super_admin | hr_agent | knowledge_editor | auditor |
+|---|---|---|---|---|
+| `knowledge.edit` (S3) | ✓ | | ✓ | |
+| `escalation.work` (S4) | ✓ | ✓ | | |
+| `directory.manage` (S5) | ✓ | ✓ | | |
+| `history.view_all` (S5) | ✓ | | | ✓ |
+| `admin.manage` (S5) | ✓ | | | |
+
+> Privacy (ADR-0018): `hr_agent` sees **only** its cards' escalated conversations (keyed to `card.chat_session_id`), never every employee's full chat history; the full-history browser is gated on **`history.view_all`** (super_admin + auditor). `admin.manage` (granting `history.view_all`) is the most privileged action — super_admin only. **Status is enforced on both OTP paths** (an inactive admin *or* employee is refused login) and **deactivation revokes outstanding Sanctum tokens** + the `EnsureActiveAccount` gate ends a live session immediately. **The server is the boundary; the UI only hides.**
 
 ### `login_codes` (email OTP)
 | column | type | notes |
@@ -339,7 +351,22 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 
 ## 8. Group E — Chat & traces
 
-> **Populated by `hr-backend` from Sprint 2b-1 (ADR-0007: `hr-backend` owns ALL writes).** Each employee turn writes, in one transaction: the `user` + `assistant` `chat_messages`, the assistant turn's `message_citations` (answer turns only), its `message_traces` row (every turn — answer *and* escalation), and an `escalation_cards` row on escalate. Sessions continue the employee's most-recent session within a 24h window, else start a new one (no session list/picker until Sprint 5). **Role-scoping-ready shape:** every row keys back to `employee_id` (via `chat_sessions`), so the Sprint-5 role-scoped access (`hr_agent` sees escalated conversations, not every history) is a query filter, not a reshape — no enforcement is built in 2b-1. **Sprint 4** makes the chat two-way: HR replies are stored as `hr_agent` `chat_messages` in the same session, and the employee re-reads its own session via the self-scoped `GET /chat/session` (hydrate on mount + poll). Card-scoped viewing only — no full-history browser yet (Sprint 5).
+> **Populated by `hr-backend` from Sprint 2b-1 (ADR-0007: `hr-backend` owns ALL writes).** Each employee turn writes, in one transaction: the `user` + `assistant` `chat_messages`, the assistant turn's `message_citations` (answer turns only), its `message_traces` row (every turn — answer *and* escalation), and an `escalation_cards` row on escalate. Sessions continue the employee's most-recent session within a 24h window, else start a new one (no session list/picker until Sprint 5). **Role-scoping-ready shape:** every row keys back to `employee_id` (via `chat_sessions`), so the Sprint-5 role-scoped access (`hr_agent` sees escalated conversations, not every history) is a query filter, not a reshape — no enforcement is built in 2b-1. **Sprint 4** makes the chat two-way: HR replies are stored as `hr_agent` `chat_messages` in the same session, and the employee re-reads its own session via the self-scoped `GET /chat/session` (hydrate on mount + poll). Card-scoped viewing only — no full-history browser yet (Sprint 5). **Sprint 5** adds the gated full-history browser/search (`history.view_all`) over this exact shape — a **query filter, not a reshape** — and tightens the card-detail conversation payload to require `escalation.work` OR `history.view_all` (so a `knowledge_editor` sees the card meta but not the messages). Every conversation access is logged to `conversation_access_log` (below).
+
+### `conversation_access_log` *(Sprint 5, additive — ADR-0018)*
+Append-only accountability record: **who viewed whose conversation, when, and how**. EVERY History access writes a row — **including a `super_admin`'s read**; no role is exempt. This is the safeguard that makes broad oversight defensible to AEPD / comité de empresa. Sprint 9 hardens it (retention/erasure + the audit/reporting layer over this table).
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| admin_id | bigint FK → admins | who viewed (logged even for super_admin) |
+| employee_id | bigint FK → employees NULL | whose conversation (null for a search-run event) |
+| chat_session_id | bigint FK → chat_sessions NULL | the session viewed (null for a `history_search` listing) |
+| access_type | varchar | `conversation_view` (one per opened conversation) \| `history_search` (one per search run) |
+| context | varchar NULL | surface marker / the search query |
+| created_at | timestamp | append-only (no `updated_at`) |
+
+> Granularity (Q7): opening a conversation logs **one** `conversation_view`; a search run logs **one** lighter `history_search`. Search snippets are kept **deliberately brief** (a match fragment, not the conversation's substance), so a listing is not per-employee disclosure — reading a conversation requires opening it (which logs the view).
 
 ### `chat_sessions`
 | column | type | notes |

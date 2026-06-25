@@ -199,7 +199,9 @@ The publish gate covers conflicts **at publish time**. A convenio added or edite
 
 Passwordless **email OTP** (not SSO — there is no identity provider to federate with; ADR-0003). Email is both the auth key and the profile-lookup key. Codes are 6-digit, short-TTL, single-use, hashed at rest, rate-limited per email and per attempt. Sessions use Laravel Sanctum bearer tokens with a **~24h ("daily") TTL** (ADR-0005). Delivery via **Postmark**. Admins use the same OTP flow.
 
-Because no HRIS/AD sync exists (ADR-0004), the directory is a first-class part of this platform: full manual CRUD + CSV bulk upload + search/filter, every profile change written to `employee_audit_log`, and a `profile_last_reviewed_at` staleness signal. Editing an employee's email changes how they log in — surfaced in the UI.
+**Status enforcement (Sprint 5).** Both OTP paths refuse an account whose `status` is not `active` — a deactivated **admin or employee** is treated as not-registered (no code sent, no code redeemable). Deactivation also **revokes the account's outstanding Sanctum tokens**, and the `EnsureActiveAccount` middleware refuses any authenticated request from an inactive account — so access ends immediately, not in up-to-24h, and a deactivated employee can no longer chat.
+
+Because no HRIS/AD sync exists (ADR-0004), the directory is a first-class part of this platform: full manual CRUD + CSV bulk upload + search/filter, every profile change written to `employee_audit_log` (one row per changed field, in the same transaction — `EmployeeAuditLogger`), and a `profile_last_reviewed_at` staleness signal set by an explicit **mark-reviewed** attestation (an edit does *not* bump it). Scope fields are **FK pickers into existing vocabulary only** (no vocabulary creation — that stays in `registry:import`/`salary:import`, ADR-0011), with a convenio-scoped `job-categories` endpoint for the category picker. **Editing an employee's email** changes how they log in (it is the login key): the UI warns *and* the server requires `confirm_email_change` (returns **409 `email_change_confirmation_required`** otherwise). **CSV bulk upload** follows the registry-import discipline — a two-phase **validate → report → apply**: a per-row pass/fail report, valid rows applied each in its own transaction with its audit write (not whole-file-atomic — one bad row cannot kill a 1,500-row bootstrap), and **failures are reported, never silently dropped**. Directory reads and writes are both gated on **`directory.manage`** (super_admin + hr_agent — agents do the day-to-day "transferred province" corrections; directory PII is a lower privacy tier than conversation content).
 
 ---
 
@@ -215,7 +217,23 @@ Because no HRIS/AD sync exists (ADR-0004), the directory is a first-class part o
 
 ## 11. Privacy
 
-Employee questions can reveal sensitive personal facts, so: GDPR-grade handling, encryption, retention limits, and **role-scoped access to conversations** — an `hr_agent` sees escalated conversations, not every employee's full history. Spain's AEPD and works-council (comité de empresa) considerations may apply before deployment. Roles via `spatie/laravel-permission`: `super_admin`, `hr_agent`, `knowledge_editor` (no chat access), `auditor` (read-only).
+Employee questions can reveal sensitive personal facts, so: GDPR-grade handling, encryption, retention limits, and **role-scoped access to conversations** — an `hr_agent` sees only its cards' escalated conversations, not every employee's full history. Spain's AEPD and works-council (comité de empresa) considerations may apply before deployment. Roles via `spatie/laravel-permission`: `super_admin`, `hr_agent`, `knowledge_editor` (no chat access), `auditor` (read-only).
+
+**Role-scoped conversation access — the load-bearing model (Sprint 5, ADR-0018).** Broad conversation access is a **deliberately-granted ability held by a designated few**, not automatic for any role. The new spatie permission **`history.view_all`** (granted to `super_admin` + `auditor` only, distinct from `escalation.work`) gates the full-history browser/search and every cross-employee conversation read. The enforced access matrix:
+
+| Role | Full History (`history.view_all`) | Card-scoped conversation | Directory | Admin/role mgmt |
+|---|---|---|---|---|
+| `super_admin` | ✓ (read + may act) | ✓ | ✓ | ✓ (`admin.manage`) |
+| `auditor` | ✓ read-only | ✓ (view) | — | — |
+| `hr_agent` | ✗ (403) | ✓ — only its cards | ✓ (`directory.manage`) | — |
+| `knowledge_editor` | ✗ (403) | ✗ (403) | — | — |
+
+- **The server is the boundary; the UI only hides.** Every history/conversation/directory/admin endpoint checks its ability server-side (`EnsureCan`) and 403s without it — proven by API tests that hit endpoints directly, not through the UI. Hiding a nav item is not access control.
+- **The `hr_agent` card-scoped boundary (Sprint 4) is unchanged** — keyed strictly to `card.chat_session_id`, no caller-supplied id. Sprint 5 only **tightens the `knowledge_editor` read**: the card-detail **conversation payload** now requires `escalation.work` OR `history.view_all`, so a `knowledge_editor` sees the card meta but not the messages (the board listing/meta stays broadly readable).
+- **Every conversation access is logged** to `conversation_access_log` — including a `super_admin`'s read; no role is exempt. `conversation_view` on opening a conversation, a lighter `history_search` on a search run (snippets brief by design). This accountability record is what makes broad oversight defensible to AEPD / comité; Sprint 9 hardens it (retention/erasure + reporting over the log).
+- **Status enforcement** (both OTP paths + token revocation + `EnsureActiveAccount`) makes deactivation remove access immediately — see §9.
+
+History is **read-only over existing data** (no answer-loop change); acting on a conversation routes through the `escalation.work`-gated escalation endpoints, which `auditor` lacks. `admin.manage` (creating admins / granting `history.view_all`) is the most privileged action — `super_admin` only.
 
 ---
 
