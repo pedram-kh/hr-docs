@@ -38,6 +38,12 @@ The employee chat (Sprint 2b) sends the **employee's question + retrieved conven
 - [ ] Chunk embed (`chunks:embed`) and salary import (`salary:import`) run against production (they populate the prod database; dev vectors do **not** carry over).
 - [ ] Employee directory loaded (CSV bulk upload / manual), per ADR-0004 (Sprint 5).
 
+## 4. Pre-go-live cleanup — privacy / confidentiality hygiene (added: Sprint 5)
+
+Some dev seed/test fixtures (and at least one doc string) carry **real-world identifiers** that must not ship to production. This is a privacy/confidentiality hygiene item, **not a functional bug** — nothing misbehaves, but real names and the internal project codename must be scrubbed before the platform serves real employees (and before the works council / AEPD see the repo).
+
+- [ ] **Scrub test fixtures and doc strings of real identifiers before go-live.** Some test/seed data — and at least one doc string — contain real-world identifiers (a real company name in a test escalation's source question; the internal project codename, which by convention must **never** appear in code or docs). Before go-live: **(a)** replace any real company/person names in seed + test fixtures with **obviously-fake placeholders**; **(b)** `grep` the codebase + docs for the internal codename and any real client identifiers and remove them; **(c)** confirm **no real `@`-domain emails or personal data** sit in committed fixtures. *(The specific offending values are intentionally not reproduced here — that would defeat the scrub; locate them with the grep in (b).)*
+
 ## 5. Corpus coverage — unanswerable / expired convenios (added: Sprint 2c)
 
 The Sprint 2c re-chunk used the **registry** as the arbiter of the active set; doing so surfaced two go-live coverage risks. Neither blocks a build; both must be **resolved or explicitly accepted** before serving employees in the affected province×sector cells.
