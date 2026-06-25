@@ -331,8 +331,9 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 | `directory.manage` (S5) | ✓ | ✓ | | |
 | `history.view_all` (S5) | ✓ | | | ✓ |
 | `admin.manage` (S5) | ✓ | | | |
+| `guardrails.manage` (S6) | ✓ | | | |
 
-> Privacy (ADR-0018): `hr_agent` sees **only** its cards' escalated conversations (keyed to `card.chat_session_id`), never every employee's full chat history; the full-history browser is gated on **`history.view_all`** (super_admin + auditor). `admin.manage` (granting `history.view_all`) is the most privileged action — super_admin only. **Status is enforced on both OTP paths** (an inactive admin *or* employee is refused login) and **deactivation revokes outstanding Sanctum tokens** + the `EnsureActiveAccount` gate ends a live session immediately. **The server is the boundary; the UI only hides.**
+> Privacy (ADR-0018): `hr_agent` sees **only** its cards' escalated conversations (keyed to `card.chat_session_id`), never every employee's full chat history; the full-history browser is gated on **`history.view_all`** (super_admin + auditor). `admin.manage` (granting `history.view_all`) is the most privileged action — super_admin only. **`guardrails.manage` (S6, ADR-0019)** gates *writes* to the admin guardrail layer — `super_admin` only (the most safety-sensitive surface, beside `admin.manage`); guardrail *reads* are open to any admin (auditor read-only). **Status is enforced on both OTP paths** (an inactive admin *or* employee is refused login) and **deactivation revokes outstanding Sanctum tokens** + the `EnsureActiveAccount` gate ends a live session immediately. **The server is the boundary; the UI only hides.**
 
 ### `login_codes` (email OTP)
 | column | type | notes |
@@ -431,6 +432,48 @@ Single-row external answer-model config (ADR-0015). The raw key is **never** an 
 | updated_by | bigint FK → admins NULL | |
 
 > Set once via the admin "Answer model" screen → encrypted at rest → masked → rotatable (replace, never read back) → decrypted only in `ChatService` for the turn and passed to `hr-ai` in the request **body** for `/route`, `/synthesise`, and `/ground` (2b-2 reuses the same key path for all three; the router uses `ROUTER_MODEL`, grounding the answer `ANSWER_MODEL`). The browser never sees the key and never calls the provider.
+
+### `guardrail_config` *(Sprint 6, additive — ADR-0019)*
+Single-row, **global** admin guardrail layer. Every threshold column is a **nullable override** — `null` = "use the hardcoded floor in `config/hr.php`"; a non-null value is accepted only when **≥ the floor** (`StoreGuardrailConfigRequest`: rejected with 422, never clamped). The engine reads `stricter_of(baseline, admin)` via `GuardrailPolicy`, so a stored value can never weaken the baseline. The hardcoded `GuardrailService` patterns are **not** here — they stay code.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | single global row (`GuardrailConfig::current()`) |
+| retrieval_score_floor | decimal(4,3) NULL | Check-A override; floor = `config('hr.retrieval_score_floor')` (0.40) |
+| answer_confidence_floor | decimal(4,3) NULL | Check-C **tiebreaker** override; floor = `config('hr.answer_confidence_floor')` (0.65) |
+| router_confidence_floor | decimal(4,3) NULL | secondary router override; floor = `config('hr.router_confidence_floor')` (0.50) |
+| off_domain_message | text NULL | admin off-domain refusal copy; display text only, changes no gate |
+| tone_constraints | text NULL | **synthesis-style-only** preamble (sanitized, ≤ 280 chars); never touches `/ground`, the router, or Check B |
+| convert_allowed_reasons | jsonb NULL | restrict-only allow-set; effective = **intersection** with the baseline; `null` = baseline |
+| updated_by | bigint FK → admins NULL | |
+
+### `guardrail_blocked_topics` *(Sprint 6, additive — ADR-0019)*
+The admin **add-only** blocked-topic / off-domain list — one row per admin-added trigger. The baseline patterns are not here, so they can never be removed. Matched (by `GuardrailPolicy`, at the **same pre-router point** as the baseline) as a normalized, accent-insensitive, **word-boundary literal** — never raw regex (ReDoS + weakening risk). "Disable" is a **soft** flag (never a hard delete).
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| pattern | varchar | keyword/phrase; matched as an escaped literal, never compiled as regex |
+| kind | varchar | `blocked_topic` → escalate `sensitive_topic`; `off_domain` → escalate `off_domain` |
+| enabled | boolean | soft on/off (default true) |
+| created_by | bigint FK → admins NULL | |
+| disabled_by | bigint FK → admins NULL | |
+| disabled_at | timestamp NULL | |
+
+### `guardrail_config_events` *(Sprint 6, additive — append-only — ADR-0019)*
+The append-only audit log for every guardrail-config change (the `escalation_events` / `tag_events` posture — `created_at` only). A change **rejected** at the floor writes **no** row.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| field | varchar | e.g. `retrieval_score_floor`, `tone_constraints`, `convert_allowed_reasons`, `blocked_topic_added`, `blocked_topic_disabled` |
+| old_value | text NULL | |
+| new_value | text NULL | |
+| actor_id | bigint FK → admins NULL | |
+| note | text NULL | |
+| created_at | timestamp | append-only |
+
+> Writes go through `GuardrailConfigService` (validated against the floor, audited, cache-busting) and are gated by the `guardrails.manage` permission (**`super_admin` only**). Reads are open to any admin (auditor read-only). `GuardrailPolicy` is a cached read-model that returns **only** `stricter_of(baseline, admin)` values, so the engine never sees a raw admin value.
 
 ---
 
