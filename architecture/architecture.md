@@ -143,6 +143,8 @@ Non-negotiable rules (ADR-0002):
 - **Conflict detection beats confidence**: the agent cross-checks parsed tags against the `convenios` registry. A filename that parses to one province but sits in another province's folder, or a convenio number absent from the registry, is a *conflict* → review, even if each field was individually confident. A confidently-wrong tag is the dangerous kind.
 - Every tag decision is written to `tag_events` with source, actor, confidence, and prior value.
 
+> **Sprint 7a built the LLM tier — inert until verified (ADR-0020).** An `unresolved` ingest auto-triggers a **queued** `ProposeDocumentTags` job → hr-ai `POST /propose-tags` (read the page text + the closed candidate vocabulary, return facets + confidence; hr-ai writes nothing, never migrates). `TagProposalService` persists the proposal as `ai_agent` `tag_events` + unverified `ai_agent` `document_topics` + `tagging_confidence`, enforcing **two safety invariants** (proven by `Sprint7aTagProposalInvariantTest`): **(1)** the AI keeps the doc `under_review` — never `auto_proposed`/`verified` — so the embedding gate (`tagging_status != under_review`) holds it unretrievable (0 chunks) until a human verifies; **(2)** the AI writes **only** `ai_agent` provenance — never the authoritative scope FKs (`convenio_id`/`document_type_id`/validity/`retrieval_status`), which change only by the human verify/reassign action. Unresolvable values become `raw_unmatched_values` (with a variant hint) feeding the **propose-new-vocabulary** flow (`vocabulary_proposals`; variant→alias default; `vocabulary.approve` = super_admin, propose-and-approve allowed; convenios registry-only). The **expiry queue** (`reviews:scan-expiry`, 90-day-or-past window) drives the human-confirmed succession handoff that writes `predecessor_document_id` (same-convenio, never auto-retire). Unverified-AI is marked by the fuchsia `--provenance-ai` token; on verify the UI reverts to normal and the AI origin survives only as the `ai_agent` provenance dot. This is **document-level facet tagging only** — multi-scope fact segmentation is Sprint 7b, which reuses this "inert until verified" spine.
+
 ---
 
 ## 7. Guardrails
@@ -210,6 +212,7 @@ Because no HRIS/AD sync exists (ADR-0004), the directory is a first-class part o
 ## 10. Admin console modules
 
 1. **Knowledge Center** — folder/batch upload (preserving the existing province-folder grouping), the two-tier tagging agent, the lens hierarchy (§4), document cards, the "test a question" sandbox, and the expiry review queue with successor lineage.
+   - **Review** *(Sprint 7a)* — the messy-tail review hub: an **AI-tagging** tab (the `under_review` backlog sorted by `tagging_confidence`, fuchsia-marked, opening the existing `DocumentDetailPanel` where the Sprint-3 Confirm verifies the AI proposal), a **Vocabulary-proposals** tab (propose [`knowledge.edit`] / approve·reject [`vocabulary.approve`]), and an **Expiry** tab (near-expiry docs + same-convenio successor handoff).
 2. **Escalation Board** — §8.
 3. **User & Directory Management** — §9.
 4. **Guardrails Configuration** — §7.
@@ -247,6 +250,6 @@ History is **read-only over existing data** (no answer-loop change); acting on a
 3. Escalation board + resolution-to-article flow.
 4. Admin: user CRUD, bulk upload, search/filter, audit log, roles.
 5. Guardrails config UI (baseline hardcoded back in sprint 2).
-6. Analytics + expiry review queue + the LLM tagging tier.
+6. Analytics + expiry review queue + the LLM tagging tier *(the tagging tier + expiry queue + lineage write-side built in Sprint 7a — ADR-0020)*.
 
 The LLM tagging tier comes last — the deterministic parser covers the clean majority, so the system ships value without it.

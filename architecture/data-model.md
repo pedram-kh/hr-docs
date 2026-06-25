@@ -165,7 +165,7 @@ One row per source document (the main convenio PDF, a Tablas PDF, a Cambios PDF,
 | validity_end | date NULL | NULL = open-ended |
 | retrieval_status | enum | `draft` \| `active` \| `historical` |
 | authority_level | enum | `national_law` \| `official_convenio` \| `internal_hr_ruling` |
-| predecessor_document_id | bigint FK → documents NULL | version lineage (e.g. 2020–2023 → 2024–2027) |
+| predecessor_document_id | bigint FK → documents NULL | version lineage (e.g. 2020–2023 → 2024–2027). **First written in Sprint 7a (ADR-0020):** the expiry-queue succession handoff writes it on human confirmation, same-convenio candidates only, never auto-retiring the predecessor. (Was a display-only stub through Sprint 6.) |
 | language | varchar | `es`, `eu`, … — **metadata only** (ADR-0006): recorded for citation/display, **never** used to filter or scope retrieval. Sprint 1 sets `es` for every document. Some documents are **bilingual** (Euskara + Spanish in parallel columns, e.g. Gipuzkoa bulletin convenios); all carry full Spanish text, so no `eu` splitting/detection is attempted this sprint |
 | tagging_status | enum | `auto_proposed` \| `under_review` \| `verified` |
 | tagging_confidence | numeric(4,3) NULL | min confidence across auto-assigned facets; drives the review queue |
@@ -201,6 +201,8 @@ A document covers multiple topics; each association carries its own provenance.
 | confidence | numeric(4,3) NULL | |
 | verified_by | bigint FK → admins NULL | set when a human confirms |
 | verified_at | timestamp NULL | |
+
+> **`ai_agent` lane lit in Sprint 7a (ADR-0020).** The tagging tier writes **unverified** `ai_agent` topic rows (`verified_by`/`verified_at` null) as a proposal; they become a confirmed tag only on the human verify action. The Sprint-3 bounded edit remains the `admin_manual` writer.
 
 ### `document_chunks` (the vector table — owned read/write by `hr-ai`)
 Prose chunks for RAG. Scope columns are **denormalized** on purpose so the vector search can pre-filter by scope *before* similarity ranking.
@@ -578,7 +580,28 @@ Tracks human handoffs surfaced to admins. The **expiry queue is primarily a quer
 | resolved_by | bigint FK → admins NULL | |
 | resolved_at | timestamp NULL | |
 
-> **Two-reason routing (ADR-0011).** `reason` is set at ingest: a `conflict` is written when parsed values contradict the registry (territory disagreement, unknown convenio, sector disagreement) and a `system` `tag_events` row is logged on each conflicting facet; `unresolved` is written when the parser had nothing to resolve or hit an unmatched controlled value (e.g. a no-numero PDF). Conflict outranks unresolved. The LLM rescue path and propose-new-value UI are **deferred** to the LLM-tagging-tier sprint — Sprint 1 only lays these two fields.
+> **Two-reason routing (ADR-0011).** `reason` is set at ingest: a `conflict` is written when parsed values contradict the registry (territory disagreement, unknown convenio, sector disagreement) and a `system` `tag_events` row is logged on each conflicting facet; `unresolved` is written when the parser had nothing to resolve or hit an unmatched controlled value (e.g. a no-numero PDF). Conflict outranks unresolved. ~~The LLM rescue path and propose-new-value UI are **deferred** to the LLM-tagging-tier sprint — Sprint 1 only lays these two fields.~~ **Sprint 7a (ADR-0020) is the first writer of the rescue path:** a `reason = unresolved` ingest now auto-triggers a queued AI tagging proposal (`ProposeDocumentTags` → hr-ai `/propose-tags`); the AI merges its variant hints into `raw_unmatched_values` and feeds the propose-new-vocabulary flow (`vocabulary_proposals`, below). The `expiry` type also gains its first writer in 7a — `reviews:scan-expiry` materializes tasks for active prose within 90 days of `validity_end` (or already past).
+
+### `vocabulary_proposals` *(Sprint 7a, additive — ADR-0011/0020)*
+Generalizes the `topics` propose/approve pattern to the scoping vocabulary. An agent or human **proposes** that a value should exist (or that an unmatched string is a *variant* of an existing value); a human **approves** it into the controlled vocabulary. The AI can only propose (`proposed_by_source = ai_agent`); approval is gated by `vocabulary.approve` (super_admin), who may propose-and-approve in one step.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| facet | enum | `territory` \| `sector` \| `convenio` |
+| proposed_value | string | the literal value proposed (the raw unmatched string) |
+| variant_of_type / variant_of_id | string / bigint NULL | the existing value to fold into as an alias (the default); null for a new-value proposal |
+| variant_similarity | decimal NULL | deterministic normalized similarity (the variant→alias suggestion, no model dependency) |
+| resolution | enum NULL | chosen at approval: `alias` (fold) \| `new_value` (create) |
+| source_document_id | bigint FK → documents NULL | the originating doc (so approval can resolve its `raw_unmatched_value`) |
+| review_task_id | bigint FK → document_review_tasks NULL | |
+| status | enum | `proposed` \| `approved` \| `rejected` |
+| proposed_by_source | enum | `ai_agent` \| `admin_manual` |
+| proposed_by_admin_id / approved_by | bigint FK → admins NULL | the human proposer / the human approver (the AI never approves) |
+| resolved_vocab_type / resolved_vocab_id | string / bigint NULL | the vocabulary row the approval wrote (alias-folded or created) |
+| note | text NULL | |
+
+> **Variant→alias is the default (ADR-0011).** `VocabularyProposalService::suggestVariant` pre-selects "fold into aliases" above a similarity threshold; "create a new value" is the deliberate fallback. Convenios are **never** created here (registry-owned) — only alias-folded. Approval writes the alias/new value with `admin_manual` `tag_events` provenance and resolves the originating doc's `raw_unmatched_value` (it does **not** auto-write the doc's scope FKs — that is the human verify action).
 
 ---
 
