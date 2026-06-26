@@ -125,7 +125,7 @@ The sub-category granularity that the split cells imply, and that the salary tab
 > **Population (Sprint 2a — ADR-0002/0014).** Job categories are created by the **`salary:import`** command from the salary `.xlsx` rows — a **deliberate, logged, idempotent** admin action, never minted by the AI at tag time. Matching is per-convenio on the normalized category name (no global dedup — `Director/a Gerente` under two convenios are two rows); a new name is created and logged, an existing one reused. `group_code` is captured where the source has one (e.g. Cantabria `2.1`, an Estatal `Grupo`). **Label normalization:** the parser collapses embedded newlines/whitespace and **strips wrapping quotes/apostrophes** from both `name` and `group_code`, so a spreadsheet cell stored as `2.1'` (a literal trailing apostrophe, common in Excel text-typed numeric codes) lands as `2.1`.
 
 ### `document_types`
-Closed vocabulary: `convenio_text`, `salary_tables`, `changes` (Cambios), `partial_agreement` (Acuerdo Parcial), `summary` (Resumen), `national_law` (Estatuto), `internal_hr_ruling`, `other`.
+Closed vocabulary: `convenio_text`, `salary_tables`, `changes` (Cambios), `partial_agreement` (Acuerdo Parcial), `summary` (Resumen), `national_law` (Estatuto), `internal_hr_ruling`, **`reference_source`** *(Sprint 7b-1, ADR-0021 — the deliberate routing tag for a non-salary `.docx`/`.xlsx` that feeds Structured Reference Knowledge)*, `other`.
 
 | column | type | notes |
 |---|---|---|
@@ -272,6 +272,31 @@ One row per job category. Common concepts are typed columns (for reliable querie
 | raw_values | jsonb | every original column verbatim (SB, COMP, Comp. SMI, totals, **and both the `14` and `12` figures**…) |
 
 > **14/12 canonical mapping (Sprint 2a — ADR-0014, plan-review catch 3).** Salary `.xlsx` express the monthly figure over **14** payments (12 months + 2 extras) and/or **12**; the column labels vary (`14`/`12`, `Bruto/mes 14 pagas`, `Salario Base` vs `Bruto mes`). To keep the typed columns comparable across formats, the **canonical** typed value is `base_salary_monthly = gross_annual / 14` with `num_payments = 14`. The original `/12` figure, the source's own `14` figure, and **all** other original columns are preserved **verbatim** in `raw_values` (nothing is lost). Decimal commas are normalized (`1.652,13 → 1652.13`), as the registry import does. `hr-ai` computes the typed columns and returns them; `hr-backend` (`salary:import`) writes the rows.
+
+### `reference_facts` *(Sprint 7b-1, additive — ADR-0021)*
+The **third** structured class beside salary: a non-vectorized, scoped, source-linked **fact** (e.g. *"periodo de prueba: 90/75 días"*). Generalizes the salary pattern — scoped via the convenio (territory/sector **derive**), `source_document_id` traceability, `value` + `raw_values` verbatim, **queried-not-embedded** (ADR-0006 — no chunks/embedding). Inert until verified (the ADR-0020 spine); provenance append-only in `tag_events`.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| uuid | uuid unique | |
+| convenio_id | bigint FK → convenios | scope; **fixes derived territory + sector** (never stored independently — §5 rule) |
+| job_category_id | bigint FK → convenio_job_categories NULL | finer scope; must belong to the convenio |
+| topic_id | bigint FK → topics NULL | **approved** topic only (ADR-0011) |
+| value | text | the fact, human-readable (single text — Q3; no typed numeric columns in 7b-1) |
+| raw_values | jsonb NULL | the verbatim source phrasing/structure (the salary `raw_values` discipline) |
+| validity_start / validity_end | date NULL | version window |
+| authority_level | enum(**`structured_reference`** only) default `structured_reference` | **INVARIANT 1**: the column *cannot* store `official_convenio`/`national_law` — a fact can never outrank a convenio |
+| source | enum(`admin_manual`, `ai_agent`) default `admin_manual` | **`ai_agent` reserved but UNWRITTEN in 7b-1** (manual path only writer; lights in 7b-2) |
+| status | enum(`needs_review`, `verified`) default `needs_review` | inert until verified — not answerable until a human verifies (and not until 7c at all) |
+| verified_by / verified_at | bigint FK → admins NULL / timestamp NULL | the human verify (ADR-0020) |
+| source_document_id | bigint FK → documents NULL | the `reference_source` doc it came from |
+| source_locator | varchar NULL | free-form in 7b-1 (Q9): `p.3 §2` / `sheet:smi26` / a paragraph anchor |
+| created_by | bigint FK → admins NULL | |
+
+> **Logical key (Q7), recorded for the 7b-2 AI upsert — NO hard unique constraint in 7b-1:** `(convenio_id, topic_id, job_category_id, validity_start, validity_end)`. A manual create is a single deliberate human action; the AI's systematic upsert/split is 7b-2's job.
+>
+> **Routing rides `document_type`, never content (INVARIANT 2).** A `reference_source`-tagged `.docx`/`.xlsx` feeds `reference_facts` **only** via the manual path; a `salary_tables`-tagged `.xlsx` feeds `salary_table_rows` **only** via `salary:import` (which filters `document_type = salary_tables`). The reference path never writes a salary row (SMI figures in a reference source land as a fact's `value`/`raw_values`). The source's extracted content is stored as display `document_pages` (one row per docx section / xlsx sheet, via hr-ai `/read-structured`) — **never** `document_chunks` (queried-not-embedded).
 
 ---
 
@@ -540,9 +565,9 @@ The complete history behind every facet decision. This is what powers the change
 | column | type | notes |
 |---|---|---|
 | id | bigint PK | |
-| entity_type | varchar | `document` \| `document_topic` \| … |
+| entity_type | varchar | `document` \| `document_topic` \| **`reference_fact`** *(Sprint 7b-1)* \| … |
 | entity_id | bigint | |
-| facet | varchar | `convenio` \| `territory` \| `sector` \| `document_type` \| `topic` \| `validity` \| `retrieval_status` \| `tagging_status` |
+| facet | varchar | `convenio` \| `territory` \| `sector` \| `document_type` \| `topic` \| `validity` \| `retrieval_status` \| `tagging_status` \| *(reference_fact)* `reference_fact` \| `value` \| `job_category_id` \| `source_document_id` \| `source_locator` |
 | old_value | text NULL | |
 | new_value | text NULL | |
 | source | enum | `filename_parse` \| `ai_agent` \| `admin_manual` \| `system` |
