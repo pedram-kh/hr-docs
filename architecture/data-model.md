@@ -273,7 +273,7 @@ One row per job category. Common concepts are typed columns (for reliable querie
 
 > **14/12 canonical mapping (Sprint 2a — ADR-0014, plan-review catch 3).** Salary `.xlsx` express the monthly figure over **14** payments (12 months + 2 extras) and/or **12**; the column labels vary (`14`/`12`, `Bruto/mes 14 pagas`, `Salario Base` vs `Bruto mes`). To keep the typed columns comparable across formats, the **canonical** typed value is `base_salary_monthly = gross_annual / 14` with `num_payments = 14`. The original `/12` figure, the source's own `14` figure, and **all** other original columns are preserved **verbatim** in `raw_values` (nothing is lost). Decimal commas are normalized (`1.652,13 → 1652.13`), as the registry import does. `hr-ai` computes the typed columns and returns them; `hr-backend` (`salary:import`) writes the rows.
 
-### `reference_facts` *(Sprint 7b-1, additive — ADR-0021)*
+### `reference_facts` *(Sprint 7b-1, additive — ADR-0021; AI lane + segmentation fields added 7b-2 — ADR-0022)*
 The **third** structured class beside salary: a non-vectorized, scoped, source-linked **fact** (e.g. *"periodo de prueba: 90/75 días"*). Generalizes the salary pattern — scoped via the convenio (territory/sector **derive**), `source_document_id` traceability, `value` + `raw_values` verbatim, **queried-not-embedded** (ADR-0006 — no chunks/embedding). Inert until verified (the ADR-0020 spine); provenance append-only in `tag_events`.
 
 | column | type | notes |
@@ -287,16 +287,22 @@ The **third** structured class beside salary: a non-vectorized, scoped, source-l
 | raw_values | jsonb NULL | the verbatim source phrasing/structure (the salary `raw_values` discipline) |
 | validity_start / validity_end | date NULL | version window |
 | authority_level | enum(**`structured_reference`** only) default `structured_reference` | **INVARIANT 1**: the column *cannot* store `official_convenio`/`national_law` — a fact can never outrank a convenio |
-| source | enum(`admin_manual`, `ai_agent`) default `admin_manual` | **`ai_agent` reserved but UNWRITTEN in 7b-1** (manual path only writer; lights in 7b-2) |
-| status | enum(`needs_review`, `verified`) default `needs_review` | inert until verified — not answerable until a human verifies (and not until 7c at all) |
+| group_label | varchar NULL | *(Sprint 7b-2, ADR-0022)* the group identity ("Grupo 1", "Grupos 1 y 2", "Grupo 1 y área cinco de Grupo 2") when no `convenio_job_category` matches — **part of the logical key** so a convenio's per-group facts don't collide on null `job_category_id` |
+| source | enum(`admin_manual`, `ai_agent`) default `admin_manual` | **`ai_agent` LIT in 7b-2** — the segmentation agent writes here (manual path still writes `admin_manual`) |
+| status | enum(`needs_review`, `verified`, **`rejected`**) default `needs_review` | inert until verified — not answerable until a human verifies (and not until 7c at all). `rejected` *(7b-2)* = an auditable, queue-excluded discard of an AI proposal (no deletion) |
 | verified_by / verified_at | bigint FK → admins NULL / timestamp NULL | the human verify (ADR-0020) |
+| confidence | decimal(4,3) NULL | *(7b-2)* the agent's scope-assignment confidence; the queue sorts ascending on it (least-confident first) |
+| uncertainty | jsonb NULL | *(7b-2)* structured `{field, reason}` — `scope` / `version` / compound-group; distinguishable & sortable (sorts first) |
+| source_excerpt | text NULL | *(7b-2)* the exact source line(s) + header trail (`ÁLAVA › COEAS ÁLAVA › Grupo 1: …`) — the review-UX defense against rubber-stamping |
+| proposal_batch_id | uuid NULL | *(7b-2)* groups one agent run (eval + re-segment idempotency) |
+| duplicate_of_id | bigint FK → reference_facts NULL `nullOnDelete` | *(7b-2)* the obvious-duplicate flag (logical-key collision, differing value) — **signal only; 7d resolves** |
 | source_document_id | bigint FK → documents NULL | the `reference_source` doc it came from |
-| source_locator | varchar NULL | free-form in 7b-1 (Q9): `p.3 §2` / `sheet:smi26` / a paragraph anchor |
+| source_locator | varchar NULL | free-form (Q9): `p.3 §2` / `sheet:smi26` / a paragraph anchor |
 | created_by | bigint FK → admins NULL | |
 
-> **Logical key (Q7), recorded for the 7b-2 AI upsert — NO hard unique constraint in 7b-1:** `(convenio_id, topic_id, job_category_id, validity_start, validity_end)`. A manual create is a single deliberate human action; the AI's systematic upsert/split is 7b-2's job.
+> **Logical key — extended in 7b-2 (ADR-0022) for the AI upsert:** `(convenio_id, topic_id, job_category_id, group_label, validity_start, validity_end)`. `group_label` was **added** so per-group facts of the same convenio (all with null `job_category_id`) don't clobber each other; the upsert is idempotent on this key. Still **no hard unique constraint** — a manual create is a single deliberate human action and the AI writer enforces the key in code (`ReferenceFactProposalService`).
 >
-> **Routing rides `document_type`, never content (INVARIANT 2).** A `reference_source`-tagged `.docx`/`.xlsx` feeds `reference_facts` **only** via the manual path; a `salary_tables`-tagged `.xlsx` feeds `salary_table_rows` **only** via `salary:import` (which filters `document_type = salary_tables`). The reference path never writes a salary row (SMI figures in a reference source land as a fact's `value`/`raw_values`). The source's extracted content is stored as display `document_pages` (one row per docx section / xlsx sheet, via hr-ai `/read-structured`) — **never** `document_chunks` (queried-not-embedded).
+> **Routing rides `document_type`, never content (INVARIANT 2).** A `reference_source`-tagged `.docx`/`.xlsx` feeds `reference_facts` via the manual path **and (7b-2) the AI segmentation path** (`SegmentReferenceSource` → hr-ai `/segment-facts` → `ReferenceFactProposalService`); a `salary_tables`-tagged `.xlsx` feeds `salary_table_rows` **only** via `salary:import` (which filters `document_type = salary_tables`). **Neither** reference writer ever writes a salary row (SMI/€-h figures in a reference source are ignored by the agent or land as a fact's `value`/`raw_values`). The source's extracted content is stored as display `document_pages` (one row per docx section / xlsx sheet, via hr-ai `/read-structured`) — **never** `document_chunks` (queried-not-embedded).
 
 ---
 
