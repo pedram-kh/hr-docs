@@ -37,6 +37,7 @@ The employee chat (Sprint 2b) sends the **employee's question + retrieved conven
 - [ ] Registry import (`registry:import`) run against production.
 - [ ] Chunk embed (`chunks:embed`) and salary import (`salary:import`) run against production (they populate the prod database; dev vectors do **not** carry over).
 - [ ] Employee directory loaded (CSV bulk upload / manual), per ADR-0004 (Sprint 5).
+- [ ] ⚠️ **Precondition (added: Sprint 7c eyes-on):** do **not** seed `convenio_job_categories` with clean digit `group_code`s for a convenio that has **verified group-scoped reference facts** (e.g. convenio 21 Hostelería Navarra) **before Sprint 7f lands** — the 7c group-matcher (`ReferenceFactAnswerService::factMatchesGroup`) would then make a latent confident-wrong-group answer live. See `roadmap.md` Sprint 7f and `sprints/sprint-07c/review.md` §7.
 
 ## 4. Pre-go-live cleanup — privacy / confidentiality hygiene (added: Sprint 5)
 
