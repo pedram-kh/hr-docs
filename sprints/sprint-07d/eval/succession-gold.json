@@ -1,0 +1,37 @@
+{
+  "_purpose": "Sprint 7d (ADR-0024) part C — labeled real-corpus pairs for `php artisan succession:gold-eval`. The failure metric is CONFIDENTLY-WRONG SUCCESSOR: a pair labeled coexisting_sibling or conflict that the rule calls successor. That is the one output that would tempt a human to retire a live document. `uncertain` on a true successor is a MISS, not a failure — the human still has the 7a expiry task and candidate list.",
+
+  "_status": "PROVISIONAL — the pairs below are transcribed from the document ids deploy.md §5 records, NOT confirmed by SQL against the corpus database. The build environment had only a fresh test database (hr_platform_test), so no pair could be verified and no score measured. Each reference is FINGERPRINT-GUARDED: the eval trusts `document_id` only when `title_contains` also matches, and SKIPS otherwise, so a stale id can never make the eval silently score the wrong document. Fill in the real titles from `succession:gold-eval --discover` output, then re-run.",
+
+  "_labels": {
+    "successor": "the candidate is a later version of the same convenio text — the expiring document's replacement",
+    "coexisting_sibling": "same convenio, different subject or different document kind (a salary table beside a prose text, a partial agreement beside a full text) — both stay live",
+    "conflict": "same convenio, overlapping subject, but the validity dates do not establish which supersedes which"
+  },
+
+  "pairs": [
+    {
+      "id": "vizcaya-intervencion-social-family",
+      "expected": "successor",
+      "_why": "deploy.md §5 records Vizcaya Intervención Social as an expired prose text (id 18) belonging to a family with ids 13/16 — successive texts of the same convenio. If 13 or 16 is the later text, this is a true version succession.",
+      "expiring": { "document_id": 18, "title_contains": "INTERVENCIÓN SOCIAL" },
+      "candidate": { "document_id": 16, "title_contains": "INTERVENCIÓN SOCIAL" }
+    },
+    {
+      "id": "coeas-estatal-under-review-successor",
+      "expected": "successor",
+      "_why": "deploy.md §5: COEAS Estatal id 72 is a successor that exists but is stuck `under_review`. A successor proposal must still be made for an under_review candidate — the proposal is inert, and the human decides whether to trust it. This pair also proves the rule is not silently limited to `active` candidates.",
+      "expiring": { "document_id": 69, "title_contains": "ESTATAL" },
+      "candidate": { "document_id": 72, "title_contains": "COEAS" }
+    },
+    {
+      "id": "navarra-oficinas-prose-vs-salary-table",
+      "expected": "coexisting_sibling",
+      "_why": "deploy.md §5: Navarra Oficinas-despachos holds an expired prose text (id 93) and an ACTIVE salary-table PDF (id 94). A salary table is not a version of a prose text — it is a different document kind that coexists. If the rule called this a `successor`, a human might retire the prose text and lose every non-salary answer for that province×sector. This is the pair that must never come out `successor`.",
+      "expiring": { "document_id": 93, "title_contains": "OFICINAS" },
+      "candidate": { "document_id": 94, "title_contains": "OFICINAS" }
+    }
+  ],
+
+  "_unlabeled_conflict_pair": "A conflict pair (two same-convenio prose documents with OVERLAPPING validity on the same subject) could not be named from deploy.md — it records coverage gaps, not overlaps. Run `succession:gold-eval --discover` on the corpus: any pair the rule reports as `conflict` is a candidate, and the Navarra Intervención Social version pair from Sprint 7b-2 (the 6-vs-4 months files) is the most likely one, since two files of the same convenio were loaded with the same subject."
+}
