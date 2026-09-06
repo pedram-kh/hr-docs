@@ -1,7 +1,7 @@
 {
   "_purpose": "Sprint 7d (ADR-0024) part C — labeled real-corpus pairs for `php artisan succession:gold-eval`. The failure metric is CONFIDENTLY-WRONG SUCCESSOR: a pair labeled coexisting_sibling or conflict that the rule calls successor. That is the one output that would tempt a human to retire a live document. `uncertain` on a true successor is a MISS, not a failure — the human still has the 7a expiry task and candidate list.",
 
-  "_status": "PROVISIONAL — the pairs below are transcribed from the document ids deploy.md §5 records, NOT confirmed by SQL against the corpus database. The build environment had only a fresh test database (hr_platform_test), so no pair could be verified and no score measured. Each reference is FINGERPRINT-GUARDED: the eval trusts `document_id` only when `title_contains` also matches, and SKIPS otherwise, so a stale id can never make the eval silently score the wrong document. Fill in the real titles from `succession:gold-eval --discover` output, then re-run.",
+  "_status": "CONFIRMED against the staging corpus (hr_platform on hr-staging-db), 2026-09-06. Every document_id below was verified by SQL (id, title, convenio numero, validity_start/end, retrieval_status) and cross-checked against `succession:gold-eval --discover` output on the same corpus — 19 same-convenio pairs examined, 3 successor claims made, all 3 labeled here, plus one conflict pair and one prose-vs-table-annex sibling pair. Each reference is still FINGERPRINT-GUARDED: the eval trusts `document_id` only when `title_contains` also matches, and SKIPS otherwise, so a stale id in another environment can never make the eval silently score the wrong document.",
 
   "_labels": {
     "successor": "the candidate is a later version of the same convenio text — the expiring document's replacement",
@@ -11,27 +11,41 @@
 
   "pairs": [
     {
-      "id": "vizcaya-intervencion-social-family",
+      "id": "ensenanza-no-reglada-estatal-2020-2023-to-2024-2027",
       "expected": "successor",
-      "_why": "deploy.md §5 records Vizcaya Intervención Social as an expired prose text (id 18) belonging to a family with ids 13/16 — successive texts of the same convenio. If 13 or 16 is the later text, this is a true version succession.",
-      "expiring": { "document_id": 18, "title_contains": "INTERVENCIÓN SOCIAL" },
-      "candidate": { "document_id": 16, "title_contains": "INTERVENCIÓN SOCIAL" }
+      "_why": "Same convenio numero (99008825011994), consecutive non-overlapping windows (2020-2023 → 2024-2027), expiring is `historical` and the candidate is the `active` text. A textbook version succession: the 2024-2027 text IS the replacement. Discover measured overlap 0.99821.",
+      "expiring": { "document_id": 79, "title_contains": "reglada Estatal 2020 2023", "convenio_numero": "99008825011994" },
+      "candidate": { "document_id": 74, "title_contains": "reglada Estatal 2024 2027", "convenio_numero": "99008825011994" }
     },
     {
-      "id": "coeas-estatal-under-review-successor",
+      "id": "oficinas-despachos-valencia-2021-2023-to-2024-2026",
       "expected": "successor",
-      "_why": "deploy.md §5: COEAS Estatal id 72 is a successor that exists but is stuck `under_review`. A successor proposal must still be made for an under_review candidate — the proposal is inert, and the human decides whether to trust it. This pair also proves the rule is not silently limited to `active` candidates.",
-      "expiring": { "document_id": 69, "title_contains": "ESTATAL" },
-      "candidate": { "document_id": 72, "title_contains": "COEAS" }
+      "_why": "Same convenio numero (46000805011981), consecutive non-overlapping windows (2021-2023 → 2024-2026), historical → active. Discover measured overlap 0.890335 — the LOWEST of the three true successors on this corpus, so it is the pair that actually constrains hr.succession_overlap_threshold from above.",
+      "expiring": { "document_id": 93, "title_contains": "Oficinas y despachos Valencia 2021 2023", "convenio_numero": "46000805011981" },
+      "candidate": { "document_id": 92, "title_contains": "Oficinas y despachos Valencia 2024 2026", "convenio_numero": "46000805011981" }
     },
     {
-      "id": "navarra-oficinas-prose-vs-salary-table",
+      "id": "alojamientos-gipuzkoa-2020-2024-to-2025-2028",
+      "expected": "successor",
+      "_why": "Same convenio numero (20100035012014), consecutive non-overlapping windows (2020-2024 → 2025-2028), historical → active. Discover measured overlap 1.0.",
+      "expiring": { "document_id": 23, "title_contains": "Alojamientos Gipuzkoa 2020 2024", "convenio_numero": "20100035012014" },
+      "candidate": { "document_id": 28, "title_contains": "Alojamientos Gipuzkoa 2025 2028", "convenio_numero": "20100035012014" }
+    },
+    {
+      "id": "bizkaia-intervencion-social-same-validity-window",
+      "expected": "conflict",
+      "_why": "The conflict pair the provisional fixture could not name from deploy.md. Two documents of convenio 48006185012006 with the SAME validity window (2022-01-01 → 2025-12-31) and near-identical text (discover measured 0.987517) — in fact a duplicate ingest of the same convenio text (source filenames differ only by a trailing underscore). High overlap with no strictly-later validity_start MUST come out `conflict`, never `successor`: nothing here establishes which supersedes which. Note both documents share the same title, so this pair is resolved by document_id — exactly the case the fingerprint guard exists for (id trusted only because the title fingerprint also matches).",
+      "expiring": { "document_id": 67, "title_contains": "Intervencion Social Bizkaia 2022 2025", "convenio_numero": "48006185012006" },
+      "candidate": { "document_id": 65, "title_contains": "Intervencion Social Bizkaia 2022 2025", "convenio_numero": "48006185012006" }
+    },
+    {
+      "id": "navarra-oficinas-prose-vs-table-annex",
       "expected": "coexisting_sibling",
-      "_why": "deploy.md §5: Navarra Oficinas-despachos holds an expired prose text (id 93) and an ACTIVE salary-table PDF (id 94). A salary table is not a version of a prose text — it is a different document kind that coexists. If the rule called this a `successor`, a human might retire the prose text and lose every non-salary answer for that province×sector. This is the pair that must never come out `successor`.",
-      "expiring": { "document_id": 93, "title_contains": "OFICINAS" },
-      "candidate": { "document_id": 94, "title_contains": "OFICINAS" }
+      "_why": "This corpus's version of the pair that must never come out `successor`. Convenio 31005105011984 holds the full prose text (id 30, 2019-2025, now historical) and a salary-table annex published as its own PDF (id 33, 'Tabla 2025', ACTIVE, NULL validity — typed convenio_text, not salary_tables, because the ingestor only forces the salary type for .xlsx). A table annex is not a new version of the whole prose convenio: if the rule called this `successor`, a human might retire the prose text and lose every non-salary answer for that province×sector. EXPECTED OUTCOME ON THIS CORPUS: the rule returns `conflict`, not `coexisting_sibling` — overlap 0.818874 is above hr.succession_overlap_threshold but the candidate has NULL validity_start, so the strictly-later conjunct fails and the rule declines to claim succession. That is a MISS in the cautious direction (bucketed `other_wrong`), not a confidently-wrong successor. It is kept labeled `coexisting_sibling` deliberately: the human label is what it is, and the eval should keep reporting the gap rather than be re-labeled to make the number look clean.",
+      "expiring": { "document_id": 30, "title_contains": "OFICINAS Y DESPACHOS NAVARRA 2019 2025", "convenio_numero": "31005105011984" },
+      "candidate": { "document_id": 33, "title_contains": "OFICINAS Y DESPACHOS NAVARRA Tabla 2025", "convenio_numero": "31005105011984" }
     }
   ],
 
-  "_unlabeled_conflict_pair": "A conflict pair (two same-convenio prose documents with OVERLAPPING validity on the same subject) could not be named from deploy.md — it records coverage gaps, not overlaps. Run `succession:gold-eval --discover` on the corpus: any pair the rule reports as `conflict` is a candidate, and the Navarra Intervención Social version pair from Sprint 7b-2 (the 6-vs-4 months files) is the most likely one, since two files of the same convenio were loaded with the same subject."
+  "_discover_coverage_note": "`--discover --limit 25` examined 19 documents with a validity_end in multi-document convenios on this corpus. 3 successor claims (all labeled above), 8 conflict claims (the 3 successors' reverse direction, the Bizkaia duplicate in both directions, plus 3 pairs whose candidate has NULL validity: Alava Ocio Educativo 63→56, Navarra Intervencion Social 41→52, Navarra Oficinas 30→33), and 8 documents where nothing was proposed at all because the expiring document has no comparable chunks — the salary .xlsx/table PDFs that are never embedded by design (ADR-0006: salary lives in SQL, not vectors). No successor claim was made that a human would call wrong."
 }
