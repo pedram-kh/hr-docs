@@ -127,7 +127,11 @@ services:
       - DATABASE_URL=/hr-staging/hr-ai/database-url
       - INTERNAL_TOKEN=/hr-staging/shared/internal-token
       - --
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+    # warm-model.py forces the model download/cache explicitly at container
+    # start (see that file's header — hr-ai's own lazy-load design has no
+    # startup hook, so left alone the model would never pre-fetch on its
+    # own). Uvicorn only starts, and the port only opens, once it's done.
+    command: ["sh", "-c", "python /warm-model.py && exec uvicorn app.main:app --host 0.0.0.0 --port 8001"]
     environment:
       AWS_ENDPOINT: https://s3.${AWS_REGION}.amazonaws.com
       AWS_REGION: ${AWS_REGION}
@@ -142,6 +146,7 @@ services:
       # app/storage.py: falls back to the instance profile's credential chain.
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
+      - ./warm-model.py:/warm-model.py:ro
       - model-cache:/model-cache
     logging: *default-logging
     healthcheck:

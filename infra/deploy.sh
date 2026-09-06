@@ -60,6 +60,7 @@ clone_or_checkout hr-docs     https://github.com/pedram-kh/hr-docs.git     "$HR_
 cp "$ROOT/hr-docs/infra/compose/docker-compose.staging.yml" "$ROOT/docker-compose.staging.yml"
 cp "$ROOT/hr-docs/infra/compose/entrypoint.sh" "$ROOT/entrypoint.sh"
 cp "$ROOT/hr-docs/infra/compose/Caddyfile" "$ROOT/Caddyfile"
+cp "$ROOT/hr-docs/infra/compose/warm-model.py" "$ROOT/warm-model.py"
 chmod +x "$ROOT/entrypoint.sh"
 
 log "Leak scan (staging plan §4 step 4) — must pass before any build..."
@@ -79,26 +80,28 @@ docker compose -f docker-compose.staging.yml run --rm hr-backend php artisan mig
 log "Bringing the stack up (unchanged-image services are left running by compose)..."
 docker compose -f docker-compose.staging.yml up -d
 
-log "Health-check loop..."
+log "Health-check loop (hr-ai runs warm-model.py before uvicorn even binds its"
+log "port on a first deploy — the BGE-M3 download, ~4.3GB, can take a while)..."
 ok=1
-for i in $(seq 1 30); do
+ATTEMPTS=90
+for i in $(seq 1 "$ATTEMPTS"); do
   ok=1
   curl -sf "http://localhost/up" >/dev/null || ok=0
   curl -sf "http://localhost/" >/dev/null || ok=0
-  docker compose -f docker-compose.staging.yml exec -T hr-ai curl -sf http://localhost:8001/health >/dev/null || ok=0
-  docker compose -f docker-compose.staging.yml exec -T hr-ai curl -sf http://localhost:8001/health/model >/dev/null || ok=0
+  docker compose -f docker-compose.staging.yml exec -T hr-ai curl -sf http://localhost:8001/health >/dev/null 2>&1 || ok=0
+  docker compose -f docker-compose.staging.yml exec -T hr-ai curl -sf http://localhost:8001/health/model >/dev/null 2>&1 || ok=0
   worker_state="$(docker compose -f docker-compose.staging.yml ps hr-backend-worker --format '{{.State}}' 2>/dev/null || echo missing)"
   [[ "$worker_state" == "running" ]] || ok=0
   if [[ "$ok" -eq 1 ]]; then
-    log "All health checks green (attempt ${i})."
+    log "All health checks green (attempt ${i}/${ATTEMPTS})."
     break
   fi
-  log "Not ready yet (attempt ${i}/30) — hr-ai's /health/model can take a while on the FIRST deploy (BGE-M3 download, ~4.3GB). Retrying in 10s..."
+  log "Not ready yet (attempt ${i}/${ATTEMPTS}). Retrying in 10s..."
   sleep 10
 done
 
 if [[ "$ok" -ne 1 ]]; then
-  log "Health checks did NOT pass after 30 attempts. NOT recording this as the last-good deploy."
+  log "Health checks did NOT pass after ${ATTEMPTS} attempts. NOT recording this as the last-good deploy."
   docker compose -f docker-compose.staging.yml ps
   exit 1
 fi
