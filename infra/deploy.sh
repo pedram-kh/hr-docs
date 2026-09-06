@@ -57,10 +57,17 @@ clone_or_checkout hr-docs     https://github.com/pedram-kh/hr-docs.git     "$HR_
 # docker-compose.staging.yml's relative build contexts (./hr-backend, ...)
 # and relative bind mounts (./entrypoint.sh, ./Caddyfile) both depend on this
 # exact flat layout, not on hr-docs's own directory structure.
-cp "$ROOT/hr-docs/infra/compose/docker-compose.staging.yml" "$ROOT/docker-compose.staging.yml"
-cp "$ROOT/hr-docs/infra/compose/entrypoint.sh" "$ROOT/entrypoint.sh"
-cp "$ROOT/hr-docs/infra/compose/Caddyfile" "$ROOT/Caddyfile"
-cp "$ROOT/hr-docs/infra/compose/warm-model.py" "$ROOT/warm-model.py"
+# rm -rf first: if a bind mount's source is ever missing when a container is
+# (re)created, Docker silently creates a DIRECTORY there as the mount point
+# — a plain `cp` would then copy INTO that directory rather than replace it
+# (found live: `/opt/hr-staging/warm-model.py` became a directory this way
+# on the run before this file existed, then silently kept eating every
+# subsequent `cp` into `warm-model.py/warm-model.py`). Removing first makes
+# each of these four copies unconditionally correct on every run.
+for f in docker-compose.staging.yml entrypoint.sh Caddyfile warm-model.py; do
+  rm -rf "$ROOT/$f"
+  cp "$ROOT/hr-docs/infra/compose/$f" "$ROOT/$f"
+done
 chmod +x "$ROOT/entrypoint.sh"
 
 log "Leak scan (staging plan §4 step 4) — must pass before any build..."
