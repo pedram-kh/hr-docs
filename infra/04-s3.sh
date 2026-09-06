@@ -39,5 +39,29 @@ log "Ensuring versioning is ON for ${NAME_S3_BACKUPS}..."
 aws s3api put-bucket-versioning --bucket "$NAME_S3_BACKUPS" \
   --versioning-configuration Status=Enabled
 
+# Cost hygiene (staging plan §8): nightly db-backup uploads to pg/*.sql.gz
+# forever with no cap otherwise — individually tiny (~20MB compressed) but
+# unbounded over the environment's lifetime. 30 days of nightly dumps is
+# already more restore-rehearsal history than this staging box needs (RDS's
+# own 7-day automated-snapshot retention, set in 03-rds.sh, is the primary
+# safety net; these pg_dumps are a belt-and-suspenders secondary copy).
+# Versioning is ON for this bucket (line above, per spec) — without also
+# expiring noncurrent versions, every overwritten/deleted object's OLD
+# version(s) would persist billed forever too, so both rules are applied
+# together. Idempotent: put-bucket-lifecycle-configuration always overwrites
+# the full configuration, safe to re-run.
+log "Ensuring a 30-day lifecycle rule exists for ${NAME_S3_BACKUPS} (pg/* current + noncurrent versions)..."
+aws s3api put-bucket-lifecycle-configuration --bucket "$NAME_S3_BACKUPS" --lifecycle-configuration '{
+  "Rules": [
+    {
+      "ID": "expire-pg-backups-30d",
+      "Filter": {"Prefix": "pg/"},
+      "Status": "Enabled",
+      "Expiration": {"Days": 30},
+      "NoncurrentVersionExpiration": {"NoncurrentDays": 30}
+    }
+  ]
+}'
+
 log "04-s3.sh done."
 aws s3api list-buckets --query "Buckets[?starts_with(Name,'hr-staging-')].Name" --output table

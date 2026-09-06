@@ -567,15 +567,18 @@ Each service sets Compose's built-in `logging.driver: json-file` with `max-size:
 
 | Component | Size | ~$/day (eu-west-1, on-demand, 24/7) |
 |---|---|---|
-| EC2 `t3.large` | 2 vCPU/8GB | ~$1.95 |
-| EBS 100GB gp3 | | ~$0.27 |
-| RDS `db.t4g.medium` | single-AZ | ~$1.65 |
-| RDS storage 50GB gp3 | | ~$0.16 |
-| Elastic IP (attached) | | $0.00 (free while associated) |
+| EC2 `t3.large` | 2 vCPU/8GB | ~$2.19 (`$0.0912`/hr — verified live via `aws pricing get-products`, Session 3; this plan's original `$1.95` figure was a slightly stale estimate) |
+| EBS 100GB gp3 | | ~$0.29 (`$0.088`/GB-month) |
+| RDS `db.t4g.medium` | single-AZ | ~$1.66 (`$0.069`/hr — verified) |
+| RDS storage 50GB gp3 | | ~$0.21 (`$0.127`/GB-month) |
+| Elastic IP | | ~$0.12 (`$0.005`/hr — **correction, found at build time**: AWS made *all* public IPv4 addresses billable Feb 1 2024, attached or idle, same rate either way. This plan's original "$0.00, free while associated" line reflected the pre-2024 policy and was wrong the whole time; it is *not* a staging-specific mistake, just an out-of-date assumption baked into the initial plan) |
+| RDS manual snapshot (`hr-staging-post-ingest-20260906`, 50GB) | | $0.00 today — within the free backup-storage allocation (equal to provisioned DB storage, i.e. 50GB, while the DB instance exists); would become `$0.095`/GB-month if the source instance is ever deleted |
 | S3 (documents+backups, low volume) | | ~$0.05–0.15 |
-| **Total, running** | | **~$4.0–4.2/day** — confirmed in the spec's `$4-5/day` range |
-| **Total, stopped** (`stop.sh`) | EC2+RDS compute stopped; EBS/RDS storage still billed | ~$0.45/day (storage only) |
+| **Total, running** | | **~$4.5–4.7/day** — still inside the spec's `$4-5/day` range, revised up from this plan's original `$4.0-4.2` after the EC2-rate and EIP corrections above |
+| **Total, stopped** (`stop.sh`) | EC2+RDS compute stopped; EBS/RDS storage + the now-always-billed EIP still billed | ~$0.62–0.72/day (was `$0.45`; +$0.12 EIP correction + more precise storage rates) |
 | Ingest hour, resized | `c7i.2xlarge` (8 vCPU/16GB) for ~1-2h | ~$0.35-0.70 extra that day — matches the spec's "~$0.50 extra per run" |
+
+Verified live at build time via `aws pricing get-products` (eu-west-1, captured 2026-09-06) rather than re-estimated from memory. Cost Explorer's own tag-filtered billing (`Env=staging`) was checked too but returned no data yet — cost-allocation tags take up to 24h to activate after first use, and these resources are hours old at time of writing; re-check Cost Explorer after a day or two of real usage to confirm against actual billed amounts rather than list pricing.
 
 **Stop-when-idle habit**: `stop.sh` documented as the end-of-day default; `start.sh` as the beginning-of-day default. `status.sh` (§2.8) is the single command that answers "is anything running that I forgot to stop" and "is the corpus/worker healthy."
 
