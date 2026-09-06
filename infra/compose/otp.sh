@@ -33,10 +33,21 @@ RAW_LOG="$(docker compose -f "$COMPOSE_FILE" exec -T hr-backend \
 # match an unrelated 6-digit number elsewhere in the log tail. Quoted-
 # printable soft line breaks ("=\n") are collapsed first in case the 6-digit
 # code happens to straddle a wrapped line.
+#
+# Found live: the original `awk '/.../{f=1} f'` sets f=1 on the FIRST match
+# and never resets it, so it prints from the first occurrence through the
+# end of the tail — every subsequent request-code call in the same log
+# window (e.g. a repeat login) just appends more text after that point. The
+# `| head -n 1` on the following grep then returns the OLDEST 6-digit code
+# in the whole matched region, not the most recent request. Any second call
+# to this script for the same email within the log tail's window verified a
+# stale code. Fixed by resetting the buffer on EVERY match instead of only
+# arming it once, so only the text from the LAST occurrence onward survives
+# — then the first 6-digit number in THAT is the newest code.
 CODE="$(printf '%s\n' "$RAW_LOG" \
   | tr -d '\r' \
   | sed ':a;N;$!ba;s/=\n//g' \
-  | awk '/Your HR Platform login code/{f=1} f' \
+  | awk '/Your HR Platform login code/{buf=""} {buf=buf"\n"$0} END{print buf}' \
   | grep -oE '[0-9]{6}' \
   | head -n 1)"
 
