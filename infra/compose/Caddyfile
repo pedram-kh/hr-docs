@@ -1,0 +1,33 @@
+# Staging Caddyfile — plain HTTP on the EIP (staging plan §9 open question 1:
+# no domain confirmed yet; this is the documented first-bring-up variant).
+# Once a domain exists, replace `:80` with the domain name and Caddy handles
+# ACME/HTTPS automatically with no other change to the site block below.
+#
+# hr-backend's own nginx (inside that container) is never reached directly
+# from the internet — only this Caddy is internet-facing (EC2 SG: 80/443
+# from 0.0.0.0/0, everything else restricted).
+
+:80 {
+	# API + Laravel's default health route → hr-backend's nginx (:80 inside
+	# the compose network, service name `hr-backend`).
+	handle /api/* {
+		reverse_proxy hr-backend:80
+	}
+	handle /up {
+		reverse_proxy hr-backend:80
+	}
+
+	# Everything else → the built frontend (SPA — client-side routing, so
+	# any unmatched path falls back to index.html).
+	handle {
+		root * /srv/frontend
+		try_files {path} /index.html
+		file_server
+	}
+
+	encode gzip
+	log {
+		output stdout
+		format console
+	}
+}
