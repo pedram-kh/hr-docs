@@ -1,0 +1,106 @@
+{
+  "_about": "Sprint 7d (ADR-0024) — LABELED calibration anchors for the semantic publish fence. Each probe's true relationship to its convenio's official text is KNOWN, which is the one thing the real published-ruling distribution cannot provide: without a known-true overlap there is nothing to prove a candidate block threshold sits below one. Run with `php artisan fence:calibrate-semantic --anchors` (read-only). The command reports, per anchor, the max score AND the top matching excerpt — verify the excerpt actually is the clause the anchor claims to paraphrase before trusting the number.",
+
+  "_classes": {
+    "paraphrase": "A near-verbatim restatement, in different words, of a rule the convenio genuinely states — i.e. exactly what an internal HR ruling looks like when it restates the convenio. THE BLOCK THRESHOLD IS SET BELOW THE LOWEST SCORE THIS CLASS PRODUCES, so no genuine overlap escapes.",
+    "same_topic_other_point": "Same subject area as the convenio's text, but a DIFFERENT rule — the shape of a legitimate ruling that fills a gap. Anchors the ACKNOWLEDGE band: plausible enough to show a human, not certain enough to block.",
+    "unrelated": "Administrative/legal prose with no relationship to the convenio's subject matter. Establishes the floor — how high a score means nothing at all."
+  },
+
+  "_provenance": "The `paraphrase` probes restate clauses recorded in ../../sprint-07b-2/eval/gold-set.json, which was hand-built and verified line-by-line against the real fixture documents (see that folder's README). The convenio numbers are the real registry bindings from the same gold set. `verified_against` names the gold entry each probe paraphrases. If a convenio's own PDF words a rule differently from the reference compilation, the command's reported excerpt will show it — that is why the excerpt is reported rather than just the score.",
+
+  "_caveat": "These probes were written by hand, not sampled from the convenios' own chunk text (which lives only in the deployed database). A paraphrase whose convenio has no text layer, or whose clause is worded very differently, will score low and DRAG THE RECOMMENDED THRESHOLD DOWN — which errs toward blocking more, the safe direction. It does not err toward passing.",
+
+  "anchors": [
+    {
+      "id": "a1-navarra-intervencion-periodo",
+      "class": "paraphrase",
+      "convenio_numero": "31101815012021",
+      "scope": "Navarra · Acción e Intervención Social",
+      "verified_against": "gold-set: Navarra / Acción e Intervención Social / 'Grupos 1 y 2' = 'Seis Meses'; 'Resto de grupos' = 'Dos meses'",
+      "probe": "El periodo de prueba del personal encuadrado en los grupos profesionales 1 y 2 tendrá una duración de seis meses. Para el resto de los grupos profesionales, la duración del periodo de prueba será de dos meses."
+    },
+    {
+      "id": "a2-alava-coeas-periodo",
+      "class": "paraphrase",
+      "convenio_numero": "01100635012017",
+      "scope": "Álava · COEAS",
+      "verified_against": "gold-set: Álava / COEAS / 'Grupo 1' = 'Cinco meses' (the cross-province trap), 'Grupo 2' = 'Dos meses'",
+      "probe": "Quienes pertenezcan al grupo 1 estarán sujetos a un periodo de prueba de cinco meses. El personal del grupo 2 tendrá un periodo de prueba de dos meses, y los grupos 3, 4, 5 y 6 de un mes, salvo el personal titulado de grado superior y medio, para el que será de dos meses."
+    },
+    {
+      "id": "a3-vizcaya-intervencion-periodo",
+      "class": "paraphrase",
+      "convenio_numero": "48006185012006",
+      "scope": "Vizcaya · Intervención Social",
+      "verified_against": "gold-set: Vizcaya / Intervención Social / 'Grupos 1,2 y 3' = 'Tres meses'; 'Grupos 4 y 5' = 'Un mes'",
+      "probe": "Se establece un periodo de prueba de tres meses para el personal de los grupos 1, 2 y 3. El personal de los grupos 4 y 5 quedará sujeto a un periodo de prueba de un mes de duración."
+    },
+    {
+      "id": "a4-navarra-deportiva-periodo",
+      "class": "paraphrase",
+      "convenio_numero": "31008235012003",
+      "scope": "Navarra · Gestión Deportiva",
+      "verified_against": "gold-set: Navarra / Gestión Deportiva / 'Grupo 1' = 'Seis meses', 'Grupo 2' = 'Dos meses', 'Grupos 3,4 y 5' = 'Un mes', 'Grupo 6' = '15 días naturales'",
+      "probe": "La duración del periodo de prueba será de seis meses para el grupo 1, dos meses para el grupo 2, un mes para los grupos 3, 4 y 5, y quince días naturales para el grupo 6."
+    },
+    {
+      "id": "a5-estatal-coeas-periodo",
+      "class": "paraphrase",
+      "convenio_numero": "99100055012011",
+      "scope": "Estatal · COEAS",
+      "verified_against": "gold-set: Estatal / COEAS / 'Grupo 1' = 'Seis meses', 'Grupo 2' = 'dos meses'",
+      "probe": "El personal del grupo 1 tendrá un periodo de prueba de seis meses de duración, y el del grupo 2 de dos meses. Para los grupos 3, 4, 5 y 6 el periodo de prueba será de un mes, excepto para los titulados de grado superior y grado medio, cuyo periodo de prueba será de dos meses."
+    },
+
+    {
+      "id": "b1-navarra-intervencion-otro-punto",
+      "class": "same_topic_other_point",
+      "convenio_numero": "31101815012021",
+      "scope": "Navarra · Acción e Intervención Social",
+      "why_this_class": "Contract-conditions territory (the same chapter of a convenio as the periodo de prueba) but a DIFFERENT rule: notice on resignation. A ruling stating this is filling a gap, not overriding.",
+      "probe": "El trabajador que desee causar baja voluntaria en la empresa deberá comunicarlo por escrito con una antelación mínima de quince días. El incumplimiento de este plazo de preaviso dará lugar al descuento en la liquidación de la parte proporcional correspondiente."
+    },
+    {
+      "id": "b2-alava-coeas-otro-punto",
+      "class": "same_topic_other_point",
+      "convenio_numero": "01100635012017",
+      "scope": "Álava · COEAS",
+      "why_this_class": "Same convenio, adjacent subject (working-time flexibility), not the periodo de prueba rule.",
+      "probe": "La distribución irregular de la jornada anual podrá afectar como máximo al diez por ciento del total de horas, respetando en todo caso el descanso mínimo entre jornadas y la comunicación al trabajador con siete días de antelación."
+    },
+    {
+      "id": "b3-vizcaya-intervencion-otro-punto",
+      "class": "same_topic_other_point",
+      "convenio_numero": "48006185012006",
+      "scope": "Vizcaya · Intervención Social",
+      "why_this_class": "Same convenio, adjacent subject (leave for family reasons), not the periodo de prueba rule.",
+      "probe": "El personal tendrá derecho a un permiso retribuido de dos días por el fallecimiento de un familiar hasta el segundo grado de consanguinidad o afinidad, ampliables a cuatro días cuando sea necesario un desplazamiento fuera de la provincia."
+    },
+
+    {
+      "id": "c1-unrelated-proteccion-datos",
+      "class": "unrelated",
+      "convenio_numero": "31101815012021",
+      "scope": "Navarra · Acción e Intervención Social",
+      "why_this_class": "Data-protection boilerplate: legal register, no relationship to any labour rule in the convenio.",
+      "probe": "El responsable del tratamiento adoptará las medidas técnicas y organizativas apropiadas para garantizar un nivel de seguridad adecuado al riesgo, incluida la pseudonimización y el cifrado de los datos personales, conforme al Reglamento General de Protección de Datos."
+    },
+    {
+      "id": "c2-unrelated-licitacion",
+      "class": "unrelated",
+      "convenio_numero": "01100635012017",
+      "scope": "Álava · COEAS",
+      "why_this_class": "Public-procurement prose: legal register, unrelated subject matter.",
+      "probe": "El plazo de presentación de ofertas finalizará a las catorce horas del decimoquinto día natural siguiente a la publicación del anuncio de licitación en el perfil del contratante, sin que se admitan proposiciones presentadas con posterioridad."
+    },
+    {
+      "id": "c3-unrelated-mantenimiento",
+      "class": "unrelated",
+      "convenio_numero": "48006185012006",
+      "scope": "Vizcaya · Intervención Social",
+      "why_this_class": "Technical maintenance instructions: no labour-rule content at all.",
+      "probe": "La revisión periódica del sistema de climatización se realizará cada seis meses, comprobando la presión del circuito, la estanqueidad de las conducciones y el estado de los filtros, y quedará registrada en el libro de mantenimiento de la instalación."
+    }
+  ]
+}
