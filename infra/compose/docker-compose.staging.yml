@@ -1,0 +1,256 @@
+# docker-compose.staging.yml — hr-staging app stack (staging plan §3.3).
+#
+# Lives in hr-docs (not any one app repo) because it references all four
+# repos as sibling build contexts. deploy.sh copies this file FLAT (alongside
+# Caddyfile and entrypoint.sh, same directory) to /opt/hr-staging/ on the EC2,
+# next to the four repo checkouts, so relative build contexts (./hr-backend,
+# ./hr-ai, ./hr-frontend) AND the relative bind mounts below (./entrypoint.sh,
+# ./Caddyfile) both resolve correctly — see deploy.sh for the exact layout.
+#
+# No postgres/minio/mailhog services — those are RDS/S3/(log-driver mail) on
+# staging, matching hr-docs/deploy.md §2. Every service's real secrets are
+# resolved at container start from SSM via the shared `entrypoint.sh`
+# (bind-mounted below, using the EC2 instance profile's credentials) — NOT
+# from this file, which never contains a secret value, only SSM parameter
+# PATHS (names, not values).
+#
+# Non-secret, environment-specific values (RDS endpoint, bucket name, EIP/
+# APP_URL, account id, region) are ${VAR}-substituted from the calling
+# shell's environment — deploy.sh exports them before invoking `docker
+# compose`. Nothing account-specific is hardcoded here, so the same file
+# works for the production re-run with different exported values.
+#
+# Usage (always from deploy.sh, which exports the vars below first):
+#   docker compose -f docker-compose.staging.yml build
+#   docker compose -f docker-compose.staging.yml run --rm hr-backend php artisan migrate --force
+#   docker compose -f docker-compose.staging.yml up -d
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+services:
+  hr-backend:
+    build:
+      context: ./hr-backend
+    image: hr-staging-hr-backend:latest
+    restart: unless-stopped
+    entrypoint:
+      - /entrypoint.sh
+      - APP_KEY=/hr-staging/hr-backend/app-key
+      - DB_PASSWORD=/hr-staging/rds/master-password
+      - HR_AI_DB_PASSWORD=/hr-staging/shared/hr-ai-db-password
+      - HR_AI_INTERNAL_TOKEN=/hr-staging/shared/internal-token
+      - POSTMARK_API_KEY=/hr-staging/hr-backend/postmark-api-key
+      - --
+    command: ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+    environment:
+      APP_NAME: "HR Platform"
+      APP_ENV: staging
+      APP_DEBUG: "false"
+      APP_URL: http://${STAGING_EIP}
+      LOG_CHANNEL: stack
+      # debug, not info: Laravel's `log` mail transport (MAIL_MAILER=log
+      # below) writes the rendered email via $logger->debug(...)
+      # (vendor/laravel/framework/.../Mail/Transport/LogTransport.php) —
+      # found live, otp.sh got a 200 and a login_codes row was created, but
+      # storage/logs/laravel.log stayed empty because Monolog's "info"
+      # threshold silently dropped every debug-level record, including the
+      # OTP mail otp.sh depends on reading back out. No Postmark account
+      # yet (staging plan §4 open question), so this IS the mail delivery
+      # path for now — its log level requirement isn't optional.
+      LOG_LEVEL: debug
+      DB_CONNECTION: pgsql
+      DB_HOST: ${RDS_ENDPOINT}
+      DB_PORT: "5432"
+      DB_DATABASE: hr_platform
+      DB_USERNAME: hr_staging_admin
+      SESSION_DRIVER: database
+      FILESYSTEM_DISK: s3
+      QUEUE_CONNECTION: database
+      CACHE_STORE: database
+      MAIL_MAILER: log
+      MAIL_FROM_ADDRESS: "noreply@hr-platform.local"
+      MAIL_FROM_NAME: "HR Platform"
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+      AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
+      HR_AI_URL: http://hr-ai:8001
+      SANCTUM_TOKEN_TTL_MINUTES: "1440"
+      FRONTEND_URL: http://${STAGING_EIP}
+      AWS_REGION: ${AWS_REGION}
+      # Obviously-fake placeholder identities for `php artisan
+      # staging:seed-test-users` (staging plan, Session 2) — NOT real people.
+      # Nothing is ever emailed to them (MAIL_MAILER=log); they exist only as
+      # login identifiers to prove the OTP flow end-to-end (otp.sh reads the
+      # code back out of the container log, never a real inbox).
+      SEED_ADMIN_EMAIL: admin@hr-staging.internal
+      SEED_EMPLOYEE_EMAIL: employee@hr-staging.internal
+      SEED_EDITOR_EMAIL: editor@hr-staging.internal
+      SEED_AUDITOR_EMAIL: auditor@hr-staging.internal
+      SEED_HR_AGENT_EMAIL: agent@hr-staging.internal
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+      - ingest-scratch:/opt/hr-staging/ingest-scratch
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  hr-backend-worker:
+    build:
+      context: ./hr-backend
+    image: hr-staging-hr-backend:latest
+    restart: unless-stopped
+    entrypoint:
+      - /entrypoint.sh
+      - APP_KEY=/hr-staging/hr-backend/app-key
+      - DB_PASSWORD=/hr-staging/rds/master-password
+      - HR_AI_INTERNAL_TOKEN=/hr-staging/shared/internal-token
+      - --
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=120"]
+    environment:
+      APP_ENV: staging
+      APP_DEBUG: "false"
+      LOG_CHANNEL: stack
+      LOG_LEVEL: info
+      DB_CONNECTION: pgsql
+      DB_HOST: ${RDS_ENDPOINT}
+      DB_PORT: "5432"
+      DB_DATABASE: hr_platform
+      DB_USERNAME: hr_staging_admin
+      FILESYSTEM_DISK: s3
+      QUEUE_CONNECTION: database
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+      AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
+      HR_AI_URL: http://hr-ai:8001
+      AWS_REGION: ${AWS_REGION}
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    logging: *default-logging
+    depends_on:
+      hr-backend:
+        condition: service_healthy
+
+  hr-ai:
+    build:
+      context: ./hr-ai
+    image: hr-staging-hr-ai:latest
+    restart: unless-stopped
+    entrypoint:
+      - /entrypoint.sh
+      - DATABASE_URL=/hr-staging/hr-ai/database-url
+      - INTERNAL_TOKEN=/hr-staging/shared/internal-token
+      - --
+    # warm-model.py forces the model download/cache explicitly at container
+    # start (see that file's header — hr-ai's own lazy-load design has no
+    # startup hook, so left alone the model would never pre-fetch on its
+    # own). Uvicorn only starts, and the port only opens, once it's done.
+    command: ["sh", "-c", "python /warm-model.py && exec uvicorn app.main:app --host 0.0.0.0 --port 8001"]
+    environment:
+      AWS_ENDPOINT: https://s3.${AWS_REGION}.amazonaws.com
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
+      AWS_USE_PATH_STYLE: "false"
+      EXTRACT_IMAGE_DPI: "150"
+      EMBED_MODEL: BGE-M3
+      EMBED_MODEL_HF: BAAI/bge-m3
+      EMBED_DIM: "1024"
+      ANTHROPIC_API_KEY: ""
+      # AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY DELIBERATELY unset — see
+      # app/storage.py: falls back to the instance profile's credential chain.
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+      - ./warm-model.py:/warm-model.py:ro
+      - model-cache:/model-cache
+    logging: *default-logging
+    healthcheck:
+      # Polls /health/model (not /health) so `docker compose ps` correctly
+      # shows `starting`/`unhealthy` through the whole first-run BGE-M3
+      # download window instead of falsely `healthy` (staging plan §3.2).
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health/model"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  frontend-dist:
+    build:
+      context: ./hr-frontend
+      args:
+        VITE_API_BASE_URL: /api
+    image: hr-staging-hr-frontend:latest
+    restart: "no"
+    volumes:
+      - frontend-dist:/out
+    logging: *default-logging
+
+  # db-backup — one-shot, invoked via `docker compose run --rm db-backup`
+  # (never `up`, so it has no restart: policy and doesn't start on its own).
+  # Nightly cron on the host runs exactly that (staging plan §6, set up by
+  # setup-backup-cron.sh). Built from backup.Dockerfile (postgres:16-alpine
+  # + aws-cli baked in at build time — see that file's header for why it
+  # can't be installed at `command:` run-time instead). PGPASSWORD resolved
+  # from SSM via the shared entrypoint.sh, same as every other service;
+  # PGHOST/PGUSER/PGDATABASE read natively by pg_dump (no flags needed).
+  # Uses the EC2 instance profile's S3-write permission on the backups
+  # bucket (06-iam.sh's HrStagingS3ReadWriteBackups) — no new IAM grant.
+  db-backup:
+    build:
+      context: .
+      dockerfile: backup.Dockerfile
+    image: hr-staging-db-backup:latest
+    restart: "no"
+    entrypoint:
+      - /entrypoint.sh
+      - PGPASSWORD=/hr-staging/rds/master-password
+      - --
+    command:
+      - sh
+      - -c
+      - |
+        set -euo pipefail
+        ts="$$(date +%F_%H%M%S)"
+        out="/tmp/hr-staging-$${ts}.sql.gz"
+        echo "[db-backup] pg_dump $${PGDATABASE}@$${PGHOST} -> $${out} ..."
+        pg_dump | gzip > "$${out}"
+        aws s3 cp "$${out}" "s3://${S3_BACKUPS_BUCKET}/pg/$${ts}.sql.gz"
+        echo "[db-backup] uploaded pg/$${ts}.sql.gz"
+    environment:
+      PGHOST: ${RDS_ENDPOINT}
+      PGPORT: "5432"
+      PGUSER: hr_staging_admin
+      PGDATABASE: hr_platform
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    logging: *default-logging
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - frontend-dist:/srv/frontend:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      frontend-dist:
+        condition: service_completed_successfully
+      hr-backend:
+        condition: service_healthy
+    logging: *default-logging
+
+volumes:
+  model-cache:
+  frontend-dist:
+  ingest-scratch:
+  caddy-data:
+  caddy-config:

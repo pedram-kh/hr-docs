@@ -1,0 +1,43 @@
+# Staging Caddyfile — plain HTTP on the EIP (staging plan §9 open question 1:
+# no domain confirmed yet; this is the documented first-bring-up variant).
+# Once a domain exists, replace `:80` with the domain name and Caddy handles
+# ACME/HTTPS automatically with no other change to the site block below.
+#
+# hr-backend's own nginx (inside that container) is never reached directly
+# from the internet — only this Caddy is internet-facing (EC2 SG: 80/443
+# from 0.0.0.0/0, everything else restricted).
+#
+# hr-backend/bootstrap/app.php sets apiPrefix: '' — its routes are
+# UNPREFIXED (/auth/request-code, /me, /admin/*, ...), while the frontend is
+# built with VITE_API_BASE_URL=/api (hr-frontend/Dockerfile build arg) and
+# calls e.g. /api/auth/request-code. `handle_path` (not `handle`) strips the
+# matched /api prefix before proxying, so hr-backend sees the path its
+# routes actually expect. Found live: `handle` alone forwards /api/* with
+# /api still attached, which 404s against every route (otp.sh's
+# request-code call).
+
+:80 {
+	# API + Laravel's default health route → hr-backend's nginx (:80 inside
+	# the compose network, service name `hr-backend`). /api prefix is
+	# stripped by handle_path — see note above.
+	handle_path /api/* {
+		reverse_proxy hr-backend:80
+	}
+	handle /up {
+		reverse_proxy hr-backend:80
+	}
+
+	# Everything else → the built frontend (SPA — client-side routing, so
+	# any unmatched path falls back to index.html).
+	handle {
+		root * /srv/frontend
+		try_files {path} /index.html
+		file_server
+	}
+
+	encode gzip
+	log {
+		output stdout
+		format console
+	}
+}
