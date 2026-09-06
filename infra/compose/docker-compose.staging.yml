@@ -192,16 +192,18 @@ services:
   # db-backup — one-shot, invoked via `docker compose run --rm db-backup`
   # (never `up`, so it has no restart: policy and doesn't start on its own).
   # Nightly cron on the host runs exactly that (staging plan §6, set up by
-  # setup-backup-cron.sh). image: postgres:16-alpine (not a custom build —
-  # matches RDS's engine version for pg_dump/pg_restore compatibility) with
-  # aws-cli installed at run-time via apk (small, ~10s, avoids maintaining a
-  # separate Dockerfile for a single nightly job). PGPASSWORD resolved from
-  # SSM via the shared entrypoint.sh, same as every other service; PGHOST/
-  # PGUSER/PGDATABASE read natively by pg_dump (no flags needed). Uses the
-  # EC2 instance profile's S3-write permission on the backups bucket
-  # (06-iam.sh's HrStagingS3ReadWriteBackups) — no new IAM grant needed.
+  # setup-backup-cron.sh). Built from backup.Dockerfile (postgres:16-alpine
+  # + aws-cli baked in at build time — see that file's header for why it
+  # can't be installed at `command:` run-time instead). PGPASSWORD resolved
+  # from SSM via the shared entrypoint.sh, same as every other service;
+  # PGHOST/PGUSER/PGDATABASE read natively by pg_dump (no flags needed).
+  # Uses the EC2 instance profile's S3-write permission on the backups
+  # bucket (06-iam.sh's HrStagingS3ReadWriteBackups) — no new IAM grant.
   db-backup:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: backup.Dockerfile
+    image: hr-staging-db-backup:latest
     restart: "no"
     entrypoint:
       - /entrypoint.sh
@@ -212,7 +214,6 @@ services:
       - -c
       - |
         set -euo pipefail
-        apk add --no-cache aws-cli >/dev/null 2>&1
         ts="$$(date +%F_%H%M%S)"
         out="/tmp/hr-staging-$${ts}.sql.gz"
         echo "[db-backup] pg_dump $${PGDATABASE}@$${PGHOST} -> $${out} ..."

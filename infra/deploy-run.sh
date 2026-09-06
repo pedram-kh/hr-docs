@@ -50,10 +50,10 @@ clone_or_checkout hr-frontend https://github.com/pedram-kh/hr-frontend.git "$HR_
 log "hr-docs @ $(git -C hr-docs rev-parse HEAD) (already checked out by deploy.sh's bootstrap step)"
 
 # Flatten the compose assets from hr-docs alongside the four repo checkouts —
-# docker-compose.staging.yml's relative build contexts (./hr-backend, ...)
-# and relative bind mounts (./entrypoint.sh, ./Caddyfile, ./warm-model.py)
-# both depend on this exact flat layout, not on hr-docs's own directory
-# structure.
+# docker-compose.staging.yml's relative build contexts (./hr-backend, ...,
+# and ./backup.Dockerfile for db-backup) and relative bind mounts
+# (./entrypoint.sh, ./Caddyfile, ./warm-model.py) both depend on this exact
+# flat layout, not on hr-docs's own directory structure.
 #
 # rm -rf first: if a bind mount's source is ever missing when a container is
 # (re)created, Docker silently creates a DIRECTORY there as the mount point
@@ -61,8 +61,8 @@ log "hr-docs @ $(git -C hr-docs rev-parse HEAD) (already checked out by deploy.s
 # (found live: `/opt/hr-staging/warm-model.py` became a directory this way
 # the run before that file existed, then silently ate every subsequent `cp`
 # into `warm-model.py/warm-model.py`). Removing first makes each of these
-# four copies unconditionally correct on every run.
-for f in docker-compose.staging.yml entrypoint.sh Caddyfile warm-model.py; do
+# copies unconditionally correct on every run.
+for f in docker-compose.staging.yml entrypoint.sh Caddyfile warm-model.py backup.Dockerfile; do
   rm -rf "$ROOT/$f"
   cp "$ROOT/hr-docs/infra/compose/$f" "$ROOT/$f"
 done
