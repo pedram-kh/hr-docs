@@ -159,18 +159,28 @@ Built on top of session 1's infra, no AWS resource re-created.
 3. Ran, in order: `registry:import` → `documents:ingest-folder` (hr-ai `/extract` over S3, via the instance profile) → `chunks:embed` → `salary:import`.
 4. `resize-back.sh` → back to `t3.large`. Confirmed live afterward: EC2 `t3.large`/`running`, RDS `db.t4g.medium`/`available` (both idempotency-checked, not just assumed).
 
-**Post-ingest counts** (verified via `psql`, matches the expected-zeros note in plan §7 — `salary_table_rows`/`salary_tables` are `0` because the imported salary data is still `pending convenio assignment`, not an ingest failure):
+**Post-ingest counts** (verified via `psql`):
 
 | Table | Count |
 |---|---|
 | `documents` | 98 |
 | `document_chunks` | 3364 |
 | `document_pages` | 2876 |
-| `employees` | 1 |
+| `employees` | 1 (+1, `salary-test@hr-staging.internal`, added below) |
 | `admins` | 4 (the `staging:seed-test-users` accounts from session 2) |
-| `salary_tables` / `salary_table_rows` | 0 / 0 (expected — pending convenio assignment) |
+| `salary_tables` / `salary_table_rows` | 10 / 109 (see below — `0`/`0` at first, resolved same session) |
+| `convenio_job_categories` | 58 |
 
-A manual RDS snapshot, `hr-staging-post-ingest-20260906`, was taken immediately after ingest — the baseline used for the restore rehearsal below, and a same-day recovery point independent of the nightly automated ones.
+A manual RDS snapshot, `hr-staging-post-ingest-20260906`, was taken immediately after ingest — the baseline used for the restore rehearsal below, and a same-day recovery point independent of the nightly automated ones. A second manual snapshot, `hr-staging-post-salary-fix-20260906-220241`, was taken after the salary fix (below).
+
+**Salary import diagnosed and fixed (same session, follow-up request):** the first `salary:import` run wrote **0 rows** — of the 26 `salary_tables`-typed documents ingested, only 11 are `.xlsx` (the only format `salary:import` reads per ADR-0014's xlsx-first policy; the other 15 are PDF salary grids, a documented, distinct coverage gap, not this bug), and **all 11 had `convenio_id IS NULL`** — none of their filenames carry the 14-digit `numero` code the deterministic `FilenameParser` keys on, so all 11 landed `under_review` at ingest exactly as ADR-0014 §"catch 4" describes, awaiting a human convenio assignment. This is expected ingest behavior, not a bug.
+
+Fixed via the existing admin path, not by hand-inserting rows:
+1. Read each of the 11 filenames against the convenio registry (26 rows, `numero`/name/territory/sector). **5 matched a single convenio unambiguously** by territory+sector keyword (e.g. "Tablas Intervencion Social Navarra.xlsx" → convenio 18, ACCIÓN E INTERVENCIÓN SOCIAL/Navarra, the only convenio with that sector+territory combination). The other **6 do not — genuine coverage gaps**, not something to guess: one has no identifying text at all ("Tabla 2026.xlsx"), three name a convenio (COEAS Estatal / COEAS Andalucía / Deporte Estatal) that plain doesn't exist in this registry's 26 rows, one names only "COEAS" with no territory (ambiguous — the registry's only COEAS convenio is Navarra, but assigning to it without a territory match would be exactly the kind of guess ADR-0014 says never to make), one ("Tablas acuerdo parcial_Alhambra.xlsx") has no matching convenio by any field. Left `under_review`, listed by `salary:import`'s own pending-report every run — visible, not silent.
+2. Assigned the 5 confident matches via `PATCH /admin/documents/{uuid}/facets/convenio` (`confirm_scope_change: true`) as the seeded `super_admin`, then `POST /admin/documents/{uuid}/confirm` (Sprint-3 tag verify) on each.
+3. Re-running `salary:import` then hit a **real bug**, not a data-entry gap: two of the five docs each have a column genuinely header-labeled `€/hora` whose value is actually an annual figure (`13448.6184` == exactly 12× the adjacent year's monthly figure) — a data-entry error in the *source* spreadsheet. Writing it verbatim overflowed `hourly_rate`'s `decimal(8,4)` column and crashed the entire command (not just that document — `salary:import`'s per-document try/catch only covers the hr-ai extraction call, not a DB-constraint violation inside the write transaction). **Fixed in `hr-ai/app/salary.py`** (`593f86e`): each typed money field is now bound-checked against its DB column's actual precision before being returned; an out-of-range value is dropped (set to `null`, never force-fit, never "corrected" by guessing) but stays in `raw_values` verbatim like every other column, with a warning surfaced in `salary:import`'s output — visible, not silently lost, not silently crashed.
+4. Redeployed hr-ai, re-ran `salary:import` — all 5 assigned documents imported cleanly: **10 `salary_tables`, 109 `salary_table_rows`, 58 `convenio_job_categories`**, across convenios 6 (Deporte Cantabria), 10 (Agencias de Viajes), 18 (Acción e Intervención Social, Navarra), 19 (COEAS Navarra), 22 (Limpieza de Edificios y Locales, Navarra).
+5. **Proved the path end-to-end**: created a new test employee (`salary-test@hr-staging.internal`, via `POST /admin/employees`, not a DB insert) in convenio 18 / job category "GRUPO 1", logged in via `otp.sh`, asked `¿Cuánto gano?` through `/chat/message`. Response: `floor_decision.path = "salary_sql"`, `outcome = "answer"`, citation `chunk_id: null` / `is_salary_table: true`, answer correctly quoting `18,4916 €/hora` for 2026 — the exact figure in `salary_table_rows`.
 
 **Backup service + restore rehearsal:**
 - `infra/compose/docker-compose.staging.yml` gained a `db-backup` one-shot service (`restart: "no"`, only ever invoked via `docker compose run --rm db-backup`, never `up`) — `pg_dump | gzip` → `aws s3 cp` to `s3://hr-staging-backups-.../pg/<timestamp>.sql.gz`, using the EC2 instance profile's existing S3-write grant (no new IAM policy). **Found live:** the shared `entrypoint.sh` (bind-mounted into every service) resolves `PGPASSWORD` from SSM via `aws ssm get-parameter` *before* exec-ing the container's command — so `aws-cli` has to already be on `$PATH` at container start, not installed by the command itself (a first draft that ran `apk add aws-cli` inside `command:` failed with "aws: command not found", too late). Fixed by building the service from a new `infra/compose/backup.Dockerfile` (`postgres:16-alpine` + `aws-cli` baked in at build time) instead of the bare image.

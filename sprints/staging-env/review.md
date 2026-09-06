@@ -85,7 +85,7 @@ bug was found live during actual ingest).
 
 ## 3. App-code changes — went straight to `main`, each authorized live
 
-Four small, additive app-code changes were needed to get staging working. **All four
+Five small, additive app-code changes were needed to get staging working. **All five
 went directly to each app repo's `main` branch during the build**, not merged via PR —
 each was proposed, explicitly authorized in chat *before* being made, and disclosed
 immediately after. This section exists so they get a proper read at sprint review,
@@ -188,6 +188,40 @@ for `phpoffice/phpspreadsheet`, then a base-image bump to `php:8.4-fpm` for
 `composer.lock`'s `>=8.4.1` requirement) — no application logic changed, not detailed
 here.
 
+### hr-ai — bound-check typed salary columns before write (one commit, follow-up fix)
+
+**`593f86e`** — `app/salary.py`. Found live, in the follow-up salary-diagnosis request
+(§7 below): two source spreadsheets each have a column genuinely header-labeled
+`€/hora` whose value is actually an annual figure, not hourly (`13448.6184` == exactly
+12× the adjacent year's monthly figure — a data-entry error in the source file, not a
+column-mapping bug; the header match to `_HOURLY` was correct). Writing it verbatim
+overflowed hr-backend's `hourly_rate` `decimal(8,4)` column and crashed the entire
+`salary:import` run, not just that one document.
+
+```python
+_FIELD_BOUNDS = {
+    "gross_annual": 99_999_999.99,
+    "base_salary_monthly": 99_999_999.99,
+    "extra_pay": 99_999_999.99,
+    "hourly_rate": 9_999.9999,
+    "night_plus": 99_999_999.99,
+}
+
+def _bounded(field, value, name_for_warning=job_category_name):
+    if value is None or abs(value) < _FIELD_BOUNDS[field]:
+        return value
+    warnings.append(f"sheet '{name}': {field}={value!r} out of range for "
+                     f"'{name_for_warning}' ... — kept in raw_values only, not written as {field}")
+    return None
+```
+
+Each typed money field is bound-checked against its actual DB column precision before
+being returned. Out-of-range values are dropped (`null`, never force-fit, never
+"corrected" by guessing) but stay in `raw_values` verbatim like every other column,
+with a warning surfaced in `salary:import`'s CLI output — visible, not silently lost,
+not silently crashing. Verified against a synthetic reproduction of the exact failing
+row before deploying to staging. Full diagnosis and result in §7.
+
 ### hr-frontend — dead prop removal (one commit)
 
 **`305c77b`**: removed an unused `onChanged` prop from `AiSuggestionsSection`
@@ -215,9 +249,10 @@ to rule out a Docker-specific difference before touching app code.
 | `document_pages` | 2876 |
 | `employees` | 1 |
 | `admins` | 4 |
-| `salary_tables` / `salary_table_rows` | 0 / 0 — **expected**, not a failure: imported salary data is pending convenio assignment, same posture as dev |
+| `salary_tables` / `salary_table_rows` | 10 / 109 — see §7 below (started at 0/0, pending convenio assignment, then fixed same session) |
 
-A manual snapshot, `hr-staging-post-ingest-20260906`, was taken immediately after.
+A manual snapshot, `hr-staging-post-ingest-20260906`, was taken immediately after; a
+second, `hr-staging-post-salary-fix-20260906-220241`, after the salary fix (§7).
 
 **Backup + restore rehearsal:** a new `db-backup` one-shot Compose service
 (`pg_dump | gzip` → `aws s3 cp` to the backups bucket, via the instance profile's
@@ -272,15 +307,101 @@ above.
 |---|---|---|
 | `hr-docs` | infra scripts, compose files, Caddyfile, `deploy.sh`/`deploy-run.sh`, `09-restore-rehearsal.sh`, `setup-backup-cron.sh`, ADR-0025, `deploy.md` §7, `plan.md` §8 corrections, this file | pushed to `main` |
 | `hr-backend` | `450bddb`, `d81eaff`, `0feb879`, `99f4712` (§3, §2) | pushed to `main` |
-| `hr-ai` | `2a1483d`, `e7c6baa` (§3) | pushed to `main` |
+| `hr-ai` | `2a1483d`, `e7c6baa`, `593f86e` (§3, §7) | pushed to `main` |
 | `hr-frontend` | `305c77b`, `e0fa02e` (§3) | pushed to `main` |
 
-Nothing is left uncommitted or pending review in any of the four repos as of the end
-of session 3.
+Nothing is left uncommitted or pending review in any of the four repos as of this
+salary follow-up (end of session 3 plus the same-day salary fix).
 
 ---
 
-## 7. Open items / carried forward
+## 7. Follow-up: the salary path, diagnosed and fixed (same session)
+
+`salary:import` wrote 0 rows at first. Diagnosis: of the 26 ingested `salary_tables`-typed
+documents, only 11 are `.xlsx` (the only format the command reads — ADR-0014's
+xlsx-first policy; the other 15 are PDF salary grids, a separate, already-documented
+coverage gap, not this bug) — and **all 11 had `convenio_id IS NULL`**, because none of
+their filenames carry the 14-digit `numero` code the deterministic `FilenameParser`
+keys on. This is exactly the expected "lands `under_review`, needs an admin convenio
+assignment" behavior ADR-0014 describes (its "catch 4") — not an ingest failure.
+
+**Fixed via the existing admin path, never by hand-inserting rows:**
+
+1. Matched each of the 11 filenames against the 26-row convenio registry by
+   territory+sector keyword. **5 matched a single convenio unambiguously** (e.g.
+   "Tablas Intervencion Social Navarra.xlsx" → convenio 18, the only convenio with
+   that sector+territory pair). The other **6 are genuine coverage gaps, left
+   unresolved on purpose**: one has no identifying text ("Tabla 2026.xlsx"), three
+   name a convenio (COEAS Estatal, COEAS Andalucía, Deporte Estatal) that simply
+   doesn't exist in this registry, one names only "COEAS" with no territory
+   (assigning it to the registry's one COEAS convenio, Navarra, without a territory
+   match would itself be the kind of guess ADR-0014 forbids), one has no matching
+   convenio by any field ("Tablas acuerdo parcial_Alhambra.xlsx"). All 6 stay
+   `under_review`, listed every run by `salary:import`'s own pending-report.
+2. Assigned the 5 confident matches via `PATCH /admin/documents/{uuid}/facets/convenio`
+   (`confirm_scope_change: true`) as the seeded `super_admin`, then
+   `POST /admin/documents/{uuid}/confirm` (Sprint-3 tag verify) on each.
+3. Re-running `salary:import` surfaced a **real bug**, not a data gap: two of the five
+   documents each have a column genuinely header-labeled `€/hora` whose value is
+   actually an annual figure (`13448.6184` == exactly 12× the adjacent year's monthly
+   figure — a data-entry error in the *source* spreadsheet, not a column-mapping
+   bug; the header match itself was correct). Writing it verbatim overflowed
+   `hourly_rate`'s `decimal(8,4)` column and crashed the **entire** command, not
+   just that document — `salary:import`'s per-document `try`/`catch` only wraps the
+   hr-ai extraction HTTP call, not a DB-constraint violation inside the write
+   transaction, so one bad spreadsheet value took down every document queued after
+   it.
+
+### hr-ai app-code fix (`593f86e`, additive, disclosed here)
+
+`app/salary.py`: each typed money field (`gross_annual`, `base_salary_monthly`,
+`extra_pay`, `hourly_rate`, `night_plus`) is now bound-checked against its actual DB
+column precision (mirrored as `_FIELD_BOUNDS`, matching `salary_table_rows`'s
+migration) before being returned. An out-of-range value is **dropped** — set to
+`null`, never force-fit into a column that structurally can't hold it, and never
+"corrected" by guessing a plausible replacement — but it stays in `raw_values`
+verbatim, exactly like every other column, and a warning is appended so it surfaces
+in `salary:import`'s CLI output (ADR-0014's "coverage gaps visible, never silent"
+discipline, applied to a value-level gap instead of a document-level one). Verified
+locally against a synthetic reproduction of the exact failing row before deploying;
+redeployed to staging (`deploy.sh` with the new hr-ai SHA), then both previously-
+failing documents imported cleanly.
+
+### Result
+
+**10 `salary_tables`, 109 `salary_table_rows`, 58 `convenio_job_categories`**, across
+5 convenios: 6 (Deporte Cantabria), 10 (Agencias de Viajes), 18 (Acción e Intervención
+Social, Navarra), 19 (COEAS Navarra), 22 (Limpieza de Edificios y Locales, Navarra).
+6 documents remain `under_review`, correctly, as genuine coverage gaps (above).
+
+### Proved end-to-end
+
+Created a new test employee, `salary-test@hr-staging.internal`, via
+`POST /admin/employees` (the employee-directory admin API — not a DB insert), scoped
+to convenio 18 / job category "GRUPO 1" (a clean row: `hourly_rate = 18.4916` for both
+2025 and 2026, no data-quality warnings). Logged in via `otp.sh`, then
+`POST /chat/message` with `¿Cuánto gano?`:
+
+```json
+{
+  "answer": "Para la categoría GRUPO 1, según la tabla salarial de 2026 de tu convenio: precio/hora de 18,4916 €/hora. ...",
+  "citations": [{"chunk_id": null, "is_salary_table": true, "document_id": 1, "authority_level": "official_convenio"}],
+  "trace": {
+    "floor_decision": {"path": "salary_sql", "outcome": "answer", "note": "exact figure from salary_tables (year 2026)"}
+  }
+}
+```
+
+`floor_decision.path = "salary_sql"`, a `chunk_id: null` / `is_salary_table: true`
+citation, and the exact figure from `salary_table_rows` — the salary path working
+end-to-end on staging, not just importable.
+
+A fresh RDS snapshot, `hr-staging-post-salary-fix-20260906-220241`, was taken
+immediately after (available, confirmed).
+
+---
+
+## 9. Open items / carried forward
 
 - **Postmark**: no account exists yet (§2). `MAIL_MAILER=log` stands in; switching is
   a one-line env change once a domain + sending account exist.
