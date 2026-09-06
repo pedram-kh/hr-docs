@@ -71,6 +71,16 @@ services:
       SANCTUM_TOKEN_TTL_MINUTES: "1440"
       FRONTEND_URL: http://${STAGING_EIP}
       AWS_REGION: ${AWS_REGION}
+      # Obviously-fake placeholder identities for `php artisan
+      # staging:seed-test-users` (staging plan, Session 2) — NOT real people.
+      # Nothing is ever emailed to them (MAIL_MAILER=log); they exist only as
+      # login identifiers to prove the OTP flow end-to-end (otp.sh reads the
+      # code back out of the container log, never a real inbox).
+      SEED_ADMIN_EMAIL: admin@hr-staging.internal
+      SEED_EMPLOYEE_EMAIL: employee@hr-staging.internal
+      SEED_EDITOR_EMAIL: editor@hr-staging.internal
+      SEED_AUDITOR_EMAIL: auditor@hr-staging.internal
+      SEED_HR_AGENT_EMAIL: agent@hr-staging.internal
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
       - ingest-scratch:/opt/hr-staging/ingest-scratch
