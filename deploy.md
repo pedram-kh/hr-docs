@@ -117,7 +117,7 @@ Region `eu-west-1`, account `049681810267`. Every resource carries the `hr-stagi
 
 Built on top of session 1's infra, no AWS resource re-created.
 
-**Dockerfiles (net-new, one per app repo, ADR-0024):**
+**Dockerfiles (net-new, one per app repo, ADR-0025):**
 
 | Repo | Image shape |
 |---|---|
@@ -135,7 +135,7 @@ Built on top of session 1's infra, no AWS resource re-created.
 - `infra/08-derived-secrets.sh` — added because hr-ai's `config.py` takes ONE composed DSN (`DATABASE_URL`), not decomposed `DB_HOST`/`DB_USER`/... vars like hr-backend does. Composes `postgresql://hr_ai:<password>@<rds-endpoint>:5432/hr_platform` once (RDS endpoint + the already-generated `hr-ai-db-password`, neither typed nor echoed) and stores it whole as `/hr-staging/hr-ai/database-url` (SecureString). Idempotent — same "leave a real value untouched" pattern as `05-ssm-params.sh`.
 - `infra/vars.sh` — two new hardcoded constants, `RDS_ENDPOINT` and `STAGING_EIP`: `deploy.sh` runs ON the EC2 under the instance profile, which has no `ec2:Describe*`/`rds:Describe*` permission (only the narrow S3+SSM read policies) — both values are stable once created (an RDS endpoint hostname never changes across restarts; an EIP is static by definition), so they're hardcoded once rather than widening the instance profile just to re-derive values that don't change.
 
-**hr-ai code changes this session (both additive, disclosed and authorized live — see ADR-0024):**
+**hr-ai code changes this session (both additive, disclosed and authorized live — see ADR-0025):**
 1. `GET /health/model` — checks the BGE-M3 safetensors snapshot exists under `$HF_HOME`; does not modify `/health` or `/health/config`. Compose's hr-ai healthcheck polls this.
 2. `app/storage.py` — omits `aws_access_key_id`/`aws_secret_access_key` from `boto3.client()` when both are empty/unset, falling back to the default credential chain (the instance profile on staging). Local dev (MinIO, always set) unchanged. No IAM user, no new policy, no SSM key added for this — see the README note in `hr-ai/README.md`.
 
@@ -147,7 +147,7 @@ Built on top of session 1's infra, no AWS resource re-created.
 
 **`otp.sh` login verification:** since no Postmark account exists yet, staging runs `MAIL_MAILER=log` — the OTP email (incl. the plaintext code) lands in `storage/logs/laravel.log` instead of an inbox. `otp.sh <email>` requests a code, reads it back out of that log (anchored on the mailable's subject line so it doesn't grab an unrelated 6-digit number), and verifies it — used this session to confirm a `super_admin` login end-to-end issues a Sanctum bearer token. **Correction logged (plan §1.1/§9 item 6):** `hr-backend/.env.example` and this file's §2 checkbox both said `POSTMARK_TOKEN` — the var Laravel's Postmark mailer config actually reads is `POSTMARK_API_KEY` (`config/services.php:18`). `POSTMARK_TOKEN` in a real `.env` is a silent no-op. Staging's `.env.staging.example` uses the correct name; switch `MAIL_MAILER=log` → `MAIL_MAILER=postmark` + set `POSTMARK_API_KEY` (not `POSTMARK_TOKEN`) the moment a Postmark account + sending domain exist — no other change.
 
-**ADR written:** `hr-docs/architecture/decisions/0024-staging-deploy-topology.md`.
+**ADR written:** `hr-docs/architecture/decisions/0025-staging-deploy-topology.md`.
 
 **Not yet done (session 3):** ingest on staging (source corpus → S3 → resize → `registry:import`/`documents:ingest-folder`/`chunks:embed`/`salary:import` → resize back), the nightly `pg_dump` backup service + a restore rehearsal against a throwaway RDS instance.
 

@@ -591,7 +591,7 @@ Each service sets Compose's built-in `logging.driver: json-file` with `max-size:
 
 ### ADR to write at build time
 
-`hr-docs/architecture/decisions/0024-staging-deploy-topology.md` (next free number after `0023`) — decision: managed RDS+S3, single-EC2 Docker Compose (not ECS/EKS/SQS — explicitly out of scope per the spec), secrets in SSM read at container-start via instance-profile credentials (not baked into images), BGE-M3 pre-cached in a named volume with an additive `/health/model` gate, worker as the same backend image with `restart: unless-stopped`, IAM least-privilege via a Pedram-attached inline policy scoped to `hr-staging-*` role/instance-profile names rather than a broad IAM grant on the deploy user.
+`hr-docs/architecture/decisions/0025-staging-deploy-topology.md` (0024 is taken by 7d on the `sprint-7d` branch, so this is 0025, the next free number after that) — decision: managed RDS+S3, single-EC2 Docker Compose (not ECS/EKS/SQS — explicitly out of scope per the spec), secrets in SSM read at container-start via instance-profile credentials (not baked into images), BGE-M3 pre-cached in a named volume with an additive `/health/model` gate, worker as the same backend image with `restart: unless-stopped`, IAM least-privilege via a Pedram-attached inline policy scoped to `hr-staging-*` role/instance-profile names rather than a broad IAM grant on the deploy user.
 
 ### Assumptions & open questions (for Pedram to resolve before/during the build turn)
 
