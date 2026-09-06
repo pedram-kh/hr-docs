@@ -52,7 +52,16 @@ services:
       APP_DEBUG: "false"
       APP_URL: http://${STAGING_EIP}
       LOG_CHANNEL: stack
-      LOG_LEVEL: info
+      # debug, not info: Laravel's `log` mail transport (MAIL_MAILER=log
+      # below) writes the rendered email via $logger->debug(...)
+      # (vendor/laravel/framework/.../Mail/Transport/LogTransport.php) —
+      # found live, otp.sh got a 200 and a login_codes row was created, but
+      # storage/logs/laravel.log stayed empty because Monolog's "info"
+      # threshold silently dropped every debug-level record, including the
+      # OTP mail otp.sh depends on reading back out. No Postmark account
+      # yet (staging plan §4 open question), so this IS the mail delivery
+      # path for now — its log level requirement isn't optional.
+      LOG_LEVEL: debug
       DB_CONNECTION: pgsql
       DB_HOST: ${RDS_ENDPOINT}
       DB_PORT: "5432"
