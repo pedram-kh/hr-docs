@@ -56,84 +56,132 @@ ADR-0024 (`architecture/decisions/0024-semantic-comparison-human-adjudicated-fai
 
 ---
 
-## 2. Calibration — the harnesses are proven; the MEASUREMENT is outstanding
+## 2. Calibration — MEASURED on the real corpus; thresholds set from the data
 
-**Both passes were built and both were run. Neither could measure anything here, because this environment has only a freshly-migrated empty test database (`hr_platform_test`) — the corpus database `hr_platform` does not exist on this machine, and hr-ai is not running with the BGE-M3 model.** Rather than invent numbers, the harnesses were written to **say so loudly** and to refuse a recommendation without evidence. Verbatim output:
+**Both passes have now been run against the real corpus.** The measurement that §2 previously recorded as outstanding was taken on **2026-09-06** on the staging environment (`hr_platform` on `hr-staging-db`, eu-west-1), on the `sprint-7d` branch, with hr-ai up and BGE-M3 loaded — 171 eligible chunks in the Navarra scope, 134 in the Álava scope. The run was repeated on two different EC2 instance types (`t3.large` and `c7i.2xlarge`) and the scores were **bit-identical**, which is the expected property of a deterministic embedder and the reason the numbers below can be treated as reproducible rather than sampled.
+
+Verbatim (`php artisan fence:calibrate-semantic`, read-only):
 
 ```
-Sprint 7d — semantic fence calibration (READ-ONLY; nothing was written)
-
- Pass 1: real published-ruling distribution
-rulings found: 0 · measured: 0
-per-ruling max: {"min":null,"median":null,"max":null}
+── Pass 1: real published-ruling distribution ──────────────────────
+rulings found: 3  ·  measured: 3
++-----+------------------------------------+--------+----------+--------+--------+--------+--------+
+| doc | title                              | probes | eligible | max    | p90    | median | min    |
++-----+------------------------------------+--------+----------+--------+--------+--------+--------+
+| 99  | Resolución interna RR. HH. — vacac | 1      | 171      | 0.8116 | 0.5948 | 0.5659 | 0.552  |
+| 100 | Resolución interna RR. HH. — vacac | 1      | 171      | 0.8116 | 0.5948 | 0.5659 | 0.552  |
+| 101 | Resolución interna RR. HH. — vacac | 1      | 171      | 0.7342 | 0.6566 | 0.617  | 0.6015 |
++-----+------------------------------------+--------+----------+--------+--------+--------+--------+
+per-ruling max: {"min":0.7342,"median":0.8116,"max":0.8116}
 +-----------+-------------+-------------+-----------+------------+
 | threshold | review_band | would BLOCK | would ASK | would pass |
 +-----------+-------------+-------------+-----------+------------+
-| 0.7       | 0.55        | 0           | 0         | 0          |
-| 0.75      | 0.6         | 0           | 0         | 0          |
-| 0.8       | 0.65        | 0           | 0         | 0          |
-| 0.85      | 0.7         | 0           | 0         | 0          |
-| 0.9       | 0.75        | 0           | 0         | 0          |
+| 0.7       | 0.55        | 3           | 0         | 0          |
+| 0.75      | 0.6         | 2           | 1         | 0          |
+| 0.8       | 0.65        | 2           | 1         | 0          |
+| 0.85      | 0.7         | 0           | 3         | 0          |
+| 0.9       | 0.75        | 0           | 2         | 1          |
 +-----------+-------------+-------------+-----------+------------+
+Small N. This pass shows the SHAPE only — the labeled anchors below carry the threshold choice.
 
- Pass 2: labeled synthetic anchors (the ground truth)
-fixture: hr-docs/sprints/sprint-07d/eval/anchors.json
-| a1-navarra-intervencion-periodo    | paraphrase             | — | — | convenio 31101815012021 not in this database |
-| a2-alava-coeas-periodo             | paraphrase             | — | — | convenio 01100635012017 not in this database |
-| a3-vizcaya-intervencion-periodo    | paraphrase             | — | — | convenio 48006185012006 not in this database |
-| a4-navarra-deportiva-periodo       | paraphrase             | — | — | convenio 31008235012003 not in this database |
-| a5-estatal-coeas-periodo           | paraphrase             | — | — | convenio 99100055012011 not in this database |
-| b1-navarra-intervencion-otro-punto | same_topic_other_point | — | — | convenio 31101815012021 not in this database |
-| b2-alava-coeas-otro-punto          | same_topic_other_point | — | — | convenio 01100635012017 not in this database |
-| b3-vizcaya-intervencion-otro-punto | same_topic_other_point | — | — | convenio 48006185012006 not in this database |
-| c1-unrelated-proteccion-datos      | unrelated              | — | — | convenio 31101815012021 not in this database |
-| c2-unrelated-licitacion            | unrelated              | — | — | convenio 01100635012017 not in this database |
-| c3-unrelated-mantenimiento         | unrelated              | — | — | convenio 48006185012006 not in this database |
-+------------------------+---+-----+--------+-----+
-| class                  | n | min | median | max |
-+------------------------+---+-----+--------+-----+
-| paraphrase             | 0 | —   | —      | —   |
-| same_topic_other_point | 0 | —   | —      | —   |
-| unrelated              | 0 | —   | —      | —   |
-+------------------------+---+-----+--------+-----+
+── Pass 2: labeled synthetic anchors (the ground truth) ────────────
+| anchor                             | class                  | convenio       | max_score | eligible | top match / skip reason                   |
+| a1-navarra-intervencion-periodo    | paraphrase             | 31101815012021 | 0.811602  | 171      | Artículo 22. Período de prueba.           |
+| a2-alava-coeas-periodo             | paraphrase             | 01100635012017 | 0.800192  | 134      | Artículo 17. Período de prueba            |
+| a3-vizcaya-intervencion-periodo    | paraphrase             | —              | —         | —        | no active official_convenio in that scope |
+| a4-navarra-deportiva-periodo       | paraphrase             | —              | —         | —        | no active official_convenio in that scope |
+| a5-estatal-coeas-periodo           | paraphrase             | 99100055012011 | —         | 0        | (convenio present; no comparable chunks)  |
+| b1-navarra-intervencion-otro-punto | same_topic_other_point | 31101815012021 | 0.875149  | 171      | Artículo 25. Cese voluntario.             |
+| b2-alava-coeas-otro-punto          | same_topic_other_point | 01100635012017 | 0.689159  | 134      | Artículo 24. Jornada máxima               |
+| b3-vizcaya-intervencion-otro-punto | same_topic_other_point | —              | —         | —        | no active official_convenio in that scope |
+| c1-unrelated-proteccion-datos      | unrelated              | 31101815012021 | 0.619803  | 171      | Artículo 57. Protección de datos …        |
+| c2-unrelated-licitacion            | unrelated              | 01100635012017 | 0.588537  | 134      | Artículo 15. De la contratación en general |
+| c3-unrelated-mantenimiento         | unrelated              | —              | —         | —        | no active official_convenio in that scope |
++------------------------+---+--------+--------+--------+
+| class                  | n | min    | median | max    |
++------------------------+---+--------+--------+--------+
+| paraphrase             | 2 | 0.8002 | 0.8116 | 0.8116 |
+| same_topic_other_point | 2 | 0.6892 | 0.8751 | 0.8751 |
+| unrelated              | 2 | 0.5885 | 0.6198 | 0.6198 |
++------------------------+---+--------+--------+--------+
 
- Recommendation
- ready: false
- note: 'No labeled `paraphrase` anchor scored. A block threshold CANNOT be chosen
-        from unlabeled data alone: without a known-true overlap there is nothing to
-        prove the threshold sits below one. Keep the conservative config defaults
-        and record this in review.md.'
+── Recommendation ──────────────────────────────────────────────────
+  ready: true
+  semantic_conflict_threshold: 0.78
+  semantic_review_band: 0.66
+  justified_by: {"weakest_true_overlap (class a min)":0.8002,
+                 "weakest_same_topic_other_point (class b min)":0.6892,
+                 "strongest_unrelated (class c max)":0.6198}
 ```
 
-**The anchor fixture is real material, not toy data** (`sprint-07d/eval/anchors.json`): eleven probes across five real convenios by `numero` (Navarra Intervención Social `31101815012021`, Álava COEAS `01100635012017`, Vizcaya Intervención Social `48006185012006`, Navarra Deportiva `31008235012003`, Estatal COEAS `99100055012011`), three labeled classes — (a) near-verbatim paraphrase of a real *periodo de prueba* clause → anchors the **block** threshold; (b) same-topic-different-point → anchors the **acknowledge** band; (c) unrelated (data protection, tendering, maintenance) → the floor.
+**Which anchors actually scored: 2 of the 5 paraphrase anchors, exactly the two predicted** — a1 (Navarra Intervención Social) and a2 (Álava Ocio Educativo). The other three skipped for the reasons the fixture already documented, though one of them for a slightly different reason than expected: a3 and a4 skipped because their convenios hold **no active `official_convenio` document** at all, while a5's convenio (COEAS Estatal `99100055012011`) *is* present and active but returned **`eligible = 0`** — its documents have no comparable chunks, because that scope's text was never embedded (the COEAS Estatal PDFs are among the corpus's no-text-layer files). The distinction matters for reading the report: a5 is a *chunking* gap, not a registry gap.
 
-### What the calibration math *is* proven to do (`Sprint7dCalibrationTest`, 4 green)
+**Two facts about the deployed corpus are worth recording, because they change how these numbers should be read:**
 
-- `test_it_refuses_to_recommend_a_block_threshold_without_labeled_evidence` — a real-distribution-only run yields `ready: false` with the reason above. **This is the test that makes the "measure first" rule enforceable rather than aspirational.**
-- `test_the_recommended_threshold_sits_below_the_weakest_true_overlap` — with scripted anchor scores, the recommendation is strictly below the lowest class-(a) score, so no known-true overlap escapes.
-- `test_a_weaker_true_overlap_pulls_the_threshold_down_never_up` — adding a weaker true overlap can only make the fence **stricter**.
-- `test_the_calibration_run_writes_nothing` — the whole run is read-only.
+1. **Pass 1's three "rulings" are this sprint's own verification artifacts, not published rulings.** They are the three drafts created by the live fence check described below (`draft` status, **0 chunks each** — the fence wrote nothing to retrieval, which is the property that matters). Before that check, Pass 1 reported `rulings found: 0`: the corpus holds **no published internal ruling at all**, so the real-distribution pass has no independent signal and the threshold rests entirely on Pass 2, as the harness's own `ready: false` guard was designed to force. Note also that `FenceCalibrateSemantic::realDistribution()` selects every `internal_hr_ruling` **without filtering `retrieval_status`**, so a blocked draft is counted as a published ruling — the docblock says "already-published", the query does not enforce it. A one-line filter would fix it; it is listed in §9 rather than changed here, because it affects no threshold (Pass 1 is shape-only).
+2. **No active convenio document in the corpus carries a topic tag.** All of them are untagged, and the Sprint-5 structural term treats an untagged in-scope convenio as governing (`orWhereDoesntHave('topics')` — fail-closed). So on today's corpus the **structural** term blocks every ruling publish in every scope, corpus-wide, and short-circuits before the semantic pass is ever called. The semantic fence is therefore *fully built and correct* but **not yet load-bearing in production terms**: it becomes the deciding term only as documents acquire topic tags through the Sprint-3/7a tagging path.
 
-### Chosen values — PROVISIONAL, and why they are safe to ship unmeasured
+### Thresholds set from the data
 
-`config/hr.php`: `semantic_conflict_threshold = 0.75`, `semantic_review_band = 0.60` (plus `semantic_compare_k = 5`, probe caps 12 / 120–600 chars; `succession_overlap_threshold = 0.75`, `succession_sibling_ceiling = 0.55`). The config block states in place that these are **provisional pending the calibration run** and how to set them.
+`config/hr.php`, committed on the branch (`9257d9c`):
 
-They are safe to ship *unmeasured* for one structural reason: the fence is `existing OR semantic`, so an uncalibrated threshold **can only add blocks and acknowledgements**. A too-low threshold over-blocks (costs human attention, routes to a person — the safe direction); a too-high threshold degrades gracefully to the Sprint-4/Correction-01 fence, which is exactly today's behaviour. The band is what to watch: every acknowledged publish is audited with its scores, so click-through is measurable.
+| value | set to | justified by |
+|---|---|---|
+| `semantic_conflict_threshold` | **0.78** | below the **weakest known-true overlap, 0.8002** (a2 Álava) — a 0.02 margin, so no genuine same-point overlap escapes the block |
+| `semantic_review_band` | **0.66** | below the **class-(b) floor, 0.6892** (b2 Álava), so every same-topic-different-point ruling at least asks; and above the **class-(c) ceiling, 0.6198** (c1 RGPD boilerplate), so genuinely unrelated text is not dragged into the band |
 
-### To finish the mandate (run these on the corpus, then set the two values)
+`succession_overlap_threshold` (0.75) and `succession_sibling_ceiling` (0.55) were **measured and deliberately left unchanged** — see the succession subsection below and the comment block in `config/hr.php`.
 
-```bash
-# 1. with hr-ai up and the corpus database attached:
-php artisan fence:calibrate-semantic            # human-readable
-php artisan fence:calibrate-semantic --json     # for the record
+**The honest caveat, and it is the most important line in this section: the two classes overlap in score space.** Class (b)'s maximum (**0.8751**, b1 — a *cese voluntario* probe matching `Artículo 25. Cese voluntario.`) is **higher than both paraphrase anchors** (0.8116, 0.8002). No threshold pair can separate "restates the convenio" from "same chapter, different rule" on this evidence, because the embedder scores b1 as the *most* similar probe in the whole set. The consequence at 0.78 is concrete: a ruling like b1 — which is **filling a gap, not overriding anything** — will be **blocked outright rather than merely asked about**. That is the direction the calibration mandate demanded (err toward blocking more; a wrongly-blocked publish costs one human's attention, a wrongly-allowed one costs the fence's whole purpose), but it is over-blocking, and it is the number to watch: if HR reports rulings being blocked that plainly fill gaps, the fix is a **richer anchor set** and probe-level rather than document-level scoring, not a higher threshold. With n = 2 per class this is a floor on confidence, not a verdict.
 
-# 2. set HR_SEMANTIC_CONFLICT_THRESHOLD *below* the lowest class-(a) anchor score,
-#    HR_SEMANTIC_REVIEW_BAND in the class-(b) region — err toward blocking more.
+### Succession gold eval on the real corpus — MEASURED
 
-# 3. the (C) side, which needs no labels to be useful:
-php artisan succession:gold-eval --discover
-php artisan succession:gold-eval                # after labeling the fixture
+The fixture's three provisional pairs were transcribed from `deploy.md`'s dev-corpus ids and **every one of them fingerprint-guarded into a SKIP** on this corpus — the guard did exactly its job, and the eval measured nothing. `succession:gold-eval --discover` was run first (19 same-convenio pairs examined, **3 successor claims**, 3m15s on `c7i.2xlarge`), every id was confirmed by SQL, and `succession-gold.json` was replaced with five labeled pairs (`f53f602`):
+
+| pair | expected | got | score | verdict |
+|---|---|---|---|---|
+| Enseñanza no reglada Estatal 79 → 74 (2020-2023 → 2024-2027) | `successor` | `successor` | 0.99821 | **right** |
+| Oficinas y despachos Valencia 93 → 92 (2021-2023 → 2024-2026) | `successor` | `successor` | 0.890335 | **right** |
+| Alojamientos Gipuzkoa 23 → 28 (2020-2024 → 2025-2028) | `successor` | `successor` | 1.0 | **right** |
+| Intervención Social Bizkaia 67 ↔ 65 (identical validity windows) | `conflict` | `conflict` | 0.987517 | **right** |
+| Navarra Oficinas prose 30 vs `Tabla 2025` annex 33 | `coexisting_sibling` | `conflict` | 0.818874 | other_wrong |
+
 ```
+right 4 | uncertain(miss) 0 | wrong-but-not-successor 1 | SKIPPED 0
+CONFIDENTLY-WRONG SUCCESSORS: 0
+```
+
+**Confidently-wrong successors: 0 of 5 — the only number that had to be zero.** The one mismatch is a miss in the cautious direction: the `Tabla 2025` annex has a **NULL `validity_start`**, so the strictly-later conjunct cannot be satisfied and the rule returns `conflict` ("the dates do not establish which supersedes which") instead of `coexisting_sibling`. No threshold change can fix it — the block/sibling branches are ordered so that a score of 0.8189 is decided before the sibling ceiling is consulted — and the actual fix is a validity window on the annex in the registry. It is left labeled `coexisting_sibling` on purpose: re-labeling it would have made the tally look clean and hidden a real registry gap.
+
+**Why the succession thresholds were not changed.** The three true successors scored 0.8903 / 0.9982 / 1.0, so `succession_overlap_threshold = 0.75` sits 0.14 below the weakest of them and loses none. But the **strongest non-successor scored 0.9875** — two duplicate ingests of the same Bizkaia text, filenames differing by a trailing underscore — which is *above* the weakest true successor. Score alone cannot separate the classes here either, so raising the threshold would buy no safety and only add misses. What actually prevented every wrong successor was the second conjunct, **strictly-later `validity_start`** — which is exactly why ADR-0024 made the rule a conjunction instead of a score cut, and the eval is the evidence that the design choice was the load-bearing one. `succession_sibling_ceiling` (0.55) was **never exercised**: the lowest score any real same-convenio pair produced was 0.8189, so that branch still has only unit-test coverage and there is no corpus evidence to tune it either way.
+
+### The fence, verified live on staging
+
+Three real publish attempts through `POST /admin/escalations/{uuid}/resolve` with a real super-admin token, against the real corpus (test employee in Navarra · Acción e Intervención Social, `31101815012021`):
+
+| attempt | resolution text | corpus state | result |
+|---|---|---|---|
+| 1 | a1's near-verbatim *periodo de prueba* restatement | as-is (in-scope docs untagged) | **409 `publish_blocked`**, `reason: topic_scope_conflict`, `passages: []`, `max_score: null` — the **structural** term fired and short-circuited, so hr-ai was never called |
+| 2 | same text | in-scope docs temporarily tagged `retribución`, ruling filed under `vacaciones` so the structural term allows | **409 `publish_blocked`**, `reason: semantic_overlap`, `max_score: 0.811602`, naming `31101815012021 Intervención Social de Navarra 2025` and returning the overlapping passage — **the semantic term blocking on its own** |
+| 3 | a mid-band probe (training-leave hours) | same | **409 `publish_requires_acknowledgement`**, `reason: semantic_near_overlap`, `max_score: 0.734216`, `comparison_unavailable: false` — **the ask branch**, on real data inside the calibrated band |
+
+The score in attempt 2 (**0.811602**) is the same number the calibration reported for a1 — the same measurement arriving through the real publish path, not a re-derivation. Attempt 1 is worth keeping in view: it is the corpus's default state, and it shows the disjunction short-circuiting in the fail-closed direction *before* spending a network call.
+
+All three branches were also measured directly against the corpus through `SemanticFenceService::compareRulingToScope()` — `block` at 0.8116 and 0.8751, `acknowledge` at 0.7342 and 0.7032, `clear` at 0.6387 and 0.6198 — confirming the three-way split sits where the calibration put it.
+
+The temporary `retribución` tags on documents 1 and 52 were **removed afterwards** (both back to 0 topics); the three ruling drafts were left in place as the evidence trail, `draft` with 0 chunks.
+
+### Full suite, on the branch, with the final thresholds
+
+```
+php artisan test  →  112 tests, 112 passed, 550 assertions
+  Sprint7dCalibrationTest            4 passed
+  Sprint7dFenceNeverOpensTest       14 passed
+  Sprint7dSuccessionProposalTest    11 passed
+  Sprint7cAdditivityRegressionTest   2 passed
+```
+
+One test had to be repaired by the recalibration, and the repair is worth a read: `Sprint7dFenceNeverOpensTest::test_review_band_requires_acknowledgement_and_writes_nothing_until_given` hardcoded a score of **0.65**, which sat inside the *provisional* band (0.60–0.75) and outside the calibrated one (0.66–0.78), so it failed with `Expected 409, received 200`. The fix derives a mid-band score from `config` instead of hardcoding one, so the test now asserts the band's *behaviour* rather than a pair of numbers that calibration is expected to move.
 
 ---
 
@@ -179,25 +227,13 @@ The seven required cases, plus the extras the build turned up:
 - **Wiring + gating** — `reviews:scan-expiry` queues the job without touching any document; the propose/reject routes 403 without `knowledge.edit` while the queue **read** still shows the proposal to an auditor.
 - **The harness is tested too** — `test_the_gold_eval_detects_a_confidently_wrong_successor_and_writes_nothing` deliberately mislabels a true successor pair as a sibling and asserts the command reports **CONFIDENTLY-WRONG SUCCESSOR** and exits non-zero (an eval that cannot fail would make the number meaningless), then passes with the correct label. `test_the_gold_eval_skips_a_pair_whose_title_fingerprint_does_not_match_the_id` proves a stale id can never make the eval score the wrong document.
 
-### The succession gold eval on the real corpus — OUTSTANDING, and honestly so
+### The succession gold eval on the real corpus — RUN, and the fixture rebuilt from SQL
 
-The plan said the build turn would confirm each pair by SQL. **It could not: there is no corpus database here.** So the fixture (`sprint-07d/eval/succession-gold.json`) is transcribed from the document ids `deploy.md` §5 records and is **explicitly marked provisional**, with every reference **fingerprint-guarded** — the eval trusts `document_id` only if `title_contains` also matches, and otherwise **skips**. Verbatim run here:
+The plan said the build turn would confirm each pair by SQL; the build environment had no corpus database, so the fixture shipped provisional and **every reference fingerprint-guarded** — the eval trusts `document_id` only if `title_contains` also matches, and otherwise skips. On the staging corpus all three provisional pairs duly **SKIPPED** (`right 0 | uncertain 0 | wrong-but-not-successor 0 | SKIPPED 3`), which is the guard working exactly as intended: a stale id produced a refusal to measure, never a measurement of the wrong document.
 
-```
-Succession gold eval — labeled real corpus pairs (read-only)
- thresholds: overlap ≥ 0.75 AND strictly-later validity → successor; ≤ 0.55 → sibling
+`--discover` was then run against the real corpus and every id confirmed by SQL, and the fixture was replaced with five labeled pairs — the three real successors, the **conflict pair** `deploy.md` could not name (two duplicate ingests of the Bizkaia Intervención Social text with identical validity windows), and a **prose-vs-table-annex sibling** (Navarra Oficinas-despachos: the 2019-2025 prose text beside the active `Tabla 2025` annex — this corpus's version of the pair that must never come out `successor`, since calling it a succession could lead a human to retire the prose text and lose every non-salary answer for that province×sector).
 
- [vizcaya-intervencion-social-family]      SKIPPED  (document(s) not found in this database)
- [coeas-estatal-under-review-successor]    SKIPPED  (document(s) not found in this database)
- [navarra-oficinas-prose-vs-salary-table]  SKIPPED  (document(s) not found in this database)
-
- right 0 | uncertain(miss) 0 | wrong-but-not-successor 0 | SKIPPED 3
- CONFIDENTLY-WRONG SUCCESSORS: 0
- Every pair was skipped — this database does not hold the labeled corpus.
- The eval has not measured anything; run it against the corpus database.
-```
-
-The three labeled pairs and why they were chosen: **a true successor** (Vizcaya Intervención Social, the id-18 + 13/16 family `deploy.md` names); **an `under_review` successor** (COEAS Estatal id 72 — proving a proposal is still made for an untrusted candidate, since the proposal is inert and the human decides); and — the important one — **a coexisting sibling that must never come out `successor`** (Navarra Oficinas-despachos: expired prose id 93 beside the **active salary-table PDF** id 94; calling that a succession could lead a human to retire the prose text and lose every non-salary answer for that province×sector). A **conflict** pair could not be named from `deploy.md`, which records coverage gaps rather than overlaps — `--discover` is the way to find one on the corpus, and the fixture says so.
+**Result: 4 right, 0 uncertain, 0 confidently-wrong successors, 1 miss in the cautious direction.** The full table, the reason the sibling pair comes out `conflict`, and the evidence for leaving both succession thresholds unchanged are in **§2**.
 
 ---
 
@@ -249,18 +285,26 @@ The three labeled pairs and why they were chosen: **a true successor** (Vizcaya 
 
 ## 9. Open items / follow-ups (recorded in `roadmap.md`)
 
-1. **Run the two calibration harnesses on the corpus and set the thresholds** (§2). This is the one piece of the mandate this environment could not complete, and it is stated as an outstanding item rather than papered over.
-2. **Exposing the semantic thresholds in the guardrails UI must use `min(baseline, admin)`, never `max`** — ADR-0019's direction is inverted for a block-triggering threshold, and it needs additive `guardrail_configs` columns. A Sprint-6-family follow-up.
-3. **Watch the acknowledgement band.** Every acknowledged publish is audited with its scores (`publish_acknowledged_overlap` + `detail`). An acknowledgement humans learn to click through is a fence that has quietly opened; if the rate is high, adjust the **band**, not the block.
-4. **Label a `conflict` pair in the succession gold set** from `--discover` output, and replace the fixture's provisional ids with SQL-confirmed ones.
-5. **Question-granular knowledge growth was not built** — 7d evolved the *fence* to meaning; the flywheel still attaches a resolved escalation as a whole ruling document. The original 7d scope note is kept in `roadmap.md` for that intent.
-6. **§8.5 was NOT deferred** — it is built at the flag-only bar (a `conflict` task, never a demotion). Stated explicitly because the build prompt named it the first deferral candidate.
+1. ~~Run the two calibration harnesses on the corpus and set the thresholds~~ — **DONE** (§2): both passes run on the staging corpus, `semantic_conflict_threshold = 0.78` / `semantic_review_band = 0.66` committed on the branch with the justifying anchor scores, succession gold eval run with 0 confidently-wrong successors. Two things it surfaced, which replace it as open items:
+   - **The anchor set needs widening before the thresholds are trusted further.** n = 2 per class, and the classes **overlap in score space** (class-(b) max 0.8751 > class-(a) min 0.8002), so the fence over-blocks same-topic-different-point rulings by construction at any threshold below 0.8751. The remedy is more anchors and probe-level scoring, not a higher threshold — see §2's caveat.
+   - **`FenceCalibrateSemantic::realDistribution()` does not filter `retrieval_status`**, so `draft` rulings (including publishes the fence *blocked*) are counted in the "real published-ruling distribution". One-line fix; affects no threshold, since Pass 1 is shape-only.
+2. **Nothing in the corpus carries topic tags yet, so the structural term blocks every ruling publish and the semantic fence never gets consulted in practice** (§2). The semantic fence is built, calibrated and proven, but it only becomes load-bearing as documents acquire topic tags through the Sprint-3/7a path. Worth knowing before reading a "the fence blocked it" report as evidence the semantic pass fired.
+3. **Exposing the semantic thresholds in the guardrails UI must use `min(baseline, admin)`, never `max`** — ADR-0019's direction is inverted for a block-triggering threshold, and it needs additive `guardrail_configs` columns. A Sprint-6-family follow-up.
+4. **Watch the acknowledgement band.** Every acknowledged publish is audited with its scores (`publish_acknowledged_overlap` + `detail`). An acknowledgement humans learn to click through is a fence that has quietly opened; if the rate is high, adjust the **band**, not the block.
+5. ~~Label a `conflict` pair in the succession gold set and replace the fixture's provisional ids with SQL-confirmed ones~~ — **DONE** (§2, commit `f53f602`): the Bizkaia duplicate pair is the labeled conflict, and all five pairs are SQL-confirmed against the staging corpus. What remains is a **validity window on the `Tabla 2025` annex** (document 33), the missing registry fact that makes the rule return `conflict` where a human says `coexisting_sibling`.
+6. **Question-granular knowledge growth was not built** — 7d evolved the *fence* to meaning; the flywheel still attaches a resolved escalation as a whole ruling document. The original 7d scope note is kept in `roadmap.md` for that intent.
+7. **§8.5 was NOT deferred** — it is built at the flag-only bar (a `conflict` task, never a demotion). Stated explicitly because the build prompt named it the first deferral candidate.
 
 ---
 
-## 10. What awaits your review (nothing committed)
+## 10. What awaits your review
 
-Working tree only, across all four repos:
+The 7d work below was committed to the **`sprint-7d` branch** in each repo (never to `main`) so it could be deployed to staging for §2's measurement. Two calibration follow-up commits sit on top of it:
+
+- `hr-backend 9257d9c` — `config/hr.php` thresholds set from the calibration (0.78 / 0.66) with the justifying scores recorded in place, the succession thresholds annotated as measured-and-unchanged, and the one review-band test switched from a hardcoded score to a config-derived one.
+- `hr-docs f53f602` — `succession-gold.json` rebuilt with SQL-confirmed staging ids (five labeled pairs, including the conflict pair).
+
+The 7d feature work itself, across all four repos:
 
 - **hr-ai** — `app/main.py`, `app/chunks_db.py` (one additive read-only endpoint + one SELECT function).
 - **hr-backend** — 3 migrations; `SemanticFenceService`, `SemanticComparison`, `SemanticRecheckService`, `FactResolutionService`, `SuccessionProposalService`, `GroupLabel`, `ResolveFactDuplicateRequest`; `ProposeSuccession` + `RecheckRulingsForConvenio` jobs; `FenceCalibrateSemantic`, `FactsScanDuplicates`, `RulingsScanSemanticConflicts`, `SuccessionGoldEval` commands; edits to `EscalationService`, `EscalationController`, `ReferenceFactController`, `ReviewQueueController`, `DocumentIngestor`, `DocumentController`, `ReviewsScanExpiry`, `ExtractionClient`, three models, `config/hr.php`, `routes/api.php`; four test suites.
