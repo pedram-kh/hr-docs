@@ -75,6 +75,7 @@ bash "$ROOT/hr-docs/infra/compose/leak-scan.sh" "$ROOT"
 # header) — all pure constants from vars.sh, no secret ever passed this way.
 export AWS_REGION RDS_ENDPOINT STAGING_EIP
 export S3_DOCUMENTS_BUCKET="$NAME_S3_DOCUMENTS"
+export S3_BACKUPS_BUCKET="$NAME_S3_BACKUPS"
 
 log "Building images (on-instance build — no ECR this cut, plan §9 item 5)..."
 docker compose -f docker-compose.staging.yml build

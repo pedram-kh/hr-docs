@@ -189,6 +189,46 @@ services:
       - frontend-dist:/out
     logging: *default-logging
 
+  # db-backup — one-shot, invoked via `docker compose run --rm db-backup`
+  # (never `up`, so it has no restart: policy and doesn't start on its own).
+  # Nightly cron on the host runs exactly that (staging plan §6, set up by
+  # setup-backup-cron.sh). image: postgres:16-alpine (not a custom build —
+  # matches RDS's engine version for pg_dump/pg_restore compatibility) with
+  # aws-cli installed at run-time via apk (small, ~10s, avoids maintaining a
+  # separate Dockerfile for a single nightly job). PGPASSWORD resolved from
+  # SSM via the shared entrypoint.sh, same as every other service; PGHOST/
+  # PGUSER/PGDATABASE read natively by pg_dump (no flags needed). Uses the
+  # EC2 instance profile's S3-write permission on the backups bucket
+  # (06-iam.sh's HrStagingS3ReadWriteBackups) — no new IAM grant needed.
+  db-backup:
+    image: postgres:16-alpine
+    restart: "no"
+    entrypoint:
+      - /entrypoint.sh
+      - PGPASSWORD=/hr-staging/rds/master-password
+      - --
+    command:
+      - sh
+      - -c
+      - |
+        set -euo pipefail
+        apk add --no-cache aws-cli >/dev/null 2>&1
+        ts="$$(date +%F_%H%M%S)"
+        out="/tmp/hr-staging-$${ts}.sql.gz"
+        echo "[db-backup] pg_dump $${PGDATABASE}@$${PGHOST} -> $${out} ..."
+        pg_dump | gzip > "$${out}"
+        aws s3 cp "$${out}" "s3://${S3_BACKUPS_BUCKET}/pg/$${ts}.sql.gz"
+        echo "[db-backup] uploaded pg/$${ts}.sql.gz"
+    environment:
+      PGHOST: ${RDS_ENDPOINT}
+      PGPORT: "5432"
+      PGUSER: hr_staging_admin
+      PGDATABASE: hr_platform
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    logging: *default-logging
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
