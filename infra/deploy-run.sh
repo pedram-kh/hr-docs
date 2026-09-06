@@ -85,6 +85,20 @@ docker compose -f docker-compose.staging.yml run --rm hr-backend php artisan mig
 log "Bringing the stack up (unchanged-image services are left running by compose)..."
 docker compose -f docker-compose.staging.yml up -d
 
+# Force-recreate the services whose bind-mounted config files (entrypoint.sh,
+# Caddyfile, warm-model.py — all copied FLAT from hr-docs above, fresh inode
+# every run) can change WITHOUT the service's image changing. Plain `up -d`
+# only recreates a container when compose detects an image/config change by
+# path, not by bind-mount content — so an unchanged image with an edited
+# Caddyfile was silently left running on the OLD file (found live: a
+# Caddyfile routing fix landed on disk but the running caddy container kept
+# serving the stale copy, because rm+cp gives the new file a new inode and
+# the already-created bind mount still pointed at the old, now-orphaned
+# one). frontend-dist is deliberately excluded: restart "no", one-shot
+# build+copy, no bind-mounted config of its own.
+docker compose -f docker-compose.staging.yml up -d --force-recreate \
+  hr-backend hr-backend-worker hr-ai caddy
+
 log "Health-check loop (hr-ai runs warm-model.py before uvicorn even binds its"
 log "port on a first deploy — the BGE-M3 download, ~4.3GB, can take a while)..."
 ok=1
