@@ -70,9 +70,9 @@ The Sprint 2c re-chunk used the **registry** as the arbiter of the active set; d
 
 ---
 
-## 7. Staging environment — build record (in progress)
+## 7. Staging environment — build record (complete)
 
-> Full runbook to be written at the end of the staging build (session 3 of `hr-docs/sprints/staging-env/`). This section is a running record of what session 1 (infra) actually created, so resource ids/tags survive a chat compaction. See `hr-docs/sprints/staging-env/plan.md` for the design and `hr-docs/infra/` for the scripts.
+> Built across three sessions (`hr-docs/sprints/staging-env/`): infra (session 1), containers + deploy (session 2), ingest + backup/restore + ops verification + cost (session 3). This section is the durable record of what each session actually created/ran, so resource ids/tags/decisions survive a chat compaction. See `hr-docs/sprints/staging-env/plan.md` for the design, `hr-docs/sprints/staging-env/review.md` for the sprint-review summary, and `hr-docs/infra/` for the scripts themselves.
 
 ### Session 1 (infra) — complete
 
@@ -111,7 +111,7 @@ Region `eu-west-1`, account `049681810267`. Every resource carries the `hr-stagi
 
 **Not yet done (session 2+):** no application containers exist yet; `hr-staging-ec2-role`'s SSM-read policy has not been exercised by an actual container; the RDS `hr_ai` role does not exist yet (created by hr-backend's migration in session 2, `2026_06_22_100001_create_hr_ai_role_and_chunk_indexes.php`, reading `HR_AI_DB_PASSWORD`).
 
-**Cost note:** as of this session, EC2 (`t3.large`) + RDS (`db.t4g.medium`) are both running 24/7 — matches the plan's ~$4/day estimate. `stop.sh`/`start.sh` exist in `hr-docs/infra/` (untested this session — first real use is session 3 per the build order) to stop them when idle.
+**Cost note:** as of this session, EC2 (`t3.large`) + RDS (`db.t4g.medium`) are both running 24/7 — see §8 (session 3) for the confirmed, pricing-API-verified cost figure (~$4.5-4.7/day running; the original ~$4/day plan estimate had two stale inputs, corrected in session 3). `stop.sh`/`start.sh` exist in `hr-docs/infra/` (untested this session — first real use is session 3 per the build order) to stop them when idle.
 
 ### Session 2 (containers + deploy) — complete
 
@@ -121,7 +121,7 @@ Built on top of session 1's infra, no AWS resource re-created.
 
 | Repo | Image shape |
 |---|---|
-| `hr-backend/Dockerfile` | Two-stage: `composer:2` vendor stage → `php:8.3-fpm` runtime with nginx + supervisord (both processes in one container — simplest given no Octane setup). Reused unmodified as `hr-backend-worker` (compose overrides the command to `php artisan queue:work --tries=3 --timeout=120`). |
+| `hr-backend/Dockerfile` | Two-stage: `composer:2` vendor stage → `php:8.4-fpm` runtime (bumped from `8.3` mid-session — `composer.lock` required PHP `>=8.4.1`) with nginx + supervisord (both processes in one container — simplest given no Octane setup), plus `gd` (and its build deps: `libpng`/`libjpeg`/`libfreetype`/`libwebp`) for `phpoffice/phpspreadsheet`. Reused unmodified as `hr-backend-worker` (compose overrides the command to `php artisan queue:work --tries=3 --timeout=120`). |
 | `hr-ai/Dockerfile` | `python:3.11-slim`, CPU-only torch wheel, `HF_HOME=/model-cache` set explicitly (closes the plan §1.2 gap). |
 | `hr-frontend/Dockerfile` | `node:22-slim` build stage (`VITE_API_BASE_URL` as a build ARG, per the §1.3 build-time-vs-runtime finding) → tiny `alpine` stage that copies `dist/` into a shared volume for Caddy and exits (`restart: "no"`). |
 | Caddy | Official `caddy:2-alpine`, no custom Dockerfile — `hr-docs/infra/compose/Caddyfile` (plain `:80`, `/api/*` + `/up` → hr-backend, everything else → the frontend volume with SPA fallback). |
@@ -149,7 +149,43 @@ Built on top of session 1's infra, no AWS resource re-created.
 
 **ADR written:** `hr-docs/architecture/decisions/0025-staging-deploy-topology.md`.
 
-**Not yet done (session 3):** ingest on staging (source corpus → S3 → resize → `registry:import`/`documents:ingest-folder`/`chunks:embed`/`salary:import` → resize back), the nightly `pg_dump` backup service + a restore rehearsal against a throwaway RDS instance.
+### Session 3 (ingest, backup/restore, ops verification, cost) — complete
+
+**hr-ai fix carried over from session 2's `storage.py` change (found live, this session):** `app/config.py`'s `aws_access_key_id`/`aws_secret_access_key` Pydantic defaults were `"minioadmin"`, not `""`. On staging (where those env vars are deliberately unset, per the instance-profile design), `pydantic-settings` fell back to those class defaults — two non-empty (but bogus) strings — which made `storage.py`'s `if settings.aws_access_key_id and ...:` check pass and hand `boto3.client()` fake static credentials instead of omitting them, so the instance-profile fallback never actually engaged and every S3 call failed (`InvalidAccessKeyId`). Fixed by changing both defaults to `""` (falsy, so the fallback now works as designed). Confirmed working: the PDF ingest below ran end-to-end through S3 via the instance profile, no static key anywhere. Both this fix and the underlying session-2 `storage.py` change are additive, disclosed-live app-code commits — see the ADR and `sprints/staging-env/review.md` for SHAs.
+
+**Ingest (source corpus → S3 → resize → import → resize back):**
+1. Synced the source corpus to `s3://hr-staging-documents-049681810267/` from the operator's machine (`aws s3 sync`), then down to `/opt/hr-staging/ingest-scratch` on the EC2 (the local path `documents:ingest-folder` needs — S3 is the durable copy, the scratch folder is a working copy re-derivable from it at any time).
+2. `resize-for-ingest.sh` → `c7i.2xlarge` (8 vCPU/16GB) — stop, `modify-instance-attribute`, start, wait for the EIP to re-associate and the Compose stack to auto-restart (`docker compose`'s own `restart: unless-stopped` policies, not a custom script).
+3. Ran, in order: `registry:import` → `documents:ingest-folder` (hr-ai `/extract` over S3, via the instance profile) → `chunks:embed` → `salary:import`.
+4. `resize-back.sh` → back to `t3.large`. Confirmed live afterward: EC2 `t3.large`/`running`, RDS `db.t4g.medium`/`available` (both idempotency-checked, not just assumed).
+
+**Post-ingest counts** (verified via `psql`, matches the expected-zeros note in plan §7 — `salary_table_rows`/`salary_tables` are `0` because the imported salary data is still `pending convenio assignment`, not an ingest failure):
+
+| Table | Count |
+|---|---|
+| `documents` | 98 |
+| `document_chunks` | 3364 |
+| `document_pages` | 2876 |
+| `employees` | 1 |
+| `admins` | 4 (the `staging:seed-test-users` accounts from session 2) |
+| `salary_tables` / `salary_table_rows` | 0 / 0 (expected — pending convenio assignment) |
+
+A manual RDS snapshot, `hr-staging-post-ingest-20260906`, was taken immediately after ingest — the baseline used for the restore rehearsal below, and a same-day recovery point independent of the nightly automated ones.
+
+**Backup service + restore rehearsal:**
+- `infra/compose/docker-compose.staging.yml` gained a `db-backup` one-shot service (`restart: "no"`, only ever invoked via `docker compose run --rm db-backup`, never `up`) — `pg_dump | gzip` → `aws s3 cp` to `s3://hr-staging-backups-.../pg/<timestamp>.sql.gz`, using the EC2 instance profile's existing S3-write grant (no new IAM policy). **Found live:** the shared `entrypoint.sh` (bind-mounted into every service) resolves `PGPASSWORD` from SSM via `aws ssm get-parameter` *before* exec-ing the container's command — so `aws-cli` has to already be on `$PATH` at container start, not installed by the command itself (a first draft that ran `apk add aws-cli` inside `command:` failed with "aws: command not found", too late). Fixed by building the service from a new `infra/compose/backup.Dockerfile` (`postgres:16-alpine` + `aws-cli` baked in at build time) instead of the bare image.
+- `infra/setup-backup-cron.sh` — idempotent installer for the nightly cron entry (`0 3 * * *`, logs to `/var/log/hr-staging-backup.log` on the host). Installed and verified idempotent (second run: "Already installed — no-op").
+- Test-ran `db-backup` manually: `pg_dump` produced a 19.1 MiB gzip, uploaded cleanly to the backups bucket.
+- `infra/09-restore-rehearsal.sh` (new) — restores a given (or latest manual) snapshot into a throwaway `hr-staging-restore-test` instance (same SG/subnet-group as prod, never publicly accessible, never touches the live instance), runs the same row-count query as the post-ingest baseline, prints the comparison, then deletes the throwaway instance via an `EXIT` trap. **Rehearsed against `hr-staging-post-ingest-20260906`: every count matched the live DB exactly** (table above). Total wall time ~6.5 minutes (restore + verify); confirmed the throwaway instance fully deleted afterward (no lingering cost).
+- Backups bucket cost hygiene: added a 30-day lifecycle rule (`infra/04-s3.sh`, idempotent) expiring `pg/*` objects and their noncurrent versions (bucket versioning is ON) — nightly dumps had no cap otherwise. RDS's own 7-day automated-snapshot retention remains the primary safety net; these are a secondary copy.
+
+**Stop/start verification:** `stop.sh` and `start.sh` (`hr-docs/infra/`) confirmed correct for both EC2 and RDS — `stop.sh` stops both compute resources (storage keeps billing, per §8 below); `start.sh` starts both, re-associates the Elastic IP (EIPs disassociate when the backing instance stops), and confirms the Compose stack auto-restarts via its own `restart: unless-stopped` policies with no manual `docker compose up` needed.
+
+**Cost — confirmed, corrected:** see `sprints/staging-env/plan.md` §8 for the full table. Verified live against the AWS Pricing API (`aws pricing get-products`, eu-west-1, captured this session) rather than re-estimated from memory; two of the plan's original figures were stale (EC2 `t3.large`'s actual on-demand rate is `$0.0912`/hr, not the plan's slightly-lower estimate; Elastic IPs have been billed `$0.005`/hr whether attached or idle since AWS's Feb 2024 pricing change — the plan's "free while associated" line reflected the pre-2024 policy). **Running: ~$4.5-4.7/day** (still inside the spec's `$4-5/day` band). **Stopped: ~$0.62-0.72/day** (storage + the now-always-billed EIP). Cost Explorer's own tag-filtered billing (`Env=staging`) returned no usable data yet — cost-allocation tags take up to 24h to activate and these resources are hours old — so list pricing was used in place of actual incurred cost; re-check Cost Explorer after a few days of real usage.
+
+**Uncommitted-app-code note (resolved):** the two app-code changes flagged mid-build (`hr-ai/app/storage.py`, `hr-frontend/src/pages/admin/DocumentDetailPanel.tsx`) were, in fact, already committed and pushed to each app repo's `main` during session 2 — each explicitly authorized live in chat before being made, not snuck in unreviewed. `sprints/staging-env/review.md` records the exact SHAs and a diff summary of the hr-backend/hr-ai commits for a proper read at sprint review, since they went straight to `main` rather than through a PR.
+
+**This runbook is now current as of the end of session 3.** For a step-by-step "how to redeploy / roll back / stop-start / restore" operator guide, see `sprints/staging-env/review.md` and the `hr-docs/infra/` scripts themselves (each carries its own usage comment header).
 
 ---
 
