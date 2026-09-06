@@ -93,6 +93,13 @@ services:
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
       - ingest-scratch:/opt/hr-staging/ingest-scratch
+      # sprint-7d's fence:calibrate-semantic / succession:gold-eval default to
+      # base_path('../hr-docs/sprints/sprint-07d/eval/...') — WORKDIR is
+      # /var/www (Dockerfile), so base_path('..') is /var, hence /var/hr-docs.
+      # Mirrors the host's own sibling layout (deploy-run.sh clones hr-docs
+      # next to hr-backend under /opt/hr-staging/) so the commands' own
+      # defaults just work, no --anchors-file/--file override needed.
+      - ./hr-docs:/var/hr-docs:ro
     logging: *default-logging
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/up"]
