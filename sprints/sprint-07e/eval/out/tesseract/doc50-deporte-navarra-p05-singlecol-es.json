@@ -1,0 +1,26 @@
+{
+  "layout": "single_column",
+  "columns": [
+    {
+      "order": 0,
+      "language": "es",
+      "text": "Equiparación: se incluyen en este grupo todas aquellas actividades correspondientes a los siguientes puestos: Conserje, Portero, Camarero, Peón y Peón de limpieza.\nArt. IZE POLIVALENCIA\nDado que, por la propia naturaleza de los servicios que se prestan en el sector, existe un alto porcentaje de prestación de servicios a tiempo parcial con jornadas muy reducidas lo que dificulta entre otras cosas la profesionalización del sector, ambas partes consideran fundamental regular expresamente la polivalencia de los trabajadores del sector con el fin de que, los límites de la movilidad funcional y de la regulación de la polivalencia no sean un obstáculo para posibilitar, bien la ampliación de jornadas en contratos a tiempo parcial ya suscritos, bien la posibilidad de contratar inicialmente una jornada mayor.\nEn base a la manifestación anterior, se acuerda que, con el fin de posibilitar la contratación o la ampliación posterior de un mayor número de jornadas en los contratos a tiempo parcial y siempre dentro de los límites de los supuestos que se definen a continuación, se podrá pactar entre empresa y trabajador la realización de funciones correspondientes a varios grupos profesionales, siempre que así lo acuerden expresamente las partes y se documente, bien en el contrato inicial de trabajo, bien en un documento posterior de novación contractual en el que se amplíe la jornada inicialmente contratada.\nEn concreto se establecen los siguientes supuestos de polivalencia: a) Técnico de actividad deportiva (grupo 3) y Coordinador deportivo (grupo 2) ) Grupos 3 y 4\nc) Técnico de actividad deportiva (grupo 3) y Operario de servicios generales (grupo 5) d) Socorrista (grupo 4) y Operario de Servicios generales (grupo 5)\nEn los supuestos y con los límites contemplados en este artículo, y dado el interés de ambas partes en posibilitar la contratación o ampliación de jornadas que este sistema de polivalencia permite, se pacta expresamente que, con independencia de las funciones que en cada caso pudieran considerarse como prevalentes, la retribución a abonar en cada caso, será la establecida para cada grupo profesional y nivel retributivo proporcionalmente al tiempo de realización efectiva de las funciones propias de cada grupo.\nCuando no concurran las circunstancias previstas en este artículo, será de aplicación lo dispuesto para los supuestos de polivalencia y movilidad funcional en la legislación general.\nCAPITULO TERCERO: CONDICIONES ECONOMICAS\nArt. DEZ SALARIOS\nEl personal afectado por el presente Convenio Colectivo percibirá durante los años 2025 y 2026, las retribuciones que, para cada grupo profesional, se establecen en las tablas salariales de los Anexos l, y II de este Convenio. Dichas retribuciones se corresponden con prestación de servicios a jornada completa.\nLos importes brutos anuales establecidos en la citada Tabla salarial incluyen los antiguos salarios base y complementos que se vinieran percibiendo con anterioridad a la entrada en vigor de este Convenio.\nEn el supuesto de que las antiguas percepciones computadas en su conjunto anualmente, sean superiores a las establecidas en el texto de este Convenio, la diferencia a favor del trabajador\nLl), e Ta"
+    }
+  ],
+  "table_rows": [],
+  "article_headers": [],
+  "_eval": {
+    "engine": "tesseract",
+    "psm": 3,
+    "langs": "spa+eus",
+    "sec_per_page": 2.857,
+    "cost_usd": 0.0,
+    "mean_word_conf": 90.04,
+    "block_count": 14,
+    "classify_raw": {
+      "two_column": false,
+      "tabular": false,
+      "has_straddle": true
+    }
+  }
+}

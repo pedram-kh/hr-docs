@@ -188,6 +188,15 @@ Mirrors the per-page text + image structure already produced by ingestion. Enabl
 | page_number | int | |
 | text | text | extracted page text |
 | image_path | varchar NULL | object-storage key for the page image |
+| extraction_source | enum, default `text_layer` | *(Sprint 7e, additive — ADR-0026)* `text_layer` \| `ocr_pending` \| `ocr`. `ocr_pending` is transient — set by hr-ai's `/extract` when the page's native text was empty, `--ocr` was opted in, and the page was within the cap; a queued `OcrPage` job (or the `documents:ocr-backfill` CLI loop) resolves it to `ocr` (success, `text` rewritten) or leaves it `ocr_pending` (a provider failure, for a future retry). Every pre-7e row defaults to `text_layer`. |
+| ocr_quality | numeric(4,3) NULL | *(Sprint 7e)* deterministic per-page quality score (function-word density, garbage-character ratio, text-length-vs-page-area — no second LLM call); set only when `extraction_source = 'ocr'`. |
+| ocr_engine | varchar NULL | *(Sprint 7e)* the model that OCR'd this page (`claude-opus-5` per ADR-0026); set only when `extraction_source = 'ocr'`. |
+| ocr_cost_usd | numeric(8,4) NULL | *(Sprint 7e)* the metered cost of this page's OCR call. |
+| ocr_bilingual | boolean NULL | *(Sprint 7e)* true only for a two-column OCR'd page whose two columns' `language` differ — reviewer-guidance marker only (Adjustment 1), never a second embedding gate. |
+
+**The S3 sidecar (Sprint 7e, ADR-0026 — not a DB row):** `documents/{uuid}/ocr/{page:04d}.json`, written by hr-ai at OCR time, holding the structured `{layout, columns[], table_rows[], article_headers[]}` envelope (the pinned table-placement contract — a table's title lives only in `article_headers`, a footnote block only in one `columns` entry, `table_rows` only the grid). `extract_language_streams` probes for this key only for a page with zero native PyMuPDF blocks, appending its units into the `es`/`eu` accumulators before chunking (Option B) — `document_pages.text` alone is a no-op for `/embed`, which re-extracts from the original PDF and never reads this table (review.md §1.3/§2.3).
+
+**`documents.ocr_pages_count` is deliberately NOT a column** — it is derived (`count(*) where extraction_source = 'ocr'`), matching the existing `pages_total`/`pages_with_text`/`has_open_review` computed-in-`DocumentController` pattern. hr-ai never migrates (ADR-0007) regardless — this migration is entirely hr-backend-owned.
 
 ### `document_topics` (many-to-many + provenance)
 A document covers multiple topics; each association carries its own provenance.

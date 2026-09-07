@@ -1,0 +1,13 @@
+
+fixture                                       col_integrity  header_surv     CER     WER   sec/pg     cost
+doc18-gipuzkoa-limpieza-p10-twocol-eseu                100%         100%   0.030   0.120     0.00   0.0000
+doc18-gipuzkoa-limpieza-p20-twocol-eseu                100%          83%   0.023   0.112     0.00   0.0000
+doc50-deporte-navarra-p05-singlecol-es                 100%         100%   0.004   0.004     0.00   0.0000
+doc50-deporte-navarra-p26-table-annex           n/a (table)           0%   0.165   0.153     9.73   0.0146
+doc69-pacto-p03-lowquality-marginalia                  100%         100%   0.000   0.000     0.00   0.0000
+
+Mean column integrity (non-table fixtures): 100.0%
+Mean header survival: 76.7%
+Mean CER: 0.0444
+Mean WER: 0.0778
+Total cost across fixtures: $0.0146
