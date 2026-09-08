@@ -1,0 +1,26 @@
+{
+  "layout": "single_column",
+  "columns": [
+    {
+      "order": 0,
+      "language": "es",
+      "text": "ANEXO l: TABLA SALARIAL DE 1-1-2025 A 31-12-2025\nGrupo 1 968,28 |1.968,28 | 1.968,28 | 29.524,20 17,33 |3,45 Grupo 2 795,58 [1.795,58 | 1.795,58 [26.933,70 15,81 |3,15 Grupo 3 general 519,37 [1.519,37 [1.519,37 [22.790,55 13,37 ETZ Monitor 037 [155987 151997 [2790591052 [280 Grupo 4 general 22.790,55\n519,37 |1.519,37 | 1.519,37 E [es Técnico sala 22.790,55]\n519,37 11.519,37 | 1.519,37 Lar agi Grupo 5 450,25 | 1.450,25 | 1.450,25 [21.753,75 12,77 ETO Grupo 6 38121 [138121 |1381,21 [20.718,15 1216 [243\nPlus Festivo: 3,18 €/h. Plus Domingo: 3,18 €/h Kilometraje: 0,21 €/km.\nLe\nGA"
+    }
+  ],
+  "table_rows": [],
+  "article_headers": [],
+  "_eval": {
+    "engine": "tesseract",
+    "psm": 3,
+    "langs": "spa+eus",
+    "sec_per_page": 1.358,
+    "cost_usd": 0.0,
+    "mean_word_conf": 67.84,
+    "block_count": 7,
+    "classify_raw": {
+      "two_column": false,
+      "tabular": false,
+      "has_straddle": true
+    }
+  }
+}

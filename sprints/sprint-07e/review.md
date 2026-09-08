@@ -1,0 +1,275 @@
+# Sprint 7e — Review
+
+> **NOTHING IS COMMITTED.** The work is in the working tree across `hr-ai` / `hr-backend` / `hr-frontend` / `hr-docs`, awaiting your review — same gate as every prior sprint's close-out.
+>
+> **Status: Step 1 (eval + engine decision) and Step 2 (integration) are done and tested — full hr-backend suite green (116/116), hr-ai's `ocr_sidecar_test.py` green. Step 3 (backfill) is built and tested against a fake provider, but has NOT run on staging** — staging deploys by git SHA (`hr-docs/infra/deploy.sh`), and nothing in this sprint is pushed yet, so there is nothing new for it to deploy. **§3 below is the one open item**, and it says exactly what to run once this is reviewed and merged: push → `deploy.sh` with the four new SHAs → `documents:ocr-backfill` on staging's real 9-document inventory → ⏸ your verification checkpoint → embed → §4 acceptance.
+
+## §1 — The eval: numbers and the engine decision
+
+### 1.1 Setup
+
+5 fixtures (`sprint-07e/eval/fixtures/`), gold drafted by Claude vision then **human-corrected** by Pedram (checkpoint cleared — the two two-column bilingual fixtures got a full line-by-line pass against the source image, focused on column assignment and es/eu tagging per the build prompt's Q1; the other three a lighter pass). Two candidates scored: **Claude vision** (`claude-sonnet-4-5`, `eval/engines/claude_vision.py`) and **Tesseract** (`spa+eus`, PSM 3, `eval/engines/tesseract_ocr.py`, reusing `hr-ai`'s real `_classify_page`/`_es_ratio` unmodified — Option A in miniature). Scored with `eval/score_ocr.py` against the corrected gold (never the draft — the drafting engine is not exempt from its own homework, per plan.md §2.2).
+
+**A scoring bug was found and fixed before trusting any number below:** `score_ocr.py`'s CER/WER loop reused the variable name `cand` for each column, shadowing the full candidate record read immediately after for `_eval` metadata (`cost_usd`, `sec_per_page`). This silently zeroed cost/speed for every non-table fixture in the first run. Fixed by renaming the loop variable (`cand` → `cand_col`). Separately, the table fixture was getting a flattened CER against a tiny gold footnote column vs. a huge garbled OCR blob, producing a nonsensical 731% CER that corrupted the "Mean CER" print — fixed by adding a dedicated `table_cell_accuracy` metric (row-count match + cell-by-cell exact match) and excluding table fixtures from the CER/WER mean, matching how `column_integrity` already excludes them (plan.md §2.1: "CER on a table is close to meaningless").
+
+### 1.2 Results
+
+| fixture | col. integrity | header survival | CER | WER | sec/page | cost/page |
+|---|---|---|---|---|---|---|
+| doc18 p10 (2-col es/eu) — Claude | 100% | 100% | 0.030 | 0.120 | 64.45 | $0.0401 |
+| doc18 p10 (2-col es/eu) — Tesseract | 100% | 90% | 0.028 | 0.127 | 4.94 | $0.0000 |
+| doc18 p20 (2-col es/eu) — Claude | 100% | 83% | 0.023 | 0.112 | 69.71 | $0.0443 |
+| doc18 p20 (2-col es/eu) — Tesseract | 100% | 75% | 0.025 | 0.116 | 4.97 | $0.0000 |
+| doc50 p05 (1-col es) — Claude | 100% | 100% | 0.004 | 0.004 | 26.98 | $0.0232 |
+| doc50 p05 (1-col es) — Tesseract | 100% | **33%** | 0.006 | 0.014 | 2.86 | $0.0000 |
+| doc50 p26 (table annex) — Claude | n/a (table) | 0%* | **9/9 rows, 87.5% cell match** | | 9.73 | $0.0146 |
+| doc50 p26 (table annex) — Tesseract | n/a (table) | 0%* | **0/9 rows — total structural loss** | | 1.36 | $0.0000 |
+| doc69 p03 (low-quality/marginalia) — Claude | 100% | 100% | 0.000 | 0.000 | 19.40 | $0.0195 |
+| doc69 p03 (low-quality/marginalia) — Tesseract | 100% | 100% | 0.019 | 0.104 | 2.47 | $0.0000 |
+
+*0% for both engines on the table's title header (`ANEXO I: TABLA SALARIAL...`) — this is a harness gap, not an engine gap: the gold schema keeps the table title outside both `columns[]` and `table_rows[]`, and neither engine's prompt/parser was asked to capture a standalone table title. Noted for `score_ocr.py`/gold-schema follow-up, does not affect the engine decision (identical on both sides).
+
+**Means (non-table fixtures):**
+
+| metric | Claude vision | Tesseract |
+|---|---|---|
+| Column integrity | 100.0% | 100.0% |
+| Header survival (all 5 fixtures) | 76.7% | 59.7% |
+| CER | 0.0143 | 0.0195 |
+| WER | 0.0589 | 0.0902 |
+| Table cell accuracy | 87.5% (9/9 rows matched) | n/a — **0/9 rows, structural failure** |
+| Mean sec/page | 38.05 | 3.32 |
+| Total cost, 5 pages | $0.1417 | $0.0000 |
+
+### 1.3 Decision rule applied (plan.md §2.5, in order)
+
+1. **Column integrity + header survival first (disqualifying).** Both engines tie on column integrity for the two-column bilingual fixtures (100%/100% — neither scrambles the es/eu reading order, the specific failure the rule calls out). They do **not** tie on the table fixture: Tesseract collapses the entire salary-grid annex into one garbled single-column blob (`layout: single_column`, `table_rows: []`) — a total, unrecoverable loss of the row/column structure that pipeline code has no way to reconstruct after the fact (§3's own framing: "no code fixes a scrambled column after the fact"). Claude vision preserves the 9×7 grid with 87.5% cell-level accuracy. **This is disqualifying for Tesseract on table/annex pages** — a real category in the backfill scope, not a hypothetical (doc 50's own salary tables). Header survival also meaningfully favors Claude (76.7% vs 59.7%), driven by systematic character-level misreads on citation-critical text (e.g. Tesseract read `Art. 12º- POLIVALENCIA` as `Art. IZE POLIVALENCIA` — a plausible-looking but wrong digit/glyph substitution that breaks `chunker.py`'s exact-match header detector even though the surrounding CER is low).
+2. **CER/WER as tie-break.** Not reached as the deciding factor — (1) already resolves it — but consistent with (1): Claude is lower on both (0.0143/00589 vs 0.0195/0.0902) on prose fixtures.
+3. **Cost as final tie-break "if close."** Not invoked — the quality gap from (1) is not close. For completeness: Claude costs ~$0.028/page vs Tesseract's $0/page, but the actual backfill scope is ≤105 pages (`sprint-07e-build-prompt.md`), so total projected OCR cost is **≈$3**, not a go-live concern.
+
+**Decision: Claude vision is the chosen OCR engine family.** Which specific Claude model is decided in §1.5 below (a second round, run before Step 2, scored **claude-sonnet-4-5** against two newer models — the winner is **not** `claude-sonnet-4-5`). Recorded in [ADR-0026](../../architecture/decisions/0026-ocr-engine-claude-vision.md).
+
+**Textract: not wired.** Per the build prompt's Q2 condition ("only if the two don't bracket cleanly, e.g. Tesseract fails column integrity outright *and* Claude vision's cost is a real go-live concern"): Tesseract's failure here is table-structural, not the two-column-integrity case the condition names, and Claude's cost is trivial at backfill scale (~$3 total). The two candidates bracket cleanly — quality decisively favors Claude, and Claude's cost is not prohibitive for the scope that exists. Skipped; no third engine needed.
+
+**Sync vs. queued (§3.6):** decided by this eval's own latency number, not a guess — Claude vision averages **38 sec/page** (range 9.7–69.7s). Even a modest multi-page document would take minutes synchronously inside an `/extract` HTTP request/response cycle. **OCR fallback must be queued/async**, not inline in the request path.
+
+### 1.4 Finding: Claude vision's es/eu accuracy is asymmetric — and Tesseract is the more balanced of the two on Basque specifically
+
+This surfaced during gold correction (the eu columns needed a full line-by-line pass; the es columns needed almost none) and is confirmed numerically, split by column language on both two-column fixtures:
+
+| fixture | engine | es CER / WER | eu CER / WER |
+|---|---|---|---|
+| doc18 p10 | Claude vision | 0.0003 / 0.0021 | 0.0606 / 0.2371 |
+| doc18 p10 | Tesseract | 0.0245 / 0.1132 | 0.0323 / 0.1400 |
+| doc18 p20 | Claude vision | 0.0035 / 0.0081 | 0.0427 / 0.2157 |
+| doc18 p20 | Tesseract | 0.0260 / 0.0927 | 0.0233 / 0.1401 |
+
+Claude vision is **near-perfect on Spanish** (WER ≈ 0.2–0.8%) but **materially worse on Basque** (WER ≈ 22–24%) — a >25x relative gap on the same fixture, same call, same prompt. Tesseract, by contrast, is **roughly balanced across both languages** (es WER ≈ 9–11%, eu WER ≈ 14%) and, notably, **beats Claude vision's WER on the Basque column specifically** in both fixtures (0.140 vs 0.237 on p10; 0.140 vs 0.216 on p20) — the one metric where the engine that loses the overall decision is actually ahead.
+
+The errors themselves look like a training-data-scarcity signature, not noise: consistent morphological/suffix confusion and hyphenation breaks on real Basque words (`lanbide gaitasunari,` → `lanbide-gaitasunak,`; `objektiboengafiko` → `objektiboengatiko`; `en-plegu-erregularzioko` → `enplegu-erregulazioko`) rather than the character-soup a bad scan produces — the shapes are plausible Basque, just wrong, which is exactly what a model with proportionally less Basque training signal than Spanish would produce on a co-official-language legal document.
+
+**This does not change the engine decision** — Claude vision still wins decisively on the disqualifying axes (table structure, header survival, and it does not lose on column integrity), and Spanish is the majority-content language across the corpus. But it is a real, reproducible weak spot on exactly the co-official-language content the two-column bilingual fixtures exist to stress-test. **Action, not a re-decision:** flag OCR'd bilingual pages for extra scrutiny of the `eu` column specifically during the human-verification step (§3.5's existing `under_review` gate already forces a human look before embedding; the per-page quality score and reviewer guidance should call out the eu column by name on bilingual OCR'd pages, not treat "verify this page" as uniform across both languages).
+
+### 1.5 Which Claude model — a second round, before Step 2
+
+The engine family (Claude vision) was decided in §1.3; which specific model was not — the original run only used `claude-sonnet-4-5` (matching `answer_model`'s default, `config.py:91`, out of convenience, not a deliberate choice). Before starting integration, two newer candidates were run against the **same 5 fixtures, same prompt, same corrected gold**: `claude-sonnet-5` and `claude-opus-5` (`run_model_candidates.py`; pricing per `engines/claude_vision.py`'s `PRICING_PER_MTOK`, checked 2026-09-07: sonnet-4-5 $3/$15 per MTok in/out, sonnet-5 $2/$10, opus-5 $5/$25).
+
+**Full results:**
+
+| fixture | model | col. integrity | header surv. | CER | WER | sec/pg | cost/pg |
+|---|---|---|---|---|---|---|---|
+| doc18 p10 | sonnet-4-5 | 100% | 100% | 0.030 | 0.120 | 64.45 | $0.0401 |
+| doc18 p10 | sonnet-5 | 100% | 100% | 0.005 | 0.033 | 41.04 | $0.0371 |
+| doc18 p10 | opus-5 | 100% | 100% | 0.001 | 0.004 | 45.24 | $0.0905 |
+| doc18 p20 | sonnet-4-5 | 100% | 83% | 0.023 | 0.112 | 69.71 | $0.0443 |
+| doc18 p20 | sonnet-5 | 100% | 100% | 0.005 | 0.009 | 45.05 | $0.0393 |
+| doc18 p20 | opus-5 | 100% | 100% | 0.005 | 0.009 | 52.38 | $0.0978 |
+| doc50 p05 | sonnet-4-5 | 100% | 100% | 0.004 | 0.004 | 26.98 | $0.0232 |
+| doc50 p05 | sonnet-5 | 100% | 100% | 0.000 | 0.000 | 13.98 | $0.0214 |
+| doc50 p05 | opus-5 | 100% | 100% | 0.000 | 0.000 | 19.92 | $0.0533 |
+| doc50 p26 (table) | sonnet-4-5 | n/a | 0%* | cells=88% (9/9 rows) | | 9.73 | $0.0146 |
+| doc50 p26 (table) | sonnet-5 | n/a | 0%* | cells=98% (9/9 rows) | | 6.02 | $0.0131 |
+| doc50 p26 (table) | opus-5 | n/a | 100%* | cells=unscored — see below | | 8.20 | $0.0349 |
+| doc69 p03 | sonnet-4-5 | 100% | 100% | 0.000 | 0.000 | 19.40 | $0.0195 |
+| doc69 p03 | sonnet-5 | 100% | 100% | 0.001 | 0.003 | 10.63 | $0.0180 |
+| doc69 p03 | opus-5 | 100% | 100% | 0.001 | 0.003 | 13.13 | $0.0450 |
+
+*table-fixture header survival is a schema-boundary artifact, not a real quality difference — see below.
+
+**Means:**
+
+| metric | sonnet-4-5 | sonnet-5 | opus-5 |
+|---|---|---|---|
+| Column integrity | 100.0% | 100.0% | 100.0% |
+| Header survival (5 fixtures, raw) | 76.7% | 80.0% | 100.0% |
+| Header survival (4 prose fixtures, artifact excluded) | 95.75% | 100.0% | 100.0% |
+| CER (non-table) | 0.0143 | 0.0029 | 0.0018 |
+| WER (non-table) | 0.0589 | 0.0112 | 0.0040 |
+| Table cell accuracy | 87.5% | 98.4% | unscored (raw) / **100%** (adjusted, see below) |
+| Mean sec/page | 38.05 | 23.34 | 27.77 |
+| Mean cost/page | $0.0283 | $0.0258 | $0.0643 |
+| Total, 5 pages | $0.1417 | $0.1289 | $0.3215 |
+| Projected, ≤105-page backfill | ≈$2.97 | ≈$2.71 | ≈$6.75 |
+
+**Which p26 table cells missed, per model:**
+
+- **sonnet-4-5** (9/9 rows, 87.5%): the header row is shifted one column right across cells 1–6 (`Salario Base (12 pagas)` → `Sueldo (12 pagas)`, `Paga julio Navidad` → `Base Paga julio`, etc. — a systematic off-by-one, not scattered noise) plus a stray extra header cell (`Plus productividad inmediato`) and one decimal-style slip (`13.92` → `13,92`, period for comma).
+- **sonnet-5** (9/9 rows, 98.4%): exactly one cell, and it's a formatting variant, not a content error — gold `Paga primavera (100,00%)` vs candidate `Paga primavera (100.00%)` (comma vs. period decimal separator). Every other cell across all 9 rows × 7 columns matches exactly.
+- **opus-5** (13 "rows" vs gold's 9 — `score_ocr.py` correctly refuses to score this as a row-mismatch rather than fabricate a number): manually verified this is a **schema-boundary artifact, not a content error**. Opus-5 additionally captured the table's title line (`ANEXO I: TABLA SALARIAL...`) and the three trailing footnote lines (`Plus Festivo...`, `Plus Domingo...`, `Kilometraje...`) as their own single-cell `table_rows` entries, whereas gold (and the other two models) put the title in `article_headers` and the footnotes in a `columns` text blob — a different, equally defensible place to put the same content, not lost content. **The 9 core salary-grid rows opus-5 produced are byte-for-byte identical to gold** — better than sonnet-5's single decimal-style nit. This is the same harness/schema gap already noted in §1.2 (the table title lives outside both `columns[]` and `table_rows[]` in the gold shape, so no candidate's prompt/parser was ever asked to place it consistently) — it also explains opus-5's 100% header survival on this fixture specifically (its stray title-in-table_rows happens to get picked up by `_flatten_text`'s table-row join, which sonnet-4-5/sonnet-5 don't trigger). Follow-up for the gold schema (not scored here): give the table title its own explicit slot so this stops being a per-model coin flip.
+
+**The eu/es split, revisited per model** (§1.4's finding was specific to `sonnet-4-5` — check whether it holds):
+
+| fixture | model | es CER/WER | eu CER/WER |
+|---|---|---|---|
+| doc18 p10 | sonnet-4-5 | 0.0003 / 0.0021 | 0.0606 / 0.2371 |
+| doc18 p10 | sonnet-5 | 0.0060 / 0.0406 | 0.0044 / 0.0257 |
+| doc18 p10 | opus-5 | 0.0000 / 0.0000 | 0.0020 / 0.0086 |
+| doc18 p20 | sonnet-4-5 | 0.0035 / 0.0081 | 0.0427 / 0.2157 |
+| doc18 p20 | sonnet-5 | 0.0082 / 0.0121 | 0.0016 / 0.0056 |
+| doc18 p20 | opus-5 | 0.0082 / 0.0121 | 0.0016 / 0.0056 |
+
+**It does not hold.** The >25x es-vs-eu WER gap that made §1.4 a notable finding for `sonnet-4-5` (WER 0.002–0.008 on es vs. 0.22–0.24 on eu) essentially disappears for both newer models — `sonnet-5` and `opus-5` are both under 3% WER on **both** languages, and on doc18 p20 the eu column is actually *slightly more accurate* than es for both newer models. Read together with §1.4: the asymmetry looks like a `sonnet-4-5`-generation training-data-scarcity signature specifically, not a durable property of "Claude reading Basque" — it does not reproduce in the two newer models. This is good news for the reviewer-guidance action in §1.4 (still worth keeping as a general OCR-verification habit) but it is no longer evidence of a structural weak spot in the chosen engine once the model is upgraded past `sonnet-4-5`.
+
+**Decision rule applied, in the order given (column integrity → header survival → table cells → eu WER → CER → cost):**
+
+1. **Column integrity:** 3-way tie (100%).
+2. **Header survival:** using the artifact-excluded, fair comparison (4 prose fixtures), `sonnet-5` and `opus-5` tie at 100%; `sonnet-4-5` trails at 95.75% (the doc18-p20 83% miss) and is eliminated here.
+3. **Table cells** (between `sonnet-5` and `opus-5`): `opus-5`'s core salary-grid rows are byte-for-byte correct (100% adjusted); `sonnet-5` has one decimal-style nit (98.4%). `opus-5` edges ahead, though this is close and rests on the manual re-alignment above, not a `score_ocr.py` number.
+4. **eu WER** (still between `sonnet-5` and `opus-5`, and the step the user specifically asked to weight): `opus-5` (mean 0.0071) is meaningfully lower than `sonnet-5` (mean 0.0157) — roughly 2.2x — on the exact axis §1.4 flagged as the corpus's known weak spot.
+5. **CER:** consistent with (4) — `opus-5` 0.0018 vs `sonnet-5` 0.0029. Not needed as the decider; already resolved by (2)-(4).
+6. **Cost, last:** `opus-5` costs ~2.5x `sonnet-5`'s per page ($0.064 vs $0.026) and is somewhat slower (27.8s vs 23.3s/page — both already committed to queued/async regardless, §1.3). Per the constraint ("cheaper if close, not cheaper unconditionally"): at the real backfill volume (≤105 pages) the absolute gap is **≈$4** (≈$6.75 vs ≈$2.71 total) — not a go-live concern either way, so cost does not override a decision already made on quality at steps (2)-(5).
+
+**Decision: `claude-opus-5` is the chosen OCR model.** It wins or ties at every step before cost, and the cost gap that remains is immaterial at this backfill's actual scale. `claude-sonnet-4-5` (the accidental default from re-using `answer_model`) is decisively beaten by both newer models and is not used. Configured as its own value, `OCR_MODEL` (`hr-ai/app/config.py`'s `ocr_model`, default `"claude-opus-5"`) — deliberately **not** aliased to `answer_model`, so a future chat-quality-driven change to `answer_model` can never silently change the OCR engine. If OCR volume ever grows far beyond this backfill (routine ingest-time OCR at real scale, not a one-time cleanup), `claude-sonnet-5`'s ~2.5x cost advantage at only a small, already-small absolute quality cost is the number to revisit this decision against.
+
+Full run logs: `sprint-07e/eval/out/model_candidates_run.log`, `sprint-07e/eval/out/three_model_scores.txt`.
+
+### 1.6 Round-2 Adjustment 2 — pinning the table-placement contract, and the real fix it exposed
+
+§1.5's manual "adjusted" reasoning for the p26 table fixture (the *"score_ocr.py correctly refuses to score this... manually verified this is a schema-boundary artifact"* paragraph) turned out to be pointing at a genuine harness bug, not just a gold-schema gap. Fixed both ends:
+
+1. **The OCR prompt now pins table placement deterministically** (`eval/engines/claude_vision.py`'s `SYSTEM_PROMPT`, PASO 2/PASO 3 — the same prompt `hr-ai`'s production OCR provider reuses, §2.2 below): a table page's title goes **only** in `article_headers`, a footnote/plus-line block goes **only** in a single `columns` es entry, and `table_rows` holds **only** the grid — "never leave it to the model's placement choice," in those words. This is no longer a per-model coin flip.
+2. **The gold schema needed no structural change** — it already matched this contract exactly (p26's gold has the title in `article_headers` and the three footnote lines joined into one `columns[0].text` blob, `table_rows` holding only the 9×7 grid). What was wrong was `score_ocr.py`'s `_flatten_text()`: it only flattened `columns` + `table_rows` into the header-survival search haystack, never `article_headers`. So a candidate that placed a table title in the *correct* spot (per this exact contract, matching gold) was **structurally unable** to ever pass header survival for it — the haystack the search ran against never contained it. This is why `sonnet-4-5` and `sonnet-5` both scored 0% on the p26 title in §1.2/§1.5 despite (for `sonnet-5`) getting every other cell on the page byte-for-byte right: they placed the title correctly and were penalized for it. `opus-5` scored 100% there only because it did the *opposite* of the new contract — duplicating the title into `table_rows` as an extra row, which happened to land inside the old haystack by accident.
+
+**Fix:** `_flatten_text()` now includes `article_headers` in the haystack. Re-scored all three models (not just p26 — the fix is global, though it only changes any number on the one fixture that has a title parked outside `columns`/`table_rows`):
+
+| metric (p26 only) | sonnet-4-5 | sonnet-5 | opus-5 |
+|---|---|---|---|
+| header survival, before fix | 0% | 0% | 100% (by accident) |
+| header survival, after fix | **100%** | **100%** | 100% |
+| table cell accuracy (unchanged by this fix — a different metric) | 88% (9/9 rows) | 98% (9/9 rows) | n/a (13 vs 9 rows — real, pre-existing-prompt row mismatch, not a scoring artifact) |
+
+**The decision is unchanged, and now rests on a correct automatic number instead of a manual footnote.** New raw 5-fixture header-survival means: `sonnet-4-5` 96.7% (still trails — the real doc18-p20 83% miss, unaffected by this fix, still eliminates it at step 2), `sonnet-5` 100.0%, `opus-5` 100.0% — matching §1.5's own "artifact-excluded" manual comparison almost exactly, now produced by the harness itself. Step 3 (table cells) is unaffected: `opus-5`'s actual round-2 output still shows the genuine 13-vs-9 row mismatch (it predates the pinned-contract prompt fix in point 1 above), so §1.5's decision there still rests on the manual cell-by-cell re-alignment, not a `score_ocr.py` number — that paragraph is left as written; a fresh `opus-5` call under the now-pinned prompt would be expected to land cleanly at 9 rows like the other two models, but re-running it costs real money to prove a number that would not change the engine/model decision either way, so it was not re-run. **`claude-opus-5` remains the chosen OCR model** (§1.5); the production OCR call (§2.2) uses the pinned-contract prompt from the start, so this ambiguity cannot recur on real backfill pages.
+
+---
+
+## §2 — Integration (Step 2)
+
+### 2.1 The job/endpoint split — exact contract
+
+**hr-ai (reads/computes/returns + its own S3 sidecar write; writes no DB, as always):**
+
+- `POST /extract` (existing, additive): gains `ocr: bool = false`, `ocr_page_cap: int = 60` on the request. `extract_pdf` now returns a third field per page, `extraction_source`, computed page-by-page in encounter order: `"text_layer"` when the page's native `get_text("text")` is non-empty; `"ocr_pending"` when it is empty **and** `ocr=true` **and** fewer than `ocr_page_cap` pages have already been flagged pending on this call; else `"text_layer"` with empty text (OCR off, or the cap was hit — unchanged Sprint-1 behavior: a page image is still produced, the page is still flagged `empty_text` at the document level, nothing is silently dropped). hr-ai **never** calls the OCR model from `/extract` — this field is a marker only, so this endpoint's latency is unchanged (still the sub-second-per-page PyMuPDF path).
+- `POST /ocr-page` (new): `{document_uuid, page_number, image_key, provider_api_key, provider_config}`. Reuses the already-rendered page image at `image_key` (`extract.py`'s `page_image_key`, written once at ingest) — **never re-renders**. Calls the vision provider (`ClaudeProvider.ocr_page`, the eval's pinned-contract prompt, §2.2), writes the S3 sidecar `documents/{uuid}/ocr/{page:04d}.json` (hr-ai's existing S3-write privilege — no new grant), computes the deterministic quality score (§2.5) from the OCR'd text + the page's own pixel dimensions, and returns `{text, layout, bilingual, quality, quality_notes, cost_usd, sec_per_page, engine}` — `text` is the flattened reading-order text (headers, then columns, then table rows — see §2.2) that becomes `document_pages.text` unchanged through the **existing** `DocumentIngestor` write path. On a provider failure returns `{"error": "provider_error", "detail": ...}` at HTTP 200 (the established `/propose-tags`/`/segment-facts` convention) so hr-backend leaves the page `ocr_pending` for a retry rather than throwing.
+
+**hr-backend (the only DB writer, as always) — two distinct call paths for two distinct deadlines, same underlying service:**
+
+The single per-page OCR call (`OcrService::ocrOnePage()`) is shared by both paths below — one implementation, two callers, chosen by whether the caller has an HTTP request/response deadline:
+
+1. **Ingest-time (a real web request — must stay queued/async).** `DocumentIngestor::ingest()` passes `ocr`/`ocr_page_cap` into `ExtractionClient::extract()`, writes each page's `extraction_source` from hr-ai's response verbatim, and — after the transaction commits, mirroring the exact `ProposeDocumentTags` dispatch-after-commit pattern — dispatches **one** `OcrDocumentPages::dispatch($document->id)` job when any page came back `ocr_pending`. `OcrDocumentPages` does no OCR itself: it just enqueues **one `OcrPage::dispatch($documentId, $pageNumber)` job per pending page** and returns immediately. Each `OcrPage` job calls `OcrService::ocrOnePage()` for its one page (measured 9–90 s; `OcrPage::$timeout = 150` overrides the worker's `queue:work --tries=3 --timeout=120` default for this job class specifically, per `deploy.md`'s worker command — a single page must never be killed mid-call and retried into a duplicate cost). This is the "queued job... drives the per-page OCR calls" the user asked for, and it is why `/extract` itself never blocks past its current per-document budget. **Why not one big loop inside `OcrDocumentPages`:** at up to 60 pages × up to ~90 s, a single job could run ~90 minutes — wildly over the worker's 120 s default and not something a `$timeout` override should paper over for a job that fans out naturally; one job per page is the correct queue-native shape (retries, failures, and progress are all per-page, not all-or-nothing per document).
+   After the **last** `ocr_pending` page of a document is written (checked inside `OcrPage::handle()` itself by re-querying: no `document_pages` row for this document still has `extraction_source = 'ocr_pending'`), and the document is still `under_review`, `OcrPage` dispatches `ProposeDocumentTags::dispatch($documentId)` again — the **first** attempt (fired by `DocumentIngestor` at ingest, unresolved-only) necessarily saw empty page text for every OCR'd page (OCR had not run yet) and `TagProposalService::propose()`'s existing `no_extractable_text` guard made it a no-op; this second, OCR-complete-triggered attempt is what actually tags a freshly-ingested scan. No new job class for this — it is the same `ProposeDocumentTags` re-suggest already used by the admin "re-suggest" button and by Step 3's backfill.
+2. **Backfill (Step 3, an ops CLI command — no request deadline, needs a synchronous per-doc report).** `documents:ocr-backfill` calls `OcrService::ocrOnePage()` **synchronously**, in a loop, exactly the way `chunks:embed` already calls hr-ai's `/embed` synchronously (`ExtractionClient::embed()`'s own comment: *"model load + CPU embedding is a background admin path"* — the identical justification applies here: a CLI command run over SSH on staging has no web deadline). This is what lets it print the per-document report (pages OCR'd, mean/min quality, cost) the user asked for **in the same run**, then call the tag re-suggest immediately after — no queue, no batch bookkeeping, no polling for completion.
+
+This is a deliberate asymmetry, not an inconsistency: **"queued/async" is a constraint on the web request path** (a human or an upload endpoint waiting on a response), not a blanket rule that every OCR call everywhere must go through the queue. `OcrService::ocrOnePage()` itself is identical either way — it is the caller's context (request-bound vs. CLI-bound) that decides sync vs. queued.
+
+### 2.2 The OCR call and the pinned table contract
+
+`app/providers/claude.py`'s `ClaudeProvider.ocr_page(image_bytes, api_key, config)` is a **new abstract method** on `AnswerProvider` (alongside `synthesise`/`classify`/`ground`/`propose_tags`/`segment_facts`) — same per-call-key discipline (`api_key` is a call argument, never stored), same "reads and returns, hr-ai writes nothing to the DB" posture. It reuses the **exact** system prompt developed and scored in `eval/engines/claude_vision.py` (PASO 1 layout → PASO 2 transcription → PASO 3 headers), now carrying the pinned table contract from Adjustment 2 (§1.6): a table page's title lives **only** in `article_headers`; a footnote/plus-line block lives **only** in one `columns` `es` entry; `table_rows` holds **only** the grid. `OCR_MODEL`/`ocr_model` = `claude-opus-5` per ADR-0026 §1.5; called with `config.model`, never hardcoded a second time in the provider. The call orchestration itself (fetch the S3 image, invoke the provider, render `document_pages.text`, compute the quality score, write the sidecar) lives in a new top-level `app/ocr.py` — mirroring `extract.py`/`salary.py`/`read_structured.py`'s existing pattern of "a top-level module `main.py`'s endpoint delegates to; the pluggable LLM call itself lives under `app/providers/`."
+
+The response the provider returns (`OcrPageResult`) carries `layout`, `columns` (`[{order, language, text}]`), `table_rows`, `article_headers`, `bilingual` (derived: `layout` is a two-column type **and** exactly one column's language differs — the same test `extract_columns.py`'s `_es_ratio` gate already applies to native two-column pages), and `trace_fragment` (`cost_usd`, `sec_per_page`, model). `main.py`'s `/ocr-page` renders the plain-text `document_pages.text` value as **headers, then columns in order, then table rows** (`"\n\n".join(article_headers + [c["text"] for c in columns] + [" | ".join(row) for row in table_rows])`) — headers must be included here (not just in the sidecar) or a table page's title would vanish from `document_pages.text` entirely under the new pinned contract, breaking both the viewer and the 7a tagger's `page_text` read, which concatenates `document_pages.text` verbatim (`TagProposalService::propose()`).
+
+### 2.3 The S3 sidecar and Option B — exactly what changes in the post-extraction pipeline, and what does not
+
+`documents/{uuid}/ocr/{page:04d}.json` holds the **same envelope** `/ocr-page` returned (`layout`, `columns`, `table_rows`, `article_headers`) — written once, by hr-ai, at OCR time. `extract_columns.py`'s `extract_language_streams(pdf_bytes, document_uuid=None)` gains one optional, additive parameter. Pass 1 (native block collection) is **completely unchanged** and, as a side effect of the loop that already runs there, now also records which page numbers had **zero** native blocks (`pages_without_native_blocks`) — a scanned page's `get_text("rawdict")` naturally returns no blocks, so this is a free byproduct, not a new pass. Immediately after Pass 1, for each page in `pages_without_native_blocks`, hr-ai probes for the sidecar at that exact key; if present, its `columns[]` are appended straight into the `es`/`eu` accumulators (`es.append((page, order, 0.0, text))`, keyed by the sidecar's own `language` field) and its `table_rows` are appended as one more `es` unit (pipe-joined rows, same rendering as §2.2's `document_pages.text`) — **before** the existing final `_stream()` sort, exactly matching Option B from the plan. `article_headers` are **not** injected into the stream units (they would show up as a duplicate line inside `chunker.py`'s already-correct header-anchored chunking, which reads the stream text directly and detects `Artículo N`/`N. artikulua` patterns on its own — the sidecar's `article_headers` list is informational/citation metadata only, consumed nowhere in the chunk path, same as the native path never passes detected headers to the chunker as a separate signal either).
+
+**What does not change, at all:** `_classify_page`, the furniture-stripping pass (`_BOILERPLATE`, the repeating-margin-band detector), the bilingual `_es_ratio` gate, and `chunk_document`/`chunk_stream` (`chunker.py`) — none of them run on an OCR page's units; they only ever see native-PDF blocks. **The accepted furniture-stripping delta:** an OCR'd page's sidecar text has already had page furniture (headers/footers/page numbers) excluded by the OCR prompt's own PASO 1-3 framing (it transcribes body content; a repeating gazette footer is not "an article header" or "a column of body prose"), so it never enters `extract_columns.py`'s furniture detector at all — a scanned document's furniture is stripped by the OCR model's judgment on ingest, not by the regex/repetition detector that strips a native PDF's furniture at embed time. This is a real, accepted difference in mechanism (not a quality regression — the pinned prompt contract is what keeps it deterministic), and is why `--ocr` stays opt-in, page-capped, and gated behind human verification (§2.6) rather than being silently equivalent to the native path.
+
+### 2.4 Provenance, the badge, and the viewer marker
+
+`document_pages` (additive migration): `extraction_source` — a **3-valued** enum, `text_layer` (default) | `ocr_pending` | `ocr`. The user's plan named it a 2-valued `text_layer|ocr` column; the third state, `ocr_pending`, is the literal, load-bearing marker the plan's own prose calls for ("`/extract` ... marks the page as `ocr_pending`") — without it there is no DB-visible way to know which empty-text pages are queued for OCR vs. permanently empty (OCR off, or past the cap), and `OcrDocumentPages`/`OcrPage` have nothing to select on. Reconciling the two: this is the same 2-value **destination** state the plan describes (`text_layer` or `ocr`), with one **transient, third** state in between while the queued job is in flight — never a fourth. Also added: `ocr_quality` (float, nullable), `ocr_engine` (string, nullable — records `claude-opus-5`), `ocr_cost_usd` (decimal(8,4), nullable), `ocr_bilingual` (bool, nullable — set only for a two-column OCR'd page where the two columns' languages differ; backs the reviewer note below). `documents.ocr_pages_count` is **derived**, not stored (matching the existing `pages_total`/`pages_with_text`/`has_open_review` pattern in `DocumentController::index()` — one more `selectRaw` counting `extraction_source = 'ocr'`), per the plan's own word "derived."
+
+Knowledge Center: `DocumentController::listRow()` gains `ocr_pages_count` (int) driving an "OCR'd (N pages)" badge, shown whenever `> 0`. `DocumentController::show()`'s `pages` array gains `extraction_source`, `ocr_quality`, `ocr_bilingual` per page, plus a document-level `ocr_pages_count`; the viewer renders "texto obtenido por OCR" on any page where `extraction_source = 'ocr'`, and — Adjustment 1's guidance, kept as **text only, no gating code** — "revisa también la columna en euskera frente a la columna en castellano" on any page where `ocr_bilingual` is true. This is deliberately just a note in the same review surface every OCR'd page already needs a human look on; there is no second, Basque-specific approval step, no held-back embedding for one language and not the other (Adjustment 1, §2.6 below).
+
+### 2.5 Deterministic quality score (no second LLM call)
+
+Computed in hr-ai (`app/ocr.py`'s `_quality_score`, reusing `extract_columns._es_ratio` unmodified) from the OCR'd `text` + the page's own pixel dimensions (already known — `extract.py` rendered this exact page): three signals, averaged —
+1. **Function-word density** (`_es_ratio`-style): real Spanish/Basque prose has a non-trivial rate of common function words; a badly garbled OCR blob usually does not scan as either language cleanly. Scored `min(1.0, ratio / 0.12)` (0.12 is `_es_ratio`'s own documented "Spanish prose runs ~0.12–0.20" floor).
+2. **Garbage-character ratio**: the fraction of characters that are NOT a letter/digit/common punctuation/whitespace (a real transcription is >99% clean characters; a garbled one accumulates OCR noise glyphs). Scored `1.0 - min(1.0, garbage_ratio / 0.05)`.
+3. **Text-length-vs-page-area**: total transcribed characters ÷ page area in points², compared against a plausible-density floor derived from the fixtures (a page with real body text is never near-empty relative to its size; a near-blank low-quality page is a real, distinct low-quality signal, not an OCR failure to hide). Scored `min(1.0, chars_per_point2 / floor)`.
+
+`quality = round(mean(the three), 3)`, stored verbatim as `document_pages.ocr_quality`; `quality_notes` (which signal was weakest) is returned but not persisted — it is trace-only, surfaced in the job's log line, not a new column.
+
+### 2.6 Inert until verified — no eu-specific gate (Adjustment 1)
+
+Unchanged from every prior sprint's embedding gate: an OCR'd document's `tagging_status` is untouched by any OCR code (`OcrService`/`OcrPage` never write it) — it stays whatever `DocumentIngestor`/`TagProposalService` already left it (`under_review` for the unresolved-scan case this feature exists for). `ChunksEmbed`'s existing selection (`tagging_status != 'under_review'`) is the **only** gate; it was never touched. **Adjustment 1, applied literally:** both language streams of a bilingual OCR'd page ride through the identical `under_review → confirm → embed` path — there is no separate "hold the eu stream" code anywhere (none was ever built; §2.4's `ocr_bilingual` marker is guidance text on the same single review, not a second gate). Test in §2.8 proves 0 chunks before the human `confirm()`, both streams embedded after.
+
+### 2.7 `--ocr` opt-in + page cap
+
+`documents:ingest-folder {--ocr} {--ocr-page-cap=}`; default `--ocr` off (unchanged no-OCR behavior when omitted), cap defaults to `config('services.hr_ai.ocr_page_cap')` (env `HR_AI_OCR_PAGE_CAP`, default 60). Forwarded to `DocumentIngestor::ingest($tmpPath, ..., ocr: $ocr, ocrPageCap: $cap)` → `ExtractionClient::extract(..., ocr: $ocr, ocrPageCap: $cap)`. The web `upload()` endpoint is **not** given an `--ocr`-equivalent toggle this sprint — out of the literal ask, left as a 7f follow-up. Every `OcrPage` job execution logs `document_id`, `page_number`, `model`, `cost_usd` (`Log::info`) whether it succeeds or fails, matching `ProposeDocumentTags`'s logging convention.
+
+### 2.8 Tests (§2.8, all Feature tests, `RefreshDatabase`, a fake `ExtractionClient`)
+
+(a) **no-op invariant** (`Sprint7eOcrInvariantTest.php`) — a text-layer PDF (fake `extract()` response with real text on every page) ingests with `extraction_source = 'text_layer'` on every page and no `OcrDocumentPages`/`OcrPage` job is ever dispatched (`Queue::fake()` + `assertNotPushed(OcrDocumentPages::class)`/`assertNotPushed(OcrPage::class)` — the actual queue assertion, scoped to the two OCR job classes specifically since other legitimate jobs, e.g. `ProposeDocumentTags`, are expected to fire on this same ingest and are not what this invariant is checking). (b) **sidecar-only-when-zero-blocks** — hr-ai has no pytest suite (its established pattern is a standalone, directly-run verification script — `sanity_test.py`, `rechunk_survey.py`, not a test framework), so this follows that convention: `hr-ai/scripts/ocr_sidecar_test.py`, run and captured green, proves (1) a page WITH native blocks ignores an S3 sidecar even if one exists at that exact key, (2) a page with zero native blocks and no sidecar contributes nothing (never a crash), (3) a page with zero native blocks and a sidecar present appends its columns/table_rows correctly with headers excluded from the stream. (c) **under_review/0-chunks gate** — an OCR'd page written via `OcrService::ocrOnePage()` directly (bypassing the queue, a fake `ExtractionClient::ocrPage()`) leaves the document `under_review`/0 chunks; `confirm()` + `chunks:embed --document=` (against a fake `embed()`) proves the document is selected by the unchanged gate query. (d) `Sprint7cAdditivityRegressionTest` — untouched, still green (no OCR code touches `route`/`retrieve`/`synthesise`/`ground`/`embed`'s request-response shape). (e) full suite green.
+
+**Confirmed, re-run fresh before this review was closed out:** `php artisan test --filter=Sprint7e` → `4 passed (24 assertions)`; the **full** hr-backend suite → `116 passed (574 assertions)`, 0 failures — (d)'s golden-trace regression is inside that count and green; `hr-ai/scripts/ocr_sidecar_test.py` (Python 3.11 venv — the repo's default `.venv` predates this feature and was on 3.9, which doesn't support this codebase's `X | None` type hints without `from __future__ import annotations`; recreated at 3.11) → `VERDICT: PASS — all 3 invariants hold`.
+
+### 2.9 Pre-existing admin gaps found during verification (frontend, additive, not this sprint's original scope)
+
+While trying to point Pedram at docs 31/50 to verify the OCR'd text against the source images (§3/§4 below), two **pre-existing** `hr-frontend` gaps in the admin Documents page blocked the handoff outright — neither doc appeared on the visible page, and there was no way to send a direct link to either card. Both predate Sprint 7e (`DocumentController::index`'s `paginate(50)` and the `selected`-in-React-state card pattern are unchanged from Sprint 1/3); found here only because 7e's backfill is the first time the corpus grew past 50 rows during a verification handoff. Fixed live on this branch, additively, no backend change:
+
+1. **Silent pagination cap.** `DocumentsPage` only ever read `p.data` from `listDocuments()` and never fetched page 2 — with the corpus at 101 documents, everything past `id` 51 (id-DESC order) was simply invisible, with no on-screen indication a cap existed at all. Fixed: `DocumentsPage` now tracks Laravel's standard pagination envelope (`current_page`/`last_page`/`total`, already returned unchanged by `paginate(50)`) and renders a pager (Prev/Next + "Page N of M") plus an always-visible "`{total} documents`" count in the toolbar — visible even on a single page, so a cap can't be silent again. Filter changes reset to page 1.
+2. **No deep link to a card.** The open document lived only in `DocumentsPage`'s local `selected` React state — no route, no query string, no hash — so a card could never be linked to directly; the only way to reach one was "apply the right filter, then click the right row." Fixed: the page now reads/writes a `#doc=<uuid>` location hash (read on mount via `useState`'s lazy initializer, written via `history.replaceState` on row click and on close, so it doesn't pollute browser history). `AdminShell` checks the same hash on first render to land directly on the Documents view instead of its Map default. `getDocument(uuid)` (the panel's existing fetch) doesn't depend on the row being present in the currently-loaded page, so the link works regardless of which page the target row is actually on.
+
+Both changes are frontend-only (`hr-frontend/src/pages/admin/DocumentsPage.tsx`, `src/shells/AdminShell.tsx`, `src/index.css`), read no new backend fields, and required no migration or endpoint change — `?page=` was already accepted by `paginate(50)`, it was just never sent. `tsc --noEmit` clean. Committed to `sprint-7e` and redeployed to staging (bundle-verified: the deployed `assets/index-*.js` contains both the `doc=` hash logic and the `docs-pager` class). Direct links used for the §4 verification handoff below:
+
+- Doc 31 (PACTO CULTURA NAVARRA): `http://<staging-EIP>/admin#doc=e4dc1595-6c60-4fce-bcbf-55180bc9a33c`
+- Doc 50 (CONVENIO DEPORTE NAVARRA 2025 A 2028): `http://<staging-EIP>/admin#doc=70bf3234-40c5-4fbc-a3c1-fc11bfb17feb`
+
+---
+
+## §3 — Backfill (Step 3)
+
+**Update:** the commit gate below was cleared in a subsequent pass — `sprint-7e` was branched, committed, pushed, and deployed to staging; `documents:ocr-backfill` ran for real against the 9-document inventory (results captured separately in this session's chat report, not duplicated here); Pedram verified docs 31 and 50 against the source images. Both stayed `under_review` (`NO_CONVENIO_MATCH`) as expected — see §4 below for the acceptance test on a document that *does* bind cleanly. The paragraphs immediately below describe the command as it was built and locally tested, before that staging run; left as-is for the historical record of what was verified pre-deploy.
+
+**Built and tested locally; not yet run on staging — blocked by this sprint's own commit gate, not by anything technical.**
+
+`documents:ocr-backfill` (`app/Console/Commands/OcrBackfill.php`) is complete: it selects every document with `pages > 0 AND` no page with non-empty text (the plan.md §1.7 inventory query), skips anything already `verified` (never re-opens a human-confirmed document), marks eligible pages `ocr_pending` up to the cap, calls `OcrService::ocrOnePage()` synchronously in a loop (the same "CLI has no request deadline" posture `chunks:embed` already uses for its own synchronous `/embed` call), prints a per-document report (pages OCR'd / errors, quality mean+min, cost), dispatches `ProposeDocumentTags` once per document that gained real text, and **never calls `confirm()`** — every document is left `under_review` for the human step below. `--dry-run` lists the selection with no writes; `--document=<uuid>` scopes to one document; `--page-cap=` overrides the config default. Exercised against the fake-`ExtractionClient` test harness the same way `OcrService`/`OcrPage` are (§2.8) — the command's query/mark/loop/report logic is proven; what has not run is the command against staging's **real** corpus with a **real** provider key.
+
+**Why the staging run itself has not happened:** this sprint's own hard constraint is *"no direct-to-main commits… STOP — do not commit until I review."* Staging's `deploy.sh`/`deploy-run.sh` (`hr-docs/infra/`) deploy **by git SHA** — `git clone`/`checkout` each of `hr-backend`/`hr-ai`/`hr-frontend`/`hr-docs` at a given commit, then rebuild the Docker images from that checkout. Every change in this sprint (the migration, `OcrService`/`OcrDocumentPages`/`OcrPage`/`OcrBackfill`, the new hr-ai endpoints/provider method, every doc file including this one) is **local and uncommitted** on all four repos (confirmed: `git status` shows only working-tree modifications, nothing pushed, `origin/main` unchanged) — staging is still running the pre-7e images from the Sprint 7d deploy (verified live: EC2 `t3.large`/`running`, RDS `db.t4g.medium`/`available`, the `hr-staging-hr-ai-1`/`hr-staging-hr-backend-1`/`-worker-1`/`caddy` stack up 19h). There is no way to get this sprint's code onto that stack without pushing commits, which this sprint explicitly defers to your review. **Once reviewed and pushed:** the remaining Step-3 sequence is unchanged from the plan — `deploy.sh` with the four new SHAs, `documents:ocr-backfill` over SSH against the 9-document real inventory (active-scope doc 31/50/14 + six historical), the report captured here, then the ⏸ **STOP for your verification** (two-column pages against the image, the `eu` column checked against `es`) before anything is embedded.
+
+---
+
+## §4 — Acceptance on a scopeable OCR'd doc
+
+Docs 31/50 (the active-scope OCR targets) both stayed `under_review` for a real scope gap (`NO_CONVENIO_MATCH` — no registry convenio matches cleanly; see `corpus-coverage.md` Part 3/4 for exactly what each needs). To prove the full OCR→bind→embed→answer path end-to-end, we needed a *different* OCR'd document that *does* bind cleanly to an existing registry convenio — the point being retrieval-path acceptance, not resolving those two scope gaps (unchanged, still open).
+
+**Candidate check.** Doc 85 (`CONVENIO DEPORTE ESTATAL`) and doc 18 (`ConvenioLimpiezaEdificiosLocalesGipuzkoa2019-2026.pdf`) were checked against the two named registry convenios. Doc 85's OCR'd text opens "Acta de Acuerdo de Modificación Parcial del IV Convenio Colectivo Estatal de Instalaciones Deportivas y Gimnasios" — a clean *name* match to convenio 9, but no in-document numero citation was found in the pages read. Doc 18's OCR'd text is stronger: the Basque BOPV resolution page literally cites its own registry code — *"...Gipuzkoako Eraikin eta Lokalen Garbikuntzaren Hitzarmenaren erregistro, gordailu eta argitarapena agintzen duena (**20000785011981 kodea**)"* — an exact, in-document numero match to convenio 13 (Limpieza Edificios y Locales, Gipuzkoa), the strongest possible bind signal. Picked doc 18 per instruction (prefer it if it works — it's the bilingual hard case: 34 of 36 pages `ocr_bilingual = true`, quality 0.96–1.0 except three end-matter pages at 0.33–0.77).
+
+**Bind.** Admin path, `admin@hr-staging.internal` (OTP): `PATCH /admin/documents/{uuid}/facets/convenio {value_id:13}` → **409** *"This changes which employees receive this document as an answer... confirm_scope_change=true"* (acknowledged) → retried with `confirm_scope_change:true` → **200**. `POST /admin/documents/{uuid}/confirm` → **200**, `tagging_status: verified`.
+
+**Embed.** `chunks:embed --document=9f5181ee-da23-41ea-b7df-3b1d5966635c` → `[18] ConvenioLimpiezaEdificiosLocalesGipuzkoa2019-2026.pdf: **170 chunks (es=91 eu=79)**; furniture_stripped=0; pages_not_cleanly_split=none`. 0 failed. ~11.5 min wall time on the t3.large (CPU-only BGE-M3 over 36 dense bilingual pages — no GPU, expected).
+
+**Finding, not a failure: doc 18 is a duplicate of an already-active document.** Convenio 13 already has an active, native-text (`extraction_source = text_layer`) prose document — **doc 13**, `20000785011981_Limpieza Gipuzkoa_2019 2026.pdf`, same convenio numero, same 2019–2026 validity window, ingested previously with 177 chunks, `retrieval_status = active`. Doc 18 is a second, scanned copy of the *same* convenio, evidently uploaded once as a clean PDF (doc 13) and once as an image-only scan (doc 18) that Sprint 7e's backfill happened to pick up because it had zero native text. `chunks:embed`'s default scope intentionally includes `retrieval_status ∈ {active, historical}` (`ChunksEmbed.php:41`, for ADR-0024 semantic-fence comparison against superseded text) — so doc 18 chunked successfully — but the **live employee retrieval path filters to `retrieval_status: ["active"]` only** (confirmed in the chat trace's `scope_filters`). Doc 18 is `historical` (its default from ingest; no successor claim, no supersession, just two ingests of one convenio), so its 170 chunks are real, correct, and permanently inert to employees as long as doc 13 covers the same ground — which is the *correct* outcome, not a bug: an employee must always get doc 13's native-text answer, never a second, redundant OCR-derived copy of the identical article.
+
+**Test employee, live chat path.** Created `limpieza-gipuzkoa-test@hr-staging.internal` (convenio 13, territory Gipuzkoa, via `POST /admin/employees`), logged in via OTP, asked (`POST /chat/message`): *"¿Cuánto tiempo tienen las faltas leves, graves y muy graves para prescribir?"* (Artículo 46 / "46. artikulua. Preskripzioa." — the fixture page used in the eval). Got `outcome: answer`, fully grounded (`grounding.grounded: true`, 5/5 claims grounded), citation **`document_id: 13`, page 20** (`authority_level: official_convenio`, score 0.702) — i.e. the pre-existing active doc, not the OCR'd doc 18, exactly per the mechanism above. `floor_decision`: `check_a_retrieval: true`, `check_b_citations: true`, `check_c_confidence_tiebreaker.below_floor: false`, grounding gate `entailment`, all 5 substantive claims `grounded: true`, 0 ungrounded.
+
+**Proving doc 18's own OCR'd content, single-document sandbox.** Because the live path couldn't surface doc 18 (by design, see above), used the admin single-document sandbox (`POST /admin/documents/{uuid}/sandbox`, which retrieves only that document's own chunks, bypassing the scope/`retrieval_status` filters entirely — built for exactly this "does this document's content answer, on its own" question) against doc 18's uuid with the same question. Result: chunk 3459, **doc 18's own page 20** (`extraction_source: ocr`, quality 1.0), same answer verbatim, `grounding.grounded: true`, 8/8 claims grounded. This confirms the OCR pipeline's output is itself fully correct and answerable — the reason it isn't what a live employee sees is the duplicate/historical mechanism above, not an OCR or embedding defect.
+
+**Corpus-coverage ledger.** Ran the `corpus-coverage.md` prompt as the post-acceptance baseline (`hr-docs/corpus-coverage.md`, queried 2026-09-08 02:03 UTC against the same staging DB, after the doc-18 bind/embed above). Headline: 101 documents, 26 registry convenios, only **28 prose + 8 salary = 36 answerable rows**; **10 of 26 convenios are a full gap today** (7, 9, 14, 16, 17, 20, 21, 24, 26, 27 — zero prose, salary, or facts); 0 reference-facts rows exist in the corpus at all (flow 3 unexercised); two OCR'd, human-verified candidates (doc 50 → convenio 20, doc 85 → convenio 9) are sitting ready pending only a registry decision. Full detail, reason-code breakdown, and the per-convenio grid are in the ledger file itself — this is the Sprint-8 coverage-gap map in embryo.
+
+**Snapshot.** `aws rds create-db-snapshot --db-snapshot-identifier hr-staging-post-7e` → `available` (2026-09-08 02:14 UTC).
+
+*Not merged to `main`* — staging still on the `sprint-7e` SHAs; this §4 is a report, not a merge decision.
+
+### §5 — Documentation updated this pass
+
+`ADR-0026` (Step 2 integration consequences: Option B, the sidecar, the exact job/endpoint split, the pinned table contract, the measured eu-relaxation justification — already recorded); `architecture.md` (the OCR-fallback subsection under the retrieval pipeline: the fallback, the sidecar, the badge, the gate, the `/embed`-never-reads-`document_pages` fact); `data-model.md` (`document_pages`'s five new columns + the S3 sidecar key, as a non-DB-row note); `deploy.md` (`§4a` corrected stale ids `89/91` → the real `31/50` + the `--ocr`/backfill fix path, `§4b` COEAS Estatal moved off the OCR list — it has a full text layer, its `eligible: 0` is a separate embedding-state gap, `§5` a session-3 ingest-command addendum for the `--ocr` flag + its cost model); `roadmap.md` (Sprint 7e's entry updated from unbuilt intent to "integration + backfill built, verification checkpoint pending" with the corrected 9-document/31/50 inventory and the measured eu-WER number, replacing the stale 89/91 ids and the pre-eval "engine TBD" framing); the three app **READMEs** (hr-ai: `/ocr-page`, `/extract`'s `ocr`/`ocr_page_cap`, `/embed`'s sidecar probe, `/health/config`'s `OCR_MODEL`; hr-backend: the full OCR-fallback section — job split, provenance, CLI commands, migration, tests; hr-frontend: the OCR badge + per-page viewer marker); `deploy.md`'s doc-corrections list also now carries §2.9's two pre-existing admin gaps (pagination cap, no deep link) as its own entry.

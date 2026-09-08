@@ -80,6 +80,11 @@ services:
       SANCTUM_TOKEN_TTL_MINUTES: "1440"
       FRONTEND_URL: http://${STAGING_EIP}
       AWS_REGION: ${AWS_REGION}
+      # Sprint 7e (ADR-0026): explicit, not left to config/services.php's
+      # env() default — the OCR engine is a deliberate operational choice,
+      # set the same way as every other named secret/config value here, not
+      # silently inherited from a code default that could drift unnoticed.
+      HR_AI_OCR_MODEL: claude-opus-5
       # Obviously-fake placeholder identities for `php artisan
       # staging:seed-test-users` (staging plan, Session 2) — NOT real people.
       # Nothing is ever emailed to them (MAIL_MAILER=log); they exist only as
@@ -136,6 +141,10 @@ services:
       AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
       HR_AI_URL: http://hr-ai:8001
       AWS_REGION: ${AWS_REGION}
+      # Sprint 7e (ADR-0026): same explicit value as hr-backend above — the
+      # OcrPage queued job runs in THIS container, so this is the copy that
+      # actually reaches ExtractionClient::ocrPage()'s provider_config.
+      HR_AI_OCR_MODEL: claude-opus-5
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
     logging: *default-logging
@@ -167,6 +176,13 @@ services:
       EMBED_MODEL: BGE-M3
       EMBED_MODEL_HF: BAAI/bge-m3
       EMBED_DIM: "1024"
+      # Sprint 7e (ADR-0026): explicit, not left to app/config.py's pydantic
+      # default — drives the /health/config diagnostic value; the value
+      # that actually reaches ClaudeProvider.ocr_page() per-call is the
+      # hr-backend-supplied provider_config.model above (HR_AI_OCR_MODEL),
+      # never this one — kept in lockstep here so a diagnostic read is never
+      # misleading about which model is actually running.
+      OCR_MODEL: claude-opus-5
       ANTHROPIC_API_KEY: ""
       # AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY DELIBERATELY unset — see
       # app/storage.py: falls back to the instance profile's credential chain.
