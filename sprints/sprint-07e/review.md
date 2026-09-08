@@ -394,3 +394,9 @@ Result: **+2 `salary_tables` (`source = ocr_pdf`), +60 rows, +30 job categories*
 Two defects the audit itself found and fixed, both in `salary.py`, both data-loss-shaped:
 1. `raw_values` silently **overwrote** a repeated header key — COEAS Navarra's sheet prints `14 pagas` for 2025 and again for 2026, so one of the two printed figures vanished from the one structure whose entire job is to keep them. Duplicates are now suffixed (`14 pagas (2)`).
 2. With that fixed, the parser was taking the *second* year's monthly and filing it under the table's year. Now a repeated stated count is detected as a multi-year block and no monthly is typed — the §7.2 coverage note.
+
+### 7.7 Deployed and snapshotted
+
+`main` in all four repos: `hr-backend` `807ffa2`, `hr-ai` `45576e1`, `hr-frontend` `c082163` (untouched by this correction), `hr-docs` `9182e5e`. Post-deploy: backend `/health` 200, hr-ai `/health` 200 and `POST /ocr-page` 401 unauthenticated, `salary:audit-monthly` exit 0 on the deployed build. **Snapshot `hr-staging-correction-salary-01`** → `available` (2026-09-08 22:51 UTC), taken *after* the re-import, so it is the first snapshot in which no stored salary figure is computed.
+
+Ledger re-run against this state: `corpus-coverage.md` (2026-09-08 22:50 UTC).
