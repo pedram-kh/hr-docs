@@ -277,6 +277,7 @@ One row per job category. Common concepts are typed columns (for reliable querie
 | job_category_id | bigint FK → convenio_job_categories | |
 | gross_annual | numeric(10,2) NULL | the annual total (`TOTAL` / `Total anual` / `Bruto anual` / `Bruto año`) |
 | base_salary_monthly | numeric(10,2) NULL | the source's **own** monthly-base column (`SB` / `Salario base` / `Salario base (mes)` / an `N pagas` column); **NULL when the source states none** — never computed (ADR-0027) |
+| base_salary_monthly_label | varchar NULL | the header that monthly was read from, **verbatim** (`SB`, `14 Pagas`, `Salario base (mes) (€)`). A sheet can print several monthly quantities that are not the same thing — convenio 10 prints `salario base` 1.183,34 next to `bruto mes` 1.824,79 — so the chat names each figure with its own column instead of a generic "salario mensual". `--mark-provenance` restores the original OCR'd header over a mapped one. NULL for rows imported before the column existed (a label is source text; no backfill may invent one) |
 | extra_pay | numeric(10,2) NULL | pagas extra (where the source has a dedicated column) |
 | pagas_count | int NULL | the payment count a header **states** (`14 pagas`, `Bruto/mes 12 pagas`); NULL otherwise, and **never used to derive** a figure (ADR-0027) |
 | hourly_rate | numeric(8,4) NULL | €/hora (`€/hora` / `precio/hora` / `bruto/hora` / `salario hora`, or the bare annual-hours-labelled column e.g. `1742`) |

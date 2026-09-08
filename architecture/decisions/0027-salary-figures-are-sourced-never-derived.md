@@ -27,6 +27,8 @@ The `/14` also masked real coverage. Convenios 18 and 19 have sheets whose annua
 
 **A typed salary figure is read from a source cell or it is not stored.**
 
+The fix is *never derive*, not *use the right divisor*: no correct constant exists to be found, because the convenios in this corpus divide by 12, 14, 15 and 16, and a figure the source never printed cannot be cited even when the arithmetic happens to be right.
+
 1. `base_salary_monthly` is written **only** from a column the source labels as a monthly base (`SB`, `Salario base`, `Salario base (mes)`, `Sueldo mensual`, or an `N pagas` column). It is **NULL** when the source states none. It is never computed from the annual.
 2. `pagas_count` (renamed from `num_payments`, whose old name invited the old behaviour back) is a typed field **in its own right**, set only when a header states it (`14 pagas`, `Bruto/mes 12 pagas`), NULL otherwise, and **never used to derive another figure**. A `PAGA 16`-style label — the value of one payment, not a count of them — is deliberately not read as a count.
 3. Where a sheet prints several stated monthlies side by side (COEAS Navarra prints `14 pagas` and `12 pagas` in adjacent columns), the 14-pagas column is stored and the alternative is named in a warning and kept verbatim in `raw_values`. This is a choice **between two source cells**, which is categorically different from computing a figure the source never printed. Where the header states two different counts and no single monthly column, `pagas_count` stays NULL rather than being guessed.

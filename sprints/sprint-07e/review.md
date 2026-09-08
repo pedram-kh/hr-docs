@@ -400,3 +400,59 @@ Two defects the audit itself found and fixed, both in `salary.py`, both data-los
 `main` in all four repos: `hr-backend` `807ffa2`, `hr-ai` `45576e1`, `hr-frontend` `c082163` (untouched by this correction), `hr-docs` `9182e5e`. Post-deploy: backend `/health` 200, hr-ai `/health` 200 and `POST /ocr-page` 401 unauthenticated, `salary:audit-monthly` exit 0 on the deployed build. **Snapshot `hr-staging-correction-salary-01`** → `available` (2026-09-08 22:51 UTC), taken *after* the re-import, so it is the first snapshot in which no stored salary figure is computed.
 
 Ledger re-run against this state: `corpus-coverage.md` (2026-09-08 22:50 UTC).
+
+
+## §8 — Correction-salary-01 follow-ups: naming the figure, and a sweep for the rest
+
+### 8.1 A monthly figure is now named by the column it came from
+
+§7 stopped the system computing a monthly. It did not stop it *mislabelling* one, and convenio 10 shows why that matters: its sheet prints **two** monthly figures that are not the same quantity — `salario base` 1.183,34 and `bruto mes` 1.824,79 (the base plus prorated extras, transport and a 5 % improvement). Calling either "salario mensual" states a number no payslip will match. COEAS Navarra has the same shape with `14 pagas` beside `12 pagas`, where "salario base mensual" would attach a name the source never used.
+
+So the figure now travels with its header. `salary.py` returns `base_salary_monthly_label` — the source header verbatim, whitespace collapsed — `salary_table_rows` stores it, and `--mark-provenance` restores the **original OCR'd** header over the mapped one (the same condition already applied to `raw_values`: the name the employee is told must be the source's, not the one the header mapping wrote for the importer's benefit). The answer then names each figure the way the table does, and when the source prints several monthlies it states all of them:
+
+| convenio | before | after |
+|---|---|---|
+| 10 Agencias de Viajes, 2025, cat. 3 | `salario base mensual de 1.218,84 €` | `salario base mensual de 1.218,84 €; **bruto mensual de 1.824,79 €**` |
+| 15 Información y Documentación, 2026, Grupo I | `salario base mensual de 2.232,75 €` | unchanged — its label restores to `Salario base (mes) (€)`, which *is* a base monthly |
+| 19 COEAS Navarra, 2026, Director/a Gerente | `salario base mensual de 2.231,04 €` | `importe mensual en 14 pagas de 2.231,04 €; importe mensual en 12 pagas de 2.602,88 €` |
+| 18 Acción e Intervención Social, 2026, Grupo 1 | `salario base mensual de 2.129,17 €` | `salario base mensual de 2.129,17 €; **bruto mensual de 2.484,03 €**` |
+| 6 Deporte Cantabria, 2026, cat. 2.1 | `salario base mensual de 2.652,25 €` | `salario base mensual de 2.652,25 €; **bruto mensual de 3.094,29 €**` |
+
+The extra figures come from `raw_values`, which holds the source's own cells — this widens what is **quoted**, never what is computed. An unrecognized header is quoted verbatim (`«Retribución de tabla (mes)» de 1.500,00 €`) rather than paraphrased into a meaning it may not have. Two deliberate silences: nothing is surfaced when no monthly is typed (an ambiguous multi-year sheet would otherwise hand over four figures and no way to choose), and a suffixed duplicate key (`14 pagas (2)`) is never quoted because it belongs to another year's table.
+
+**A parser bug this surfaced.** A grid whose only money headers are `N pagas` columns — they are matched by pattern, not by the literal synonym set — put the label/grid boundary *past* them, so `Director/a | 2.231,04 | 2.602,88` was read as a category literally named "2602.88". No live sheet hit it (COEAS Navarra's own grid starts with a bare-year column, which the hours-header pattern happens to catch), but the shape is one gazette away. A column that was typed is part of the numeric grid by definition, and the boundary now says so.
+
+### 8.2 The sweep: every computed number in an answer path
+
+`hr-ai/app/salary.py`, `SalaryAnswerService`, `ReferenceFactAnswerService` and the prose answer/composition path, read for any number that is calculated rather than read.
+
+| # | where | what is computed | decision |
+|---|---|---|---|
+| 1 | `salary.py` | `base_salary_monthly = gross_annual / 14` | **removed** (§7 / ADR-0027) |
+| 2 | `salary.py` | `num_payments = 14` asserted for every row | **removed** — `pagas_count` is stated or NULL |
+| 3 | `salary.py` | `round(value, 6)` on every float into `raw_values` | **keep** — trims openpyxl's IEEE noise (`1771.6400000000003`); it cannot reach a printed digit |
+| 4 | `salary.py` | `round(…, 2)` on money and `round(…, 4)` on the hourly rate | **keep** — coercion to the typed column's own scale (`decimal(10,2)` / `decimal(8,4)`), max change half a cent, and the unrounded cell stays verbatim in `raw_values`. The alternative, dropping a figure whose source carries three decimals of formula noise, loses more than it protects |
+| 5 | `salary.py` | `_year_from_sheet_name("smi 26") → 2026` | **keep** — a year read from a sheet *name*, never inferred from the grid's figures, and not a money figure at all |
+| 6 | `salary.py` | picking the 14-pagas column when a sheet prints two monthlies | **keep** — a choice between two SOURCE cells, warned on every affected sheet (ADR-0027 point 3), and now visible in the answer, which states both |
+| 7 | `SalaryAnswerService` | `number_format(…, 2)` / `(…, 4)` for display | **keep** — display scale equals storage scale, so no displayed figure differs from the stored one |
+| 8 | `SalaryAnswerService` | the monthly's label | **fixed** — §8.1; a generic name is its own kind of invented figure |
+| 9 | `ReferenceFactAnswerService` | `mb_substr($breakdown, 0, 240)` | **fixed** — a character-wise cap can end a breakdown mid-figure (`1.234,56` printed as `1.23`), a number reached by truncation instead of division but equally absent from the source. Whole entries are dropped now |
+| 10 | prose answer prompt (`hr-ai/app/providers/claude.py`) | nothing in code — but the prompt forbade only *inventing* figures from general knowledge, not *deriving* one from a cited figure | **fixed** — rule 7: no dividing, multiplying, prorating, summing, applying a percentage, or converting annual→monthly→hourly. A calculated figure appears in no source and therefore cannot carry a `[Fuente N]`, which is the prompt's own test for whether it may be said |
+
+Numbers deliberately **not** in scope, listed so the next reader does not re-audit them: retrieval scores (`round(1 - distance, 6)`), OCR quality sub-scores, the escalation note's similarity readout (`number_format(…, 3)`), the precedence epsilon, and ChatService's Spanish cardinal expansion (`cuarenta y seis` for article-number recall). None is ever stated to an employee as a fact about pay or conditions; they are ranking, diagnostic and query-expansion machinery. A grep for `gross_annual` / `base_salary_monthly` across all four repos confirms no other service, command or frontend component touches a salary figure.
+
+ADR-0027 gains the sentence that generalizes all of this: the fix is *never derive*, not *use the right divisor* — no correct constant exists to be found, because this corpus divides by 12, 14, 15 and 16.
+
+### 8.3 Convenio 3 through the real chat path
+
+`staging:seed-test-users --chat-profiles` now seeds the convenio-scoped chat employees (previously the salary ones were created ad hoc), and `ChatTestUserSeeder` carries the two convenios whose figures exist only because a PDF grid was converted — convenio 15, whose source prints a monthly, and convenio 3, whose source prints only an annual.
+
+As `Test Ocio Educativo Álava (convenio 3)` / `Director/a gerente`, through the real `POST /chat/message`:
+
+> Para la categoría Director/a gerente, según la tabla salarial de 2026 de tu convenio: bruto anual de 37.761,14 €.
+
+`floor_decision.path = salary_sql`, citation → **document 104** (the OCR-derived `.xlsx`, `is_salary_table = true`, `chunk_id = null`), trace row `{gross_annual: 37761.14, base_salary_monthly: null, pagas_count: null}`. The ADR-0027 answer shape on real data: the source states no monthly, so none is given, and nothing is divided to fill the gap.
+
+### 8.4 State after the follow-ups
+
+Re-imported and re-stamped: all 75 rows that carry a monthly now carry its source header too (`Salario base`, `SB`, `14 Pagas`, `Salario base (mes) (€)`). `salary:audit-monthly` exits **0** — 179 rows across 14 tables, 107 with a source-stated monthly, 0 failures, the one COEAS Navarra coverage note unchanged. Suite **145/145** green (`CorrectionSalary01Test` 13 → 19) plus the hr-ai parser script (9 → 11 scenarios). Snapshot `hr-staging-correction-salary-01b`.
