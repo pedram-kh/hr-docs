@@ -456,3 +456,46 @@ As `Test Ocio Educativo Álava (convenio 3)` / `Director/a gerente`, through the
 ### 8.4 State after the follow-ups
 
 Re-imported and re-stamped: all 75 rows that carry a monthly now carry its source header too (`Salario base`, `SB`, `14 Pagas`, `Salario base (mes) (€)`). `salary:audit-monthly` exits **0** — 179 rows across 14 tables, 107 with a source-stated monthly, 0 failures, the one COEAS Navarra coverage note unchanged. Suite **145/145** green (`CorrectionSalary01Test` 13 → 19) plus the hr-ai parser script (9 → 11 scenarios). Snapshot `hr-staging-correction-salary-01b`.
+
+---
+
+## §9 — Docs 50 and 85 bound: the 7e OCR backfill's last two scope decisions
+
+Go-live item (a) was the one 7e follow-up that no code could close: two scanned convenios had been OCR'd and human-read, but neither could be *bound* without someone deciding which registry row it belonged to. Pedram read both cover pages and decided. This section records what that produced, because "bind a document" is the cheapest coverage the corpus has left and it is worth knowing exactly what it buys.
+
+### 9.1 Applied through the admin path, gate included
+
+Both binds went through the real endpoints, not a script writing columns: `PATCH /admin/documents/{uuid}/facets/convenio` — deliberately sent **unconfirmed first**, which returned **409** (`"This changes which employees receive this document as an answer"`) on both — then re-sent with `confirm_scope_change=true`, then `PATCH /admin/documents/{uuid}` for the lifecycle facets (also 409-gated), then `POST .../confirm`. Every field therefore carries an `admin_manual` `tag_events` row with the actor id, and the scope gate is exercised rather than assumed.
+
+| doc | → convenio | document_type | retrieval | validity | chunks |
+|---|---|---|---|---|---|
+| 50 `CONVENIO DEPORTE NAVARRA 2025 A 2028` | 20 Gestión Deportiva Navarra | `convenio_text` | active | 2025-01-01 → 2028-12-31 | **60** (es=60, eu=0) |
+| 85 `CONVENIO DEPORTE ESTATAL` | 9 Instalaciones Deportivas y Gimnasios | `partial_agreement` | active | 2023-09-26 → open | **32** (es=32, eu=0) |
+
+One judgement call worth flagging: doc 85 was `retrieval_status = historical` and the instruction named a validity of `2023-09-26 → open`. An amendment in force with an open end date is not historical, and an inert document cannot be asked a question, so it was flipped to `active` — through the same 409-gated lifecycle edit, and recorded here as an inference rather than an instruction.
+
+Neither document is bilingual (unlike doc 18, the 7e acceptance case: 91 es / 79 eu). Both are Spanish-only gazette text, so the es/eu split is the trivial one.
+
+### 9.2 Both verified through the real chat path
+
+Two scoped employees, seeded reproducibly by `staging:seed-test-users --chat-profiles` (`ChatTestUserSeeder` now carries convenios 20 and 9).
+
+**Convenio 20** — *"¿puedo hacer funciones de dos grupos profesionales?"*
+
+> Sí, puedes realizar funciones de dos grupos profesionales mediante el sistema de polivalencia, siempre que se cumplan determinadas condiciones [Fuente 1]. Debe existir un acuerdo expreso entre la empresa y tú como persona trabajadora, que se documente bien en el contrato inicial de trabajo o en un documento posterior de novación contractual [Fuente 1]. La polivalencia solo se puede pactar para las siguientes combinaciones específicas de grupos profesionales [Fuente 1]: a) Técnico de actividad deportiva (grupo 3) y Coordinador deportivo (grupo 2) […] En estos casos, la retribución será la establecida para cada grupo profesional y nivel retributivo proporcionalmente al tiempo de realización efectiva de las funciones propias de cada grupo [Fuente 1].
+
+Citation: **document 50, page 5** — `extraction_source = ocr`, `ocr_quality = 1.00`, i.e. the answer is quoting text no text layer ever contained. `authority_used = [official_convenio]`; 10 claims, **0 ungrounded**; `check_a_retrieval` and `check_b_citations` both true, confidence 0.95 against a 0.65 floor.
+
+**Convenio 9** — *"¿cómo funcionan los contratos fijos discontinuos?"* (Art. 22)
+
+> […] El contrato deberá formalizarse necesariamente por escrito y deberá reflejar los elementos esenciales de la actividad laboral, entre otros, la duración del periodo de actividad, la jornada y su distribución horaria [Fuente 1] [Fuente 3]. La persona trabajadora con contrato fijo discontinuo será llamada de forma escrita y por medio que permita dejar constancia de la debida notificación […] con una antelación de 15 días antes de que la persona trabajadora deba incorporarse a su puesto de trabajo [Fuente 1]. […] La persona trabajadora debe responder […] en el plazo de 5 días hábiles […] [Fuente 1].
+
+Citations: **document 85, pages 1–2** (`extraction_source = ocr`, quality 1.00) **and document 75** (Estatuto de los Trabajadores, pp. 42–45, `text_layer`). `authority_used = [official_convenio, national_law]`; 21 claims, **0 ungrounded**; the figure-guard checked `15 días` and `5 días` against the cited chunks and both are grounded.
+
+`floor_decision.path` is **null** on both, and that is the correct value, not a missing one: `path` is written only by the shortcut paths (`salary_sql`, `reference_fact`, `reference_fact_composition`). A prose answer goes through the ordinary retrieval → synthesis → A∧B → entailment route, whose `floor_decision` records the floors and gate results instead. Reading `path = null` as "no path taken" would be a misreading of the trace.
+
+### 9.3 What this closed, and what it did not
+
+**Convenio 20 is genuinely closed.** It had no current text at all (doc 40 expired in 2020); it now has its 2025–2028 successor, and doc 40 moves to "historical, successor exists".
+
+**Convenio 9 is not.** Doc 85 amends Art. 22 of the IV convenio; the IV convenio's own text is not in the corpus (doc 73, 2023–2025, is expired). The convenio-9 answer above shows exactly what that means in practice: the amendment supplies the llamamiento terms, and everything it doesn't touch comes from the **Estatuto de los Trabajadores**. That is a correct answer and a legitimate authority mix, but an employee on convenio 9 is being answered largely from national law rather than from their own convenio, and the ledger and `deploy.md` both now say so. Sourcing the base IV convenio text is the open action.
