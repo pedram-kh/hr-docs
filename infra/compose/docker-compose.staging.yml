@@ -85,6 +85,13 @@ services:
       # set the same way as every other named secret/config value here, not
       # silently inherited from a code default that could drift unnoticed.
       HR_AI_OCR_MODEL: claude-opus-5
+      # Same reasoning, applied to the answer model (Sprint 7f §1.5 finding):
+      # this was UNSET, so it resolved to config/services.php's env() default.
+      # Segmentation has no model of its own — it reuses the answer model — so
+      # a change to that default would silently re-run every fact proposal on
+      # a different model, and an eval baseline would drift with nothing in a
+      # diff to show it. Pinned so model changes are deliberate.
+      HR_AI_ANSWER_MODEL: claude-sonnet-4-5
       # Obviously-fake placeholder identities for `php artisan
       # staging:seed-test-users` (staging plan, Session 2) — NOT real people.
       # Nothing is ever emailed to them (MAIL_MAILER=log); they exist only as
@@ -145,6 +152,10 @@ services:
       # OcrPage queued job runs in THIS container, so this is the copy that
       # actually reaches ExtractionClient::ocrPage()'s provider_config.
       HR_AI_OCR_MODEL: claude-opus-5
+      # Sprint 7f: and the answer model, for the same reason — the SEGMENTATION
+      # jobs run in THIS container, so this is the copy that decides which
+      # model a fact proposal actually runs on.
+      HR_AI_ANSWER_MODEL: claude-sonnet-4-5
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
     logging: *default-logging
