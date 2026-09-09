@@ -321,4 +321,122 @@ Because every employee reads null, Phase 1 changes no answer: the group-scoped e
 
 ---
 
-*(Phase 2 follows.)*
+## Phase 2 — the AI proposes a tree, a human approves it
+
+### 2.1 `hr-ai POST /propose-groups`
+
+Read-only, writes nothing, never migrates (ADR-0007). It gets one convenio's own text (page-ordered), its categories as a **closed set** with `group_code` marked *evidence only*, and the `group_label` strings its **verified** facts already use. Verified only, deliberately: an unverified label is itself an unreviewed AI guess, and feeding it back as a requirement would let one proposal justify the next.
+
+**No AI at answer time.** This is a one-off structural read whose output is inert until approved; the answer path never calls it.
+
+The prompt's load-bearing rule is **granularity**: propose a sub-area *only* where the text assigns the slices different values, and cite the line. Everything the database enforces is enforced again in the provider, before hr-backend sees the payload, so a malformed tree degrades to *fewer nodes* rather than to a rejected batch — two levels only, no orphan sub-areas, an uncited split dropped, category ids validated against the closed set (ADR-0011). Labels are passed through **unnormalized**: `GroupCodeNormalizer` in hr-backend owns the comparison key, so there is exactly one implementation of the thing Phase 3 compares. `scripts/propose_groups_validation_test.py` pins all of it with the Anthropic call stubbed — no network, no cost.
+
+### 2.2 Persist, and the rule that makes approval safe
+
+`ExtractionClient::proposeGroups` → `ProposeConvenioGroups` (queued) / `groups:propose` (CLI, inline, prints cost) → `ConvenioGroupProposalService`. Every node lands `ai_agent`/`needs_review`. Re-running upserts on `(convenio, parent, code)` and **never reopens a node a human approved or rejected** — an approved node may already be bound to facts and assigned to employees, and a rejected one was rejected on purpose.
+
+**`FactGroupBindingPlanner`** reads a fact's `group_label` and works out which approved nodes it means. It proves the corpus's real shapes and **refuses the rest, by design**. That refusal is the fix, not a gap: the matcher this sprint deletes always produced an answer, and replacing one over-confident parser with a cleverer over-confident parser would fix the symptom and keep the disease. An unresolved label costs a click; a wrongly resolved one is a wrong answer about someone's probation period.
+
+| proved | refused |
+|---|---|
+| `Grupo 1`, `Grupo I` → one node | `Resto de grupos` — defined by what it excludes |
+| `Grupos 3, 4, 5 y 6` → four nodes | `Grupo 2 excepto área cinco` — a complement |
+| `Grupo 3 (todas las áreas)` → the group itself | `Grupo 2` **where G2 is split** — under-specified |
+| `Grupo 2 (resto áreas)` → the child | `Contratos de formación en alternancia` — not a group |
+| `Grupo 1 (todas las áreas) y Grupo 2 (área 5)` → two nodes | `Grupo 1 y Grupo 9` — **partial parses bind nothing** |
+
+The last row matters most. Binding the half that parsed would answer confidently for Grupo 1 and silently drop the rest of the fact's scope, and nothing about it would look wrong.
+
+**`approve()` never writes a binding.** `GET .../binding-diff` is a read that shows exactly which facts would bind; `approve()` writes `reference_fact_group_scopes` rows *only* for the ids the reviewer sends back, and re-checks each one against the grammar inside the transaction, so a stale payload cannot bind a fact whose label points elsewhere. A sub-area cannot be approved under a pending parent, an approved node cannot be renamed (that would change the key Phase 3 compares, under facts and people already attached), and a node with bindings cannot be rejected out from under them.
+
+### 2.3 Found by reading the real text: one group, three keys
+
+Hostelería Navarra's article 19 prints **"Grupo Prof. 1.º"**, its verified reference fact writes **"Grupo 1"**, and its annex writes **"GRUPO PROFESIONAL PRIMERO"**. Those normalized to `prof-1`, `1` and `profesional-primero` — **three nodes for one group**, which is this entire bug re-entering through typography. Rule 2 now strips the `profesional`/`prof.` qualifier and trims ordinal markers at both ends; rule 3 reads ordinal words. All 44 Phase 1 normalizer tests still pass unchanged; 13 new ones pin the convergence and guard against swallowing a genuine prose group name (`Profesionales de oficio` stays itself).
+
+### 2.4 Found by running it: a cited split was being thrown away
+
+The first live run on convenio 21 read article 19 **correctly** and said so in its own notes — *"divide el Grupo profesional 2.º en dos áreas exclusivamente porque les asigna periodos de prueba distintos"* — but returned Grupo 2's two areas **without Grupo 2 itself**. Both areas were therefore orphans, both were dropped, and what survived was 2 roots and no split: **precisely the under-split the eval gates on.** That is how someone entitled to 90 días gets told 60.
+
+Dropping a *cited* split is the worst outcome available, so a missing parent is now **reconstructed** instead of discarded. It invents nothing — the printed label comes verbatim from the child's own `parent_code_label`, the child carries the excerpt proving the group is split, and the node lands `needs_review` flagged as reconstructed. An **uncited** orphan is still dropped and conjures nothing. Reconstruction never targets a label the model used for an *area*, which would defeat the two-level limit by making one area both an area and a root. The prompt now also states the requirement directly, so reconstruction stays a fallback — and on the re-run the model emitted all three roots itself, citing Anexo I for the groups and article 19 for the areas.
+
+### 2.5 The group eval
+
+`eval/gold-trees.json` — gold trees hand-built by **reading each convenio's own text on staging**, page cited per entry so a disagreement is settled by looking. The two errors are scored separately because they are not symmetric: an **under-split** binds one value to a group the convenio prices in halves and answers 60 días to someone entitled to 90 (a wrong answer — **gated at zero**), while an **over-split** demands a distinction that does not exist and escalates (worse service, not wrong information — reported). Scoring is by group **identity**, not spelling; two proposed roots matching one gold group is itself reported as a duplicate-node bug.
+
+**Live staging run, all six fixture convenios — `PASS`:**
+
+| id | convenio | gold | proposed | exact | **under** | over | missing | extra | time | cost |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 21 | HOSTELERIA NAVARRA | 3 | 3+2 | 3 | **0** | 0 | 0 | 0 | 24.0s | $0.1107 |
+| 3 | COEAS Álava | 6 | 6+0 | 6 | **0** | 0 | 0 | 0 | 16.0s | $0.1948 |
+| 4 | COEAS Andalucía | 6 | 6+0 | 6 | **0** | 0 | 0 | 0 | 18.6s | $0.1906 |
+| 11 | COEAS Estatal | 6 | 6+0 | 6 | **0** | 0 | 0 | 0 | 25.5s | $0.1899 |
+| 18 | Acción e Intervención Social Navarra | 4 | 4+0 | 4 | **0** | 0 | 0 | 0 | 24.8s | $0.1875 |
+| 19 | COEAS Navarra | 6 | 6+0 | 6 | **0** | 0 | 0 | 0 | 12.8s | $0.0718 |
+| | **total** | **31** | **33 nodes** | **31** | **0** | **0** | **0** | **0** | **122s** | **$0.9453** |
+
+**31/31 exact.** Convenio 21 is the only one that splits, and it splits exactly where the convenio does. The five unsplit convenios stayed unsplit — the over-split column is the one that would have caught a proposer that split for the sake of it, and it is zero.
+
+**Membership, ungated:** COEAS Navarra's forward-fill recovered **28 of 32** (88%). Its salary sheet printed each group header once and left the following rows blank, so only 6 of 32 categories carry a `group_code` and 26 inherit theirs from the row above; the proposer offered all 32 as `needs_review` memberships with the block excerpt. Ungated on purpose: membership only pre-fills a picker, it never decides an answer, and 72 of the corpus's 94 categories have no group at all. Gating on it would fail the eval for a signal nothing depends on.
+
+**Also worth recording:** four of the six convenios hit `text_truncated` at the 180k-character cap (3, 4, 11, 18 — convenio 11 is 136 pages). All four still scored exact, because a convenio's classification article sits early, but the cap is a real limit and is carried as **O-3** below rather than left implicit.
+
+### 2.6 Test totals
+
+**288 backend tests green, 1,087 assertions** (143 new in 7f), including `Sprint7cAdditivityRegressionTest` byte-for-byte unchanged and the full 7c ladder suite. Frontend typechecks and builds. `propose_groups_validation_test.py` all checks pass.
+
+Nothing in Phase 2 changes an answer: every node is `needs_review`, `reference_fact_group_scopes` is still **empty**, every employee's `convenio_group_id` is still **null**, and §0.7 check B still escalates. Phase 3 is the matcher.
+
+### Open items carried out of Phase 2
+
+| # | item | blocks? |
+|---|---|---|
+| **O-3** | `PROPOSE_GROUPS_TEXT_CAP` (180k chars) truncated 4 of 6 convenios. Harmless here — classification articles sit early — but a convenio that classifies late would silently lose its structure. Wants either a targeted article-finding pass or a chunked read | no — all six scored exact |
+| **O-4** | Convenio 18's categories 57-64 are salary *amounts* parked in the category table (the model spotted this and refused to attach them). Corpus hygiene, not 7f | no |
+
+---
+
+## ⏸ CHECKPOINT 2 — Navarra Hostelería tree + binding diff — **passed** 2026-09-09
+
+Pedram approved all five nodes. Approving them surfaced two gaps that only a real reviewer working the real surface could have found, and the second is a design point rather than a missing button.
+
+### 2.7 What approval revealed: binding is a decision separate from approval
+
+Phase 2 shipped with binding available at exactly one moment — the approval diff. Approve a node with a fact unticked and there was no way back to it: facts **44** and **34** sat `sin vincular` on an approved Grupo 1, correctly listed, with no door. The reviewer's first pass was final, which is not a policy anyone chose; it is what falls out of putting the only write behind a screen that renders for `pending` nodes.
+
+Binding now has its own endpoint (`POST /convenio-groups/{id}/bind`) and its own affordance, in **two lanes**:
+
+**The grammar lane** is what 44 and 34 needed. Their labels *do* resolve to Grupo 1 — the planner reads them fine — they were simply never ticked. The lane re-plans inside the transaction and refuses anything that does not resolve to the node, so a stale payload still cannot bind sideways.
+
+**The override lane** is the interesting one, and fact **35** is why it exists. Its label is `Grupo 2 excepto área cinco`. That *does* mean `resto áreas` — but only because someone read the convenio and knows which areas the other facts claim. The planner refuses it as a `complement`, and refusing is the right behaviour: a complement is defined by exclusion, so resolving it means deciding what the other facts cover, which is a judgement. The mistake would be to teach the parser to guess — that is precisely the shape of the bug this sprint exists to delete. The digit matcher answered confidently from an inference nobody sanctioned.
+
+So the design is: **the planner declines to infer, and a human may decide.** What makes that safe is not the decision but its filing. An overridden binding is written under `facet = group_scope_manual`, and the event keeps the planner's refusal reason *beside* the human's note:
+
+> `dato vinculado al nodo "resto áreas" (resto-areas) — decisión humana sobre una etiqueta que el analizador no resuelve. El analizador NO resuelve esta etiqueta (complement): La etiqueta se define por exclusión…. Nota: Checkpoint 2, instrucción de Pedram: el complemento del Grupo 2 menos el área 5 es exactamente resto áreas.`
+
+A later reader can tell an **asserted** scope from a **read** one. That distinction is the whole value of the lane; without it, override would just be the digit matcher wearing a badge.
+
+Override is refused in two cases where it would be a contradiction rather than a judgement. A label that resolves to a *different* node is rejected with "fix the label, don't bind past it" — the fact's own text is wrong and editing it is the honest repair. And a **convenio-wide** fact is rejected outright: it already answers for the whole workforce at Tier 3, so attaching a group would *narrow* a universal rule. That is the inverse of this sprint's bug and just as wrong, which is worth saying plainly because the safe direction is not symmetric — under-scoping escalates, over-scoping answers.
+
+### 2.8 The join table, after Checkpoint 2
+
+Three bindings were added through the real HTTP endpoints as `admin@hr-staging.internal`, the same super_admin who approved the nodes. Eight rows, on convenio 21:
+
+| fact | `group_label` | → nodes | lane |
+|---|---|---|---|
+| 44 | `Grupo 1 (todas las áreas) y Grupo 2 (área 5)` | Grupo 1, área 5 | grammar |
+| 34 | `Grupo 1 y área cinco de Grupo 2` | Grupo 1, área 5 | grammar |
+| 45 | `Grupo 2 (resto áreas)` | resto áreas | grammar |
+| 35 | `Grupo 2 excepto área cinco` | resto áreas | **override** |
+| 46 | `Grupo 3 (todas las áreas)` | Grupo 3 | grammar |
+| 36 | `Grupo 3` | Grupo 3 | grammar |
+
+The two compound facts (44, 34) each hold **two** rows, which is the case the join table was added for in the first place: a fact bound to half its scope answers confidently for one group and silently omits the other — a failure that looks like success from the inside.
+
+Fact 35 still appears in *"Datos que no se vinculan solos"*, because the planner still cannot read its label — that remains true and the surface should not pretend otherwise. It now reads `vinculado a mano → resto áreas` rather than looking untouched, so the list is a description of the parser's limit and not a standing verdict.
+
+**Incidental, logged not fixed (F-3):** `infra/compose/otp.sh` extracts the login code by taking the first six-digit run after the subject line, which can be a fragment of the `Message-ID` header immediately below it — `<6c7671882fdb…>` yielded `767188` and a spurious "Invalid or expired code". Anchoring on the code's own letter-spaced `<p>` is reliable. Staging-only convenience script, disappears when Postmark lands; not touched on the sprint branch.
+
+**Ownership drift, fixed:** `/opt/hr-staging` had root-owned git objects from one `sudo`-run deploy, which broke the next `git fetch` as `ubuntu` (`insufficient permission for adding an object`). `chown -R ubuntu:ubuntu` restored it; `ubuntu` is in the `docker` group, so deploys never needed `sudo`.
+
+Phase 3 now has what it needs: verified group-scoped facts bound to approved nodes on a real convenio, and check B still escalating.

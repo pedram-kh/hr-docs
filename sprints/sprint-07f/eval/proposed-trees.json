@@ -1,0 +1,411 @@
+[
+    {
+        "convenio_id": 3,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "Grupo I",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    102
+                ]
+            },
+            {
+                "code_normalized": "2",
+                "label": "Grupo II",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    103,
+                    104,
+                    105,
+                    106,
+                    107
+                ]
+            },
+            {
+                "code_normalized": "3",
+                "label": "Grupo III",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    108,
+                    109,
+                    110,
+                    111,
+                    112,
+                    113,
+                    114,
+                    115,
+                    116,
+                    117,
+                    118
+                ]
+            },
+            {
+                "code_normalized": "4",
+                "label": "Grupo IV",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    119,
+                    120
+                ]
+            },
+            {
+                "code_normalized": "5",
+                "label": "Grupo V",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    121,
+                    122,
+                    123,
+                    124
+                ]
+            },
+            {
+                "code_normalized": "6",
+                "label": "Grupo VI",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    125,
+                    126,
+                    127,
+                    128,
+                    129,
+                    130,
+                    131
+                ]
+            }
+        ]
+    },
+    {
+        "convenio_id": 4,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "Grupo I",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "2",
+                "label": "Grupo II",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "3",
+                "label": "Grupo III",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "4",
+                "label": "Grupo IV",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "5",
+                "label": "Grupo V",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "6",
+                "label": "Grupo VI",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            }
+        ]
+    },
+    {
+        "convenio_id": 11,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "Grupo I",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "2",
+                "label": "Grupo II",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "3",
+                "label": "Grupo III",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "4",
+                "label": "Grupo IV",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "5",
+                "label": "Grupo V",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "6",
+                "label": "Grupo VI",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            }
+        ]
+    },
+    {
+        "convenio_id": 18,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "GRUPO 1",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    53
+                ]
+            },
+            {
+                "code_normalized": "2",
+                "label": "GRUPO 2",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    54
+                ]
+            },
+            {
+                "code_normalized": "3",
+                "label": "GRUPO 3",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    55
+                ]
+            },
+            {
+                "code_normalized": "4",
+                "label": "GRUPO 4",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    56
+                ]
+            }
+        ]
+    },
+    {
+        "convenio_id": 19,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "Grupo I",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    65
+                ]
+            },
+            {
+                "code_normalized": "2",
+                "label": "Grupo II",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    66,
+                    67,
+                    68,
+                    69,
+                    70
+                ]
+            },
+            {
+                "code_normalized": "3",
+                "label": "Grupo III",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    71,
+                    72,
+                    73,
+                    74,
+                    75,
+                    76,
+                    77,
+                    78,
+                    79,
+                    80,
+                    81,
+                    82
+                ]
+            },
+            {
+                "code_normalized": "4",
+                "label": "Grupo IV",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    83,
+                    84,
+                    85
+                ]
+            },
+            {
+                "code_normalized": "5",
+                "label": "Grupo V",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    86,
+                    87,
+                    88,
+                    89
+                ]
+            },
+            {
+                "code_normalized": "6",
+                "label": "Grupo VI",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": [
+                    90,
+                    91,
+                    92,
+                    93,
+                    94,
+                    95,
+                    96
+                ]
+            }
+        ]
+    },
+    {
+        "convenio_id": 21,
+        "groups": [
+            {
+                "code_normalized": "1",
+                "label": "Grupo 1",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "2",
+                "label": "Grupo 2",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "3",
+                "label": "Grupo 3",
+                "parent_code": null,
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "area-5",
+                "label": "área 5",
+                "parent_code": "2",
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            },
+            {
+                "code_normalized": "resto-areas",
+                "label": "resto áreas",
+                "parent_code": "2",
+                "status": "needs_review",
+                "source": "ai_agent",
+                "has_excerpt": true,
+                "category_ids": []
+            }
+        ]
+    }
+]
