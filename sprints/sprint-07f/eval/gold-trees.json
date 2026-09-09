@@ -1,0 +1,148 @@
+{
+  "_about": [
+    "Sprint 7f (ADR-0028) — gold group trees, hand-built by reading each convenio's own text",
+    "on staging. Every entry cites the page it was read from, so a disagreement between the",
+    "proposer and this file can be settled by looking, not by arguing.",
+    "",
+    "THE ONLY THING THAT REALLY MATTERS HERE IS GRANULARITY. A sub-area exists in gold if and",
+    "only if the convenio assigns the slices DIFFERENT VALUES. Getting a label slightly wrong",
+    "costs a reviewer an edit; getting granularity wrong costs a wrong answer, in both",
+    "directions:",
+    "  UNDER-SPLIT — the proposer misses a split the convenio makes. The matcher then binds one",
+    "    value to a group whose halves are priced differently, and answers 60 días to someone",
+    "    entitled to 90. This is a WRONG ANSWER and the eval gates on it: zero tolerated.",
+    "  OVER-SPLIT — the proposer invents a slice the convenio does not price separately. The",
+    "    matcher then demands a distinction that does not exist, and a question that answers",
+    "    correctly today escalates instead. Bad, but it degrades to a human, so it is reported",
+    "    rather than gated.",
+    "",
+    "`accepted_codes` lists the `code_normalized` keys that count as the same node, because a",
+    "convenio legitimately spells one group several ways (Hostelería Navarra's article 19 writes",
+    "'Grupo Prof. 1.º' where its own reference fact writes 'Grupo 1'). Scoring on identity rather",
+    "than on spelling keeps the eval measuring structure, not typography."
+  ],
+  "convenios": [
+    {
+      "convenio_id": 21,
+      "name": "HOSTELERIA NAVARRA",
+      "numero": "31003805011981",
+      "read_from": "doc pages 11-12, Artículo 19.º Periodo de prueba",
+      "gated": true,
+      "note": "The sprint's headline case. Article 19's table has three rows, and the FIRST row spans two groups at once ('Grupo Prof. 1.º de todas las áreas y Grupo Prof. 2.º del área 5.ª' — 90/75/60), while the second prices the rest of Grupo 2 differently ('Grupo Prof. 2.º de todas las áreas, excepto área 5.ª' — 60/45/30). So Grupo 2 MUST split and Grupos 1 and 3 must NOT: the convenio prices them whole.",
+      "groups": [
+        {
+          "code": "1",
+          "accepted_codes": ["1", "prof-1"],
+          "printed_examples": ["Grupo Prof. 1.º", "Grupo 1"],
+          "sub_areas": []
+        },
+        {
+          "code": "2",
+          "accepted_codes": ["2", "prof-2"],
+          "printed_examples": ["Grupo Prof. 2.º", "Grupo 2"],
+          "sub_areas": [
+            {
+              "code": "area-5",
+              "accepted_codes": ["area-5", "area-5-a", "area-funcional-5", "5"],
+              "printed_examples": ["área 5.ª", "área 5"],
+              "why": "priced at 90/75/60 while the rest of Grupo 2 is 60/45/30"
+            },
+            {
+              "code": "resto-areas",
+              "accepted_codes": ["resto-areas", "resto-de-areas", "todas-las-areas-excepto-area-5", "resto"],
+              "printed_examples": ["de todas las áreas, excepto área 5.ª", "resto áreas"],
+              "why": "the complement slice, priced at 60/45/30"
+            }
+          ]
+        },
+        {
+          "code": "3",
+          "accepted_codes": ["3", "prof-3"],
+          "printed_examples": ["Grupo Prof. 3.º", "Grupo 3"],
+          "sub_areas": []
+        }
+      ]
+    },
+    {
+      "convenio_id": 3,
+      "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL (COEAS Álava)",
+      "read_from": "doc pages 7 and 9 (periodo de prueba), pages 35-42 (Anexo II, Clasificación profesional)",
+      "gated": true,
+      "note": "Six groups, none split. The article enumerates them plainly ('el grupo 1: 5 meses… el grupo 2: dos meses… los grupos 3, 4, 5 y 6: un mes') and the annex names them in roman with prose titles ('Grupo I. Personal directivo'). Those are the SAME six groups written two ways, so a correct tree has six nodes, not twelve. Nothing in this convenio prices part of a group differently, so any sub-area here is an over-split.",
+      "groups": [
+        {"code": "1", "accepted_codes": ["1"], "printed_examples": ["grupo 1", "Grupo I. Personal directivo"], "sub_areas": []},
+        {"code": "2", "accepted_codes": ["2"], "printed_examples": ["grupo 2", "Grupo II. Personal directivo y de gestión"], "sub_areas": []},
+        {"code": "3", "accepted_codes": ["3"], "printed_examples": ["grupos 3, 4, 5 y 6", "Grupo III. Personal de atención directa en equipamientos"], "sub_areas": []},
+        {"code": "4", "accepted_codes": ["4"], "printed_examples": ["Grupo IV. Personal de atención directa"], "sub_areas": []},
+        {"code": "5", "accepted_codes": ["5"], "printed_examples": ["Grupo V. Personal de administración"], "sub_areas": []},
+        {"code": "6", "accepted_codes": ["6"], "printed_examples": ["Grupo VI. Personal de servicios generales"], "sub_areas": []}
+      ]
+    },
+    {
+      "convenio_id": 4,
+      "name": "OCIO EDUCATIVO Y ANIMACION ANDALUCIA (COEAS Andalucía)",
+      "read_from": "same COEAS structure; facts 11-13 and 79-82 enumerate grupos 1, 2 and 3-6",
+      "gated": true,
+      "note": "The same six-group COEAS structure as Álava, at different values (Grupo 1 is 6 meses here, 5 in Álava — which is exactly why scope has to be per-convenio and not per-sector). Unsplit. Note fact 82's label is 'Contratos de formación en alternancia', a CONTRACT TYPE parked in the group column; it is not a group and must not become a node.",
+      "groups": [
+        {"code": "1", "accepted_codes": ["1"], "printed_examples": ["Grupo 1", "Grupo I"], "sub_areas": []},
+        {"code": "2", "accepted_codes": ["2"], "printed_examples": ["Grupo 2"], "sub_areas": []},
+        {"code": "3", "accepted_codes": ["3"], "printed_examples": ["Grupos 3, 4, 5 y 6"], "sub_areas": []},
+        {"code": "4", "accepted_codes": ["4"], "printed_examples": ["Grupo IV"], "sub_areas": []},
+        {"code": "5", "accepted_codes": ["5"], "printed_examples": ["Grupo V"], "sub_areas": []},
+        {"code": "6", "accepted_codes": ["6"], "printed_examples": ["Grupo VI"], "sub_areas": []}
+      ]
+    },
+    {
+      "convenio_id": 11,
+      "name": "OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL (COEAS Estatal)",
+      "read_from": "facts 5-7 enumerate grupos 1, 2 and 3-6; 136 pages of statewide text",
+      "gated": true,
+      "note": "The statewide COEAS agreement the provincial ones inherit from. Same six unsplit groups. This is the longest text in the set (136 pages), so it also tests that the proposer finds the classification article rather than being defeated by length.",
+      "groups": [
+        {"code": "1", "accepted_codes": ["1"], "printed_examples": ["Grupo 1", "Grupo I"], "sub_areas": []},
+        {"code": "2", "accepted_codes": ["2"], "printed_examples": ["Grupo 2"], "sub_areas": []},
+        {"code": "3", "accepted_codes": ["3"], "printed_examples": ["Grupos 3, 4, 5 y 6"], "sub_areas": []},
+        {"code": "4", "accepted_codes": ["4"], "printed_examples": ["Grupo IV"], "sub_areas": []},
+        {"code": "5", "accepted_codes": ["5"], "printed_examples": ["Grupo V"], "sub_areas": []},
+        {"code": "6", "accepted_codes": ["6"], "printed_examples": ["Grupo VI"], "sub_areas": []}
+      ]
+    },
+    {
+      "convenio_id": 18,
+      "name": "ACCIÓN E INTERVENCIÓN SOCIAL (Navarra)",
+      "read_from": "doc pages 2, 55 and 73 — the salary tables name GRUPO 1 through GRUPO 4 explicitly",
+      "gated": true,
+      "note": "Four groups, unsplit. Its facts distinguish Grupo 1 (6 meses) from Grupo 2 (4 meses) and then say 'Resto de grupos' (2 meses) — a COMPLEMENT label that the binding planner deliberately refuses to resolve, since it means 'whatever is left' and only a human can confirm that is 3 and 4. The tree still needs all four nodes for that human to have something to tick.",
+      "groups": [
+        {"code": "1", "accepted_codes": ["1"], "printed_examples": ["GRUPO 1"], "sub_areas": []},
+        {"code": "2", "accepted_codes": ["2"], "printed_examples": ["GRUPO 2"], "sub_areas": []},
+        {"code": "3", "accepted_codes": ["3"], "printed_examples": ["GRUPO 3"], "sub_areas": []},
+        {"code": "4", "accepted_codes": ["4"], "printed_examples": ["GRUPO 4"], "sub_areas": []}
+      ]
+    },
+    {
+      "convenio_id": 19,
+      "name": "COEAS NAVARRA",
+      "read_from": "the 32 job categories' group_code column, which carries the block headers 'Grupo I: personal directivo' … 'Grupo VI: personal de servicios generales'",
+      "gated": true,
+      "note": "THE FORWARD-FILL CASE. Its salary sheet printed each group header once and left the following rows blank, so only 6 of 32 categories carry a group_code and the other 26 inherit theirs from the row above. Structure is the same six unsplit COEAS groups; what is being tested here is whether the proposer offers the forward-fill as a MEMBERSHIP PROPOSAL with the block excerpt and an uncertainty flag, rather than either inventing it silently or ignoring 26 categories. Membership is reported, never gated — see `expected_memberships`.",
+      "groups": [
+        {"code": "1", "accepted_codes": ["1"], "printed_examples": ["Grupo I"], "sub_areas": []},
+        {"code": "2", "accepted_codes": ["2"], "printed_examples": ["Grupo II"], "sub_areas": []},
+        {"code": "3", "accepted_codes": ["3"], "printed_examples": ["Grupo III"], "sub_areas": []},
+        {"code": "4", "accepted_codes": ["4"], "printed_examples": ["Grupo IV"], "sub_areas": []},
+        {"code": "5", "accepted_codes": ["5"], "printed_examples": ["Grupo V"], "sub_areas": []},
+        {"code": "6", "accepted_codes": ["6"], "printed_examples": ["Grupo VI"], "sub_areas": []}
+      ],
+      "expected_memberships": {
+        "1": [65],
+        "2": [66],
+        "3": [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82],
+        "4": [83, 84, 85],
+        "5": [86, 87, 88, 89],
+        "6": [90, 91, 92, 93, 94, 95, 96]
+      }
+    }
+  ]
+}

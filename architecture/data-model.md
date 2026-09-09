@@ -118,11 +118,49 @@ The sub-category granularity that the split cells imply, and that the salary tab
 | id | bigint PK | |
 | convenio_id | bigint FK → convenios | |
 | name | varchar | job category / group name |
-| group_code | varchar NULL | e.g. `2.1`, `3.2`, `4.1` (as in Cantabria table) |
+| group_code | varchar NULL | e.g. `2.1`, `3.2`, `4.1` (as in Cantabria table). ⚠️ **Evidence only — never a scope key.** See the note below `convenio_groups`. |
 | annual_hours | numeric(7,2) NULL | category-specific override |
 | weekly_hours | numeric(5,2) NULL | category-specific override |
 
 > **Population (Sprint 2a — ADR-0002/0014).** Job categories are created by the **`salary:import`** command from the salary `.xlsx` rows — a **deliberate, logged, idempotent** admin action, never minted by the AI at tag time. Matching is per-convenio on the normalized category name (no global dedup — `Director/a Gerente` under two convenios are two rows); a new name is created and logged, an existing one reused. `group_code` is captured where the source has one (e.g. Cantabria `2.1`, an Estatal `Grupo`). **Label normalization:** the parser collapses embedded newlines/whitespace and **strips wrapping quotes/apostrophes** from both `name` and `group_code`, so a spreadsheet cell stored as `2.1'` (a literal trailing apostrophe, common in Excel text-typed numeric codes) lands as `2.1`.
+
+### `convenio_groups` *(Sprint 7f, additive — ADR-0028)*
+A convenio's **professional group structure**, as an explicit two-level tree: groups at the root, sub-areas beneath them. Split **only where the convenio assigns different values** — convenio 21 names six functional areas inside Grupo 2 but pays *área 5* differently from the rest, so Grupo 2 has exactly two children (`área 5`, `resto áreas`), not six. A tree that mirrored every heading would be more faithful to the document and useless for answering, because five of those nodes would be indistinguishable in every fact that exists.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| convenio_id | bigint FK → convenios | |
+| parent_id | bigint FK → convenio_groups NULL | NULL = a group; set = a sub-area. **Depth 2 is enforced by a Postgres trigger**, not by convention |
+| label | varchar | the convenio's own printed name (`Grupo 2`, `área 5`, `resto áreas`) |
+| code_normalized | varchar | the match key, derived at write time by `GroupCodeNormalizer` |
+| status | varchar | `needs_review` \| `approved` \| `rejected`. **Only `approved` is visible to the matcher** |
+| source | varchar | `ai_agent` \| `admin_manual` |
+| source_excerpt | text NULL | the convenio passage that justifies this node — what a reviewer reads |
+| proposal_batch_id | uuid NULL | groups one proposer run, so a batch can be reviewed as a unit |
+| approved_by / approved_at | | |
+
+Partial unique indexes keep `(convenio_id, parent_id, code_normalized)` unique among non-rejected rows — a rejected node must not block re-proposing the same one later.
+
+> **`code_normalized` and why it is not `group_code`.** Every spelling of one group *within one convenio* must normalize to one key: convenio 21 writes `Grupo Prof. 1.º` in its articles and `GRUPO PROFESIONAL PRIMERO` in its annex, and they are the same group. `GroupCodeNormalizer` handles leading words, Roman numerals, ordinal words and trailing ordinal marks, and it runs **once at write time, during review, where a human can see the result** — never inside a chat turn.
+>
+> `convenio_job_categories.group_code` is a **different thing that looks like the same thing**, which is why it is not reused. It is populated by `salary:import` from whatever a salary sheet happens to print: of 22 non-empty values in the corpus, nine are section numbers (`4.1`, `2.1`) or free text, and 72 of 94 categories have none. The convenios this feature exists for have **no categories at all**. Group scope therefore needs its own vocabulary, independent of the category table — which is also why membership is a many-to-many rather than a column.
+
+### `convenio_group_categories` *(Sprint 7f, additive — ADR-0028)*
+Which job categories belong to a group node — many-to-many, with its own review status (`needs_review` \| `approved` \| `rejected`) and `source`. Membership only ever **pre-fills a picker as a suggestion**; it never decides an answer, which is why the group eval reports membership accuracy ungated.
+
+### `reference_fact_group_scopes` *(Sprint 7f, additive — ADR-0028)*
+**The scope key.** Which group nodes a reference fact applies to: `(reference_fact_id, convenio_group_id)`, unique, plus `bound_by` / `bound_at`.
+
+| column | type | notes |
+|---|---|---|
+| reference_fact_id | bigint FK → reference_facts | |
+| convenio_group_id | bigint FK → convenio_groups | |
+| bound_by / bound_at | | who bound it, and when — a binding is always a human act |
+
+> **Why a join table and not a `group_id` column on `reference_facts`.** The corpus's headline fact is **compound**: one sentence in convenio 21 covers *Grupo 1 entirely, plus área 5 of Grupo 2*, and it holds **two rows** here. A single column could not express it. The obvious alternative — split it into two facts — creates two rows that can drift apart while citing the same sentence, and a reviewer correcting one would silently leave the other. The fact stays one fact; its scope is a set. A fact bound to only *half* its scope is the quiet failure this shape prevents: it answers confidently for one group and omits the other, which looks like success from the inside.
+>
+> A fact with **zero** rows here is never group-matchable. It cannot satisfy Tier 3 either (that requires a null `group_label`), so a group-labelled but unbound fact escalates — an unbound label is a claim nobody has vouched for.
 
 ### `document_types`
 Closed vocabulary: `convenio_text`, `salary_tables`, `changes` (Cambios), `partial_agreement` (Acuerdo Parcial), `summary` (Resumen), `national_law` (Estatuto), `internal_hr_ruling`, **`reference_source`** *(Sprint 7b-1, ADR-0021 — the deliberate routing tag for a non-salary `.docx`/`.xlsx` that feeds Structured Reference Knowledge)*, `other`.
@@ -338,6 +376,7 @@ Email is mandatory and unique — it is the identity and lookup key.
 | employee_external_id | varchar NULL | Sedena's own ID if any |
 | convenio_id | bigint FK → convenios | |
 | job_category_id | bigint FK → convenio_job_categories NULL | resolves split-value granularity |
+| convenio_group_id | bigint FK → convenio_groups NULL | *(Sprint 7f, ADR-0028)* the employee's **approved** group node — the left-hand side of Tier 2's comparison. NULL for every real profile until an admin sets it, which skips Tier 2 exactly as before 7f. **Never written by an import without a human**: the employee form's picker (pre-filled from the job category's approved memberships *as a suggestion only*), or a CSV column whose ambiguous rows **fail** rather than resolving to a best guess |
 | territory_id | bigint FK → territories | renamed from `province_id` in Sprint 1; employee's **own** location scope (may differ from an Estatal convenio) |
 | work_location | varchar NULL | town/centre, e.g. "CaixaForum Palma" |
 | employment_type | enum | `full_time` \| `part_time` (affects e.g. vacation calc) |
