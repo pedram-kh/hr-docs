@@ -440,3 +440,162 @@ Fact 35 still appears in *"Datos que no se vinculan solos"*, because the planner
 **Ownership drift, fixed:** `/opt/hr-staging` had root-owned git objects from one `sudo`-run deploy, which broke the next `git fetch` as `ubuntu` (`insufficient permission for adding an object`). `chown -R ubuntu:ubuntu` restored it; `ubuntu` is in the `docker` group, so deploys never needed `sudo`.
 
 Phase 3 now has what it needs: verified group-scoped facts bound to approved nodes on a real convenio, and check B still escalating.
+
+---
+
+## 3. Phase 3 — the exact matcher
+
+### 3.1 What was deleted, and what replaced it
+
+Two methods are gone from `ReferenceFactAnswerService`, and with them the only place the answer path read a group as text:
+
+- **`factMatchesGroup()`** — the digit regex, including its `(?<!\d)…(?!\d)` lookarounds. Those lookarounds worked: "Grupo 10" never matched code `1`. They were never the problem. The problem was that `Grupo 2 excepto área cinco` contains a `2`.
+- **`resolveEmployeeGroupCode()`** — the read of `job_category.group_code`. Per §1.2, nine of the corpus's 22 non-empty values are not group codes, and 72 of 94 categories have no value at all.
+
+Verified against the deployed container, not the working copy: `private function factMatchesGroup` **absent**, `private function resolveEmployeeGroupCode` **absent**, `preg_match` **absent** from the whole file.
+
+Tier 2 is now four rules over integers, per fact, against the employee's node E: a bound node **is** E → match; a bound node is a **child** of E → escalate; a bound node is E's **parent** and that parent has approved children → escalate; otherwise no match. Rule (1) is evaluated across all of a fact's nodes before (2)/(3), which is what lets the compound fact answer for Grupo 1 on the strength of its Grupo 1 binding.
+
+**The hard stop deserves its own paragraph, because it is the one place the ladder's shape changed.** An escalate from rule (2) or (3) ends Tier 2 rather than falling through. It would have been easy — and wrong — to let an indeterminate group drop to Tier 3 and answer convenio-wide. That answer is *less specific than the evidence the matcher just looked at*, delivered with the same confidence and the same citation shape. `test_an_indeterminate_group_does_not_fall_through_to_the_convenio_wide_fact` pins it with a perfectly good convenio-wide fact sitting in the candidate set, unused.
+
+One case the plan did not name and the code has to answer anyway: a node **rejected** out from under an assigned employee. It is not a match and not an escalation — the ladder continues as if no group were set, which is where a null node already lands. Rejecting a node must not start escalating turns that used to answer.
+
+### 3.2 Tests (a)–(h), plus three
+
+All on the convenio-21-shaped fixture: G1 and G3 undivided, G2 split into *área 5* / *resto áreas*, **no job categories** — the real shape.
+
+| | case | result |
+|---|---|---|
+| (a) | employee in G2›*resto áreas* | **60/45/30**, `match_kind = group`, and asserts 90 días is **not** in the answer — the bug, as a test |
+| (b) | employee on G2, the split parent | **escalate**, note names the sub-area |
+| (c) | employee in G1 | **90/75/60** via the compound fact's `{G1}` binding |
+| (d) | undivided childless group | matches on the group alone |
+| (e) | fact with a `group_label` and **zero** bindings | escalates — never group-matchable, and Tier 3 needs a null label |
+| (f) | fact bound to node `12`; employees on G1 and G2 | **neither** matches |
+| (g) | compound fact read from G1 and from G2›*área 5* | identical answer, identical citations, same `fact_id`; only `group_node_id` differs |
+| (h) | `convenio_group_id = null` | behaves exactly as before, **and** asserts `group_node_id` is absent from the trace |
+
+Plus rule (3) on its own (a group-level fact on a since-split group does not answer a sub-area employee), the hard stop above, and the rejected-node case.
+
+(h) is the one that matters on day one: all 1,500 real profiles have a null node, so (h) *is* production for now. Its second assertion is the quieter half — the trace shape of a non-group answer must not change, which is why `group_node_id` / `group_node_label` are written only on a group match rather than initialized to null for every path.
+
+**Five existing tests were rewritten onto structured scope, not deleted or weakened** — three in `Sprint7cReferenceFactAnswerTest` and, less obviously, two in `Sprint7dFactResolutionTest`. The 7d pair reached the answer path through the digit matcher (a category with `group_code = '2'` and facts labelled "Grupo 2"), so they failed the moment the regex went. Their invariant has nothing to do with digits — it is that a same-validity conflict escalates until a human supersedes, and that history keeps its old value afterwards — so each got an approved node and bound facts, and both assertions stand unchanged.
+
+**309 tests, 1,153 assertions, green.** `Sprint7cAdditivityRegressionTest` was run **first** after the matcher change, per §5.5, and stayed byte-for-byte green (3 tests, 39 assertions). `Sprint7cCompositionTest` needed no edit, as predicted.
+
+### 3.3 The live proof on staging
+
+One employee (`test-hosteleria-navarra@example.com`, #13, convenio 21, no job category), one question — *"¿cuál es mi periodo de prueba?"* — moved across three nodes. Full traces:
+
+**G2 › *resto áreas* (node 35) — the case that used to be wrong:**
+
+```
+outcome  : answer
+trace.reference_fact:
+  {"convenio_id":21,"topic_id":1,"job_category_id":null,
+   "group_label":"Grupo 2 (resto áreas)","as_of_date":"2026-09-09","fact_id":45,
+   "validity_selection":"single",
+   "value":"60 días (indefinidos), 45 días (temporales > 3 meses) y 30 días (temporales hasta 3 meses)",
+   "authority_used":"structured_reference","match_kind":"group",
+   "group_node_id":35,"group_node_label":"resto áreas",
+   "validity_start":"2026-01-01","validity_end":null,"outcome":"answer"}
+answer   : "Según el dato de referencia verificado de tu convenio: 60 días (indefinidos), 45 días…"
+citations: document 106 "PERÍODOS PRUEBA ACTUALIZADOS 2026", chunk_id null, is_reference_fact true
+```
+
+**Grupo 1 (node 31) — the compound fact, reached from its other binding:**
+
+```
+outcome  : answer
+trace.reference_fact:
+  {"convenio_id":21,"topic_id":1,"job_category_id":null,
+   "group_label":"Grupo 1 (todas las áreas) y Grupo 2 (área 5)","fact_id":44,
+   "validity_selection":"single",
+   "value":"90 días (indefinidos), 75 días (temporales > 3 meses) y 60 días (temporales hasta 3 meses)",
+   "authority_used":"structured_reference","match_kind":"group",
+   "group_node_id":31,"group_node_label":"Grupo 1","outcome":"answer"}
+```
+
+**Grupo 2 (node 32), the split parent — escalates:**
+
+```
+outcome  : escalate
+trace.reference_fact:
+  {"convenio_id":21,"topic_id":1,"group_label":null,"fact_id":null,"value":null,
+   "authority_used":"structured_reference","match_kind":"group","group_node_id":32,
+   "outcome":"escalate",
+   "note":"group scope is indeterminate, escalate rather than answer less specifically
+           than the evidence: fact 45 is scoped to sub-area \"resto áreas\" of the
+           employee's group \"Grupo 2\" — the employee's sub-area is unknown; fact 44
+           is scoped to sub-area \"área 5\" of the employee's group \"Grupo 2\" —
+           the employee's sub-area is unknown"}
+answer   : the coverage-gap message, verbatim and unchanged
+citations: []
+```
+
+Read the first two together: **the same question, the same convenio, the same verified data, two different correct answers, selected by an integer.** The old matcher gave 90 días for the first of them. Note also that `group_label` and `group_node_label` disagree in the first trace — the fact is printed as *"Grupo 2 (resto áreas)"* and the match was made on the node *resto áreas*. Keeping both is what makes the trace auditable; folding one into the other is how the old matcher hid its reasoning.
+
+The third trace is worth reading as a *feature*. It is the only honest answer available: the convenio pays two different periods inside Grupo 2, and nothing in the system knows which side of the split this employee is on.
+
+### 3.4 Baseline check A, re-run after the matcher change — unchanged
+
+```
+employee : #14 test-deportivas-alava@example.com (convenio 2, group null)
+escalated: false
+trace.reference_fact:
+  {"convenio_id":2,"topic_id":1,"job_category_id":null,"group_label":null,
+   "as_of_date":"2026-09-09","fact_id":40,"validity_selection":"single",
+   "value":"El periodo de prueba no podrá exceder de dos meses en ningún caso.",
+   "authority_used":"structured_reference","match_kind":"convenio_wide",
+   "validity_start":"2026-01-01","validity_end":null,"outcome":"answer"}
+```
+
+Byte-for-byte identical to §0.7's record, including the absence of any `group_node_*` key. Tier 3 did not move.
+
+### 3.5 §2.7 gate — run 3 of 3, and its retirement
+
+**Zero rows**, as in runs 1 and 2 — but for a different reason, which is the point. The gate asked whether any employee had a non-empty digit `group_code` while their convenio had a verified group-scoped fact. That combination was dangerous *because the digit matcher read those two strings against each other*. It no longer does. The query is now **vacuous**: it would be harmless if it returned rows, because `group_code` is not read by the answer path at all.
+
+The gate is retired. It moves out of `deploy.md`'s go-live list, and the `roadmap.md` precondition it enforced is closed. What replaces it as the standing invariant is narrower and stronger: **`employees.convenio_group_id` and `reference_fact_group_scopes` only ever reference `approved` nodes**, which the matcher enforces by construction rather than by a query someone has to remember to run.
+
+---
+
+## 4. Sprint close
+
+### 4.1 What shipped
+
+| | |
+|---|---|
+| **Migrations** | 4, all additive: `convenio_groups`, `convenio_group_categories`, `reference_fact_group_scopes`, `employees.convenio_group_id`. Depth-2 and uniqueness enforced in Postgres (trigger + partial unique indexes), not by convention |
+| **hr-ai** | `POST /propose-groups` — read-only, writes nothing, never migrates; closed-set category validation; missing-parent reconstruction |
+| **hr-backend** | `GroupCodeNormalizer`, `FactGroupBindingPlanner`, `ConvenioGroupProposalService`, `ProposeConvenioGroups`, `ConvenioGroupController` (tree / binding diff / approve / bind / edit / reject / unbind), `groups:propose`, `groups:export-trees`, the new Tier 2 |
+| **hr-frontend** | Groups review tab (tree, excerpts, categories, binding diff, link affordances, manual-bind picker), employee group picker, CSV columns, the group node in the chat trace |
+| **Deleted** | `factMatchesGroup()`, `resolveEmployeeGroupCode()` |
+| **Tests** | 309 backend (1,153 assertions), incl. tests (a)–(h) + 3; `Sprint7cAdditivityRegressionTest` byte-for-byte green; `propose_groups_validation_test.py` all checks |
+| **Cost** | $0.95 and 122s for six convenios' proposals; **$0 at answer time** — there is no AI in the matcher |
+
+### 4.2 Both checkpoints
+
+**Checkpoint 1** (Phase 0) — Pedram verified the cross-province pair (41, 79) and the Navarra Hostelería trio (44, 45, 46), then fact 40, which closed O-1 and flipped baseline check A from the prose path to `reference_fact` Tier 3.
+
+**Checkpoint 2** (Phase 2) — Pedram approved all five nodes on convenio 21 and, in doing so, found the two gaps in §2.7 that no amount of test-writing would have surfaced: binding reachable only at the approval moment, and no lane for a label the parser must refuse. Both are now closed, with the join table confirmed at 8 rows in §2.8.
+
+The second checkpoint is the one worth drawing a lesson from. Every invariant test passed before Pedram touched the surface; what failed was reachability — a write that existed but had no door, and a decision the system was right to refuse but wrong to make final. Neither is expressible as "the code computes the wrong value," which is the only kind of wrong a unit test looks for.
+
+### 4.3 What is deliberately still open
+
+| # | item | why it is not in 7f |
+|---|---|---|
+| **O-2** | Six duplicate fact pairs flagged `needs_review` on both sides | asserting a version relationship between two unreviewed proposals is a human's call (7d) |
+| **O-3** | `PROPOSE_GROUPS_TEXT_CAP` truncated 4 of 6 convenios. All still scored exact — classification articles sit early — but a convenio that classifies late would silently lose its structure | wants an article-finding pass or a chunked read; no observed failure to fix yet |
+| **O-4** | Convenio 18's categories 57–64 are salary *amounts* parked in the category table | corpus hygiene |
+| **F-1** | The checksum-dedupe re-typing trap (an ingest fixture re-typed existing document 10) | logged at Pedram's instruction for the post-7f follow-on |
+| **F-2** | 7d's token-overlap duplicate detector must become **binding-aware** now that facts carry nodes — compare nodes, not digit tokens. Its five false positives on convenio 21 are the evidence | same follow-on; the detector is advisory, so this misleads a reviewer rather than an employee |
+| **F-3** | `infra/compose/otp.sh` can extract a `Message-ID` fragment instead of the login code | staging convenience script; disappears with Postmark |
+| **7g** | **Escalation explanations.** 7f escalates in strictly more cases, on purpose — rules (2) and (3) refuse what the digit matcher answered. Right now all of them produce the same neutral coverage-gap message | its own sprint with its own prompt: one fixed message for the employee, AI prose over deterministic facts plus a structured fix link for HR |
+
+The 7g dependency is the one to read twice before calling this sprint finished in a user-facing sense. **7f made the system correct; 7g makes it explicable.** An employee on a split group who asks about their probation period now gets a referral instead of a wrong number — better, and still not good. The escalation is right, the experience of it is not yet.
+
+### 4.4 The one thing that would have caught this bug earlier
+
+Not a test. The 7c review recorded this exact hazard, in prose, with the exact convenio and the exact two facts — and it stayed latent for three sprints because the *second* condition (an employee with a resolvable `group_code`) happened not to be true yet. What made it safe was luck about which convenios had salary sheets. The §2.7 gate turned that prose warning into a query someone could run, which is the difference between a known risk and a documented one; it is worth doing that translation earlier next time a review says "latent."
