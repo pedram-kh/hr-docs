@@ -1,0 +1,25 @@
+{
+  "_note": "Sprint 8, resolved question #3 (tau calibration) — build-authorization prompt item (3). 20 hand-authored Spanish question pairs: 10 true paraphrases (same intent, different wording) and 10 hard non-pairs (same topic, different intent), across 5 topics: vacaciones, salario, periodo_de_prueba, permisos, jornada. Embedded via the real staging /embed-batch endpoint (BGE-M3); similarities recorded in review.md and ADR-0030. No LLM was used to write these pairs' similarity judgments -- the pairs are hand-authored and the label (paraphrase vs non-pair) is the ground truth being tested against the embedding model's cosine score.",
+  "pairs": [
+    { "id": 1, "topic": "vacaciones", "type": "paraphrase", "a": "¿Cuántos días de vacaciones tengo?", "b": "¿Cuál es mi número de días de vacaciones al año?" },
+    { "id": 2, "topic": "vacaciones", "type": "paraphrase", "a": "¿Cuándo puedo coger mis vacaciones?", "b": "¿En qué fechas puedo disfrutar de mis vacaciones?" },
+    { "id": 3, "topic": "salario", "type": "paraphrase", "a": "¿Cuál es mi salario base?", "b": "¿Cuánto gano de sueldo base?" },
+    { "id": 4, "topic": "salario", "type": "paraphrase", "a": "¿Cuándo me pagan la nómina?", "b": "¿Qué día del mes recibo mi salario?" },
+    { "id": 5, "topic": "periodo_de_prueba", "type": "paraphrase", "a": "¿Cuánto dura mi periodo de prueba?", "b": "¿Cuántos meses tengo de prueba en el contrato?" },
+    { "id": 6, "topic": "periodo_de_prueba", "type": "paraphrase", "a": "¿Puedo dejar el trabajo durante el periodo de prueba?", "b": "¿Puedo renunciar mientras estoy en periodo de prueba?" },
+    { "id": 7, "topic": "permisos", "type": "paraphrase", "a": "¿Tengo permiso retribuido por matrimonio?", "b": "¿Me dan días pagados si me caso?" },
+    { "id": 8, "topic": "permisos", "type": "paraphrase", "a": "¿Cuántos días de permiso tengo por fallecimiento de un familiar?", "b": "¿Qué días libres me corresponden si se muere un pariente?" },
+    { "id": 9, "topic": "jornada", "type": "paraphrase", "a": "¿Cuál es mi jornada laboral semanal?", "b": "¿Cuántas horas trabajo a la semana?" },
+    { "id": 10, "topic": "jornada", "type": "paraphrase", "a": "¿Tengo derecho a un descanso durante mi jornada?", "b": "¿Puedo parar a descansar mientras trabajo?" },
+    { "id": 11, "topic": "vacaciones", "type": "hard_non_pair", "a": "¿Cuántos días de vacaciones tengo?", "b": "¿Puedo vender mis vacaciones no disfrutadas?" },
+    { "id": 12, "topic": "vacaciones", "type": "hard_non_pair", "a": "¿Cuándo puedo coger mis vacaciones?", "b": "¿Qué pasa con mis vacaciones si estoy de baja médica?" },
+    { "id": 13, "topic": "salario", "type": "hard_non_pair", "a": "¿Cuál es mi salario base?", "b": "¿Me pueden descontar dinero del salario por llegar tarde?" },
+    { "id": 14, "topic": "salario", "type": "hard_non_pair", "a": "¿Cuándo me pagan la nómina?", "b": "¿Cómo pido un anticipo de nómina?" },
+    { "id": 15, "topic": "periodo_de_prueba", "type": "hard_non_pair", "a": "¿Cuánto dura mi periodo de prueba?", "b": "¿Qué pasa si me despiden durante el periodo de prueba?" },
+    { "id": 16, "topic": "periodo_de_prueba", "type": "hard_non_pair", "a": "¿Puedo dejar el trabajo durante el periodo de prueba?", "b": "¿Se me aplica el convenio durante el periodo de prueba?" },
+    { "id": 17, "topic": "permisos", "type": "hard_non_pair", "a": "¿Tengo permiso retribuido por matrimonio?", "b": "¿Cuántos días de permiso tengo por mudanza?" },
+    { "id": 18, "topic": "permisos", "type": "hard_non_pair", "a": "¿Cuántos días de permiso tengo por fallecimiento de un familiar?", "b": "¿Tengo permiso para ir al médico en horario laboral?" },
+    { "id": 19, "topic": "jornada", "type": "hard_non_pair", "a": "¿Cuál es mi jornada laboral semanal?", "b": "¿Puedo cambiar mi turno de jornada con un compañero?" },
+    { "id": 20, "topic": "jornada", "type": "hard_non_pair", "a": "¿Tengo derecho a un descanso durante mi jornada?", "b": "¿Puedo hacer horas extra en mi jornada?" }
+  ]
+}
