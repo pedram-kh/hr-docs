@@ -201,7 +201,7 @@ The follow-on that makes Sprint 7 usable, not another answer-engine change: none
 
 **Docs at close:** `architecture.md` §8.6 (escalation explanations) + the §2 deploy-key note (Item 0, already landed with Session 5); `data-model.md` §9 (the five `escalation_cards` columns); `deploy.md` §7 Session 6 (Items 1–5 build record, including the dedupe-guard behaviour change and the Review-pagination note) alongside Session 5 (Item 0); **ADR-0029**; this entry; `sprints/sprint-07g/review.md`.
 
-### Sprint 8 — Analytics + coverage gaps + quality sampling  · size **M**  · **DONE** (2026-09-10, ADR-0030) — *pending user review, not merged*
+### Sprint 8 — Analytics + coverage gaps + quality sampling  · size **M**  · **DONE** (2026-09-10, ADR-0030) — merged to `main` in all four repos 2026-09-11 after the eyes-on walkthrough (`sprints/sprint-08/review.md`)
 The HR-facing measurement layer.
 - Deflection rate, top questions, unanswered questions, escalation volume by topic, satisfaction.
 - **Coverage-gap detection** (province × sector with employees but no current document — free from the faceted model). *(Sprint 2c surfaced concrete instances to seed this: registry-expired convenios with **no loaded active successor** — Andalucía COEAS, Vizcaya Intervención Social, Huesca Hostelería, Salamanca Oficinas, Gipuzkoa Intervención Social, Navarra Hostelería/Oficinas-prose, Deporte Estatal — plus the scanned-no-text actives, see `deploy.md` §5.)*
