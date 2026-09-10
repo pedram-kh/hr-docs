@@ -599,3 +599,42 @@ The 7g dependency is the one to read twice before calling this sprint finished i
 ### 4.4 The one thing that would have caught this bug earlier
 
 Not a test. The 7c review recorded this exact hazard, in prose, with the exact convenio and the exact two facts — and it stayed latent for three sprints because the *second* condition (an employee with a resolvable `group_code`) happened not to be true yet. What made it safe was luck about which convenios had salary sheets. The §2.7 gate turned that prose warning into a query someone could run, which is the difference between a known risk and a documented one; it is worth doing that translation earlier next time a review says "latent."
+
+### 4.5 Merge, deploy, ledger, snapshot
+
+`sprint-7f` merged into `main` with `--no-ff` in all four repos, one message across all four:
+
+| Repo | Merge commit | Branch tip merged |
+|---|---|---|
+| `hr-backend` | **`e242608`** | `1ffe0c5` |
+| `hr-ai` | **`264d762`** | `3f5226a` |
+| `hr-frontend` | **`6098e66`** | `00a2bf2` |
+| `hr-docs` | **`259e477`** | `284db2f` |
+
+`--no-ff` was the right call here for a reason beyond convention: the sprint's history contains the two Checkpoint-2 corrections as their own commits, and a fast-forward would scatter them into `main`'s linear history where the "approval and binding are separate decisions" discovery is no longer legible as something that happened *during review*. The merge commit keeps the sprint readable as a unit.
+
+The full suite was re-run **on the merged `main`, not on the branch** — 309 tests, 1,153 assertions, green in 77s. That ordering is deliberate: a clean merge means git found no textual conflict, which is not the same as the merged tree behaving correctly, and Phase 3 touched the one file (`ReferenceFactAnswerService.php`) where a silently-wrong merge would be both plausible and expensive.
+
+Deployed `main` to staging (`deploy.sh e242608 264d762 6098e66 259e477`), health green on attempt 2 of 90. One observable change came from the `hr-docs` merge picking up the deploy-hygiene commit: `HR_AI_ANSWER_MODEL` is now **set** in both `hr-backend` and `hr-backend-worker`, where it was previously unset and falling through to the application default. It resolves to the same `claude-sonnet-4-5` — a deliberate no-op today, whose whole value is that the value can no longer drift silently if the default changes.
+
+**Post-merge replay, not just a re-count.** The ledger re-run also re-executed the three-node live proof against the merged `main`, in the running container:
+
+| Employee's node | Outcome | Fact | Node id | Answer |
+|---|---|---|---|---|
+| `Grupo 2 › resto áreas` | answer | 45 | 35 | 60 / 45 / 30 |
+| `Grupo 1` | answer | 44 | 31 | 90 / 75 / 60 |
+| `Grupo 2` (split parent) | **escalate** | — | 32 | coverage gap, indeterminate |
+
+Identical to the branch. The three deleted symbols — `factMatchesGroup`, `resolveEmployeeGroupCode`, and *any* `preg_match` — were re-checked as absent by reading the file **out of the deployed container**, not the local checkout, which is the only version of that check that can catch a bad deploy.
+
+Ledger unchanged across the merge: 106 documents, 3,626 chunks, 14 salary tables / 179 rows, 94 categories, 88 `reference_facts` (6 verified), 33 `convenio_groups` (5 approved / 28 `needs_review` across 3, 4, 11, 18, 19), 66 memberships, 8 `reference_fact_group_scopes` (7 grammar + 1 override, cross-checked against the `group_scope` / `group_scope_manual` `tag_events` facets), 1 of 14 employees carrying a node.
+
+**Snapshot `hr-staging-post-7f`** taken from `hr-staging-db` after the deploy — the restore point for a `main` that includes the four 7f migrations.
+
+### 4.6 Making the repos private is blocked on a credential the deploy path never had
+
+Sprint close was meant to end with the four repos flipped to private. It did not, and the reason is worth recording as a finding rather than a leftover task: **`deploy.sh` fetches all four repos over anonymous HTTPS**, and the staging box holds no git credential of any kind — no `~/.git-credentials`, no `~/.netrc`, no `credential.helper`, no `gh`, and all four remotes are `https://github.com/pedram-kh/…`. Public read has been load-bearing in the deploy path since Sprint 0 and nothing anywhere recorded that dependency; it was invisible precisely because it always worked.
+
+So flipping visibility would not have degraded anything gradually — it would have broken **the next deploy outright**, at the first `git fetch`, with the repos' new state being the cause and the deploy log being the only place it showed up. **The flip is deliberately deferred** until the credential path is built as its own piece of work.
+
+When it is built, the choice to make is deploy keys versus a personal access token, and for a box reachable from the internet they are not equivalent: a PAT is account-wide and write-capable by default, so a compromised staging host would expose every repo the account can touch, whereas a per-repo read-only deploy key is scoped to one repo and individually revocable without disturbing the other three. That points at four keys, one per repo — GitHub will not accept the same key on two repos in one account — with the private halves resolved from SSM by `entrypoint.sh` like every other secret, rather than written to disk on the host. Recorded here as the shape of the answer, not as a decision taken.
