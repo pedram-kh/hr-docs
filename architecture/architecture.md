@@ -29,6 +29,8 @@ Four independent git repos, cloned side by side into one local `hr-platform/` fo
 
 Why the Laravel + Python split (full reasoning in ADR-0007): Laravel is excellent for auth, CRUD, roles, and business logic; the RAG/embedding ecosystem lives in Python. Each language does what it is strongest at. The cost is one extra service and a defined contract between them.
 
+> **Deploy-time credential (Sprint 7g Item 0).** All four repos are **private** on GitHub. The staging box (ADR-0025) reaches them over **SSH via four read-only, per-repo GitHub deploy keys** (`/opt/hr-staging/keys/`, aliased through `~/.ssh/config`) — never a PAT, which would be account-wide and write-capable. `deploy.sh`/`deploy-run.sh` clone/fetch over the aliased SSH URLs exclusively; anonymous HTTPS, load-bearing since Sprint 0, is retired. Full record and rotation procedure: `deploy.md` §7 Session 5.
+
 ### The Laravel ↔ Python contract (high level)
 
 1. The frontend sends an authenticated chat message to `hr-backend`.

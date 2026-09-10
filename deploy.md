@@ -38,7 +38,7 @@ The employee chat (Sprint 2b) sends the **employee's question + retrieved conven
 - [ ] Chunk embed (`chunks:embed`) and salary import (`salary:import`) run against production (they populate the prod database; dev vectors do **not** carry over).
 - [ ] Employee directory loaded (CSV bulk upload / manual), per ADR-0004 (Sprint 5).
 - [x] ~~⚠️ **Precondition (added: Sprint 7c eyes-on):** do **not** seed `convenio_job_categories` with clean digit `group_code`s for a convenio that has **verified group-scoped reference facts**~~ — **RETIRED by Sprint 7f (ADR-0028).** `factMatchesGroup` and `resolveEmployeeGroupCode` are deleted; the answer path no longer reads `group_code` at all, so the combination this guarded against is inert. The §2.7 gate query is vacuous and was run a final time for the record (`sprints/sprint-07f/review.md` §3.5). Seeding a clean `group_code` is now a category-data question with no answer-path consequence.
-- [ ] **Give the staging box a git credential before making the repos private (found: Sprint 7f close).** `deploy.sh` fetches all four repos over **anonymous HTTPS**, and the box holds **no git credential at all** — no `~/.git-credentials`, no `~/.netrc`, no `credential.helper`, no `gh`; all four remotes are `https://github.com/pedram-kh/…`. Public read is therefore load-bearing in the deploy path, and flipping any repo to private breaks **the next deploy outright** at the first `git fetch`, not gradually. The visibility flip is **deferred** until this is built. Prefer **per-repo read-only deploy keys** over a PAT — a PAT is account-wide and write-capable, so a compromised staging host would expose every repo the account can reach, whereas a deploy key is one repo, read-only, revocable alone — with the private halves resolved from SSM by `entrypoint.sh` rather than written to the host's disk. Four keys (GitHub rejects the same key on two repos in one account). **Verify by re-running `deploy.sh` against the private repos**, not by inspecting config.
+- [x] **Give the staging box a git credential before making the repos private (found: Sprint 7f close) — DONE, Sprint 7g Item 0.** See §7a below for the full build record. All four repos are now private; `deploy.sh` was verified green against them over SSH deploy keys, twice (once immediately before the flip, once immediately after).
 - [ ] **HR task — assign employees to their group (added: Sprint 7f, ADR-0028).** A group-scoped fact only answers for an employee whose `employees.convenio_group_id` is set, and **no path ever sets it without a human** (ADR-0028 §7). Two surfaces, both requiring a person:
   - **The directory picker** — `convenio_group_id` on the employee form, listing that convenio's **approved** nodes parent-first (`Grupo 2 › resto áreas`). It pre-fills from the job category's approved memberships **as a suggestion only**, and only when the field is empty; changing the job category clears it rather than silently re-deriving. The API refuses a node from another convenio (422) and refuses a node that is not `approved` (422).
   - **The CSV `group` column** — *one* optional column, not two. A sub-area is addressed as `Grupo 2 > resto áreas`, with the `>` explicit so no delimiter is ever guessed; either side may be the printed label (`Grupo 2`, `resto áreas`) or the normalized code (`2`, `resto-areas`), since `GroupCodeNormalizer` collapses both onto one key. **A single column is deliberate:** a sub-area has no meaning without its parent, so two columns would make a half-specified scope (`sub_area` filled, `group` blank) expressible, and the importer would then have to interpret it. **An ambiguous row fails** with both candidates named — `todas las áreas` can legitimately exist under Grupo 1 *and* Grupo 3 — and a convenio with no approved tree yet fails with a message saying so, rather than writing a null. Same discipline as the matcher: never guess a scope.
@@ -289,6 +289,56 @@ Fixed via the existing admin path, not by hand-inserting rows:
 **Verified, staging, a truly fresh `deploy.sh main main main main` run, this session:** `/route` and `/ground` both now reach the real Claude API (401 on a deliberately bad test key — proof the import succeeds and the request goes out — rather than the 500/ImportError from before the fix). Staging was then switched back to the Sprint 7e branch SHAs for that sprint's own backfill work (unaffected — see `sprints/sprint-07e/review.md`).
 
 **Action for whoever reviews Sprint 7e (or does the next `main` release regardless of 7e's outcome):** this fix is already live on `hr-ai`'s `main` HEAD, independent of the 7e branch — no additional action needed for this specific bug, but it is worth a moment's pause that the chat answer path's live-staging behavior had not actually been proven end-to-end until this session.
+
+### Session 5 (Sprint 7g Item 0 — deploy keys, then private repos) — complete
+
+Closes the Sprint 7f finding above (§3): the box now holds a real git credential, scoped and read-only, and all four repos are private.
+
+**The keys — one per repo, read-only, GitHub deploy keys (never a PAT):**
+
+| Repo | GitHub deploy key title | Read-only | Private-key location (staging box) |
+|---|---|---|---|
+| `hr-backend` | `hr-staging-deploy-key-hr-backend` | ✓ | `/opt/hr-staging/keys/hr-backend-deploy-key` |
+| `hr-ai` | `hr-staging-deploy-key-hr-ai` | ✓ | `/opt/hr-staging/keys/hr-ai-deploy-key` |
+| `hr-frontend` | `hr-staging-deploy-key-hr-frontend` | ✓ | `/opt/hr-staging/keys/hr-frontend-deploy-key` |
+| `hr-docs` | `hr-staging-deploy-key-hr-docs` | ✓ | `/opt/hr-staging/keys/hr-docs-deploy-key` |
+
+Why four, why deploy keys and not a PAT: GitHub will not accept the same key on two repos in one account, so a per-repo key is the only way to scope narrowly; a PAT is account-wide and write-capable by default, so a compromised staging host would have exposed every repo the account can touch, whereas a deploy key is one repo, read-only, individually revocable without disturbing the other three — exactly the shape Sprint 7f's close flagged as "the shape of the answer, not a decision taken." That decision is now taken.
+
+**Generation and installation.** Each keypair was generated `ssh-keygen -t ed25519` **locally** (operator's machine, `~/.hr-staging/deploy-keys/`, chmod 700 dir / 600 private / 644 public — never committed, same convention as `hr-staging-ec2-key.pem`), the four **public** keys were printed and Pedram pasted each into its repo's GitHub Settings → Deploy keys (read-only, unchecked "Allow write access") — a deliberate human checkpoint so the exact key bytes granted access are eyes-on before any use, not because the automation couldn't do it (the `gh` token in use has `repo` scope and could call the deploy-key API directly). The four **private** keys were `scp`'d to the box and installed at `/opt/hr-staging/keys/*-deploy-key`, `chmod 600`, owned by `ubuntu` (the deploy user — `/opt/hr-staging` itself is `ubuntu`-owned since Sprint 7f's ownership-drift fix, and deploys never need `sudo`). Verified afterward: `gh api repos/pedram-kh/<repo>/keys` shows all four as `read_only: true` with the matching title, before any repo was touched.
+
+**`~/.ssh/config` on the box** (`ubuntu`'s home, `chmod 600`) maps four aliases, one per repo, each `IdentitiesOnly yes` so ssh can never fall back to trying another key first — the entire point of a scoped key is defeated if ssh tries the others:
+
+```
+Host github-hr-backend
+    HostName github.com
+    User git
+    IdentityFile /opt/hr-staging/keys/hr-backend-deploy-key
+    IdentitiesOnly yes
+# ...github-hr-ai, github-hr-frontend, github-hr-docs, same shape
+```
+
+GitHub's `ssh-ed25519` host key was pinned into `~/.ssh/known_hosts` via `ssh-keyscan` before first use (fingerprint `AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl` — GitHub's long-published key, confirmed against it). Each alias was auth-tested directly (`ssh -T github-hr-backend`, etc.) and each returned GitHub's own per-repo confirmation (`Hi pedram-kh/hr-backend! You've successfully authenticated...`) before `deploy.sh` ever touched them.
+
+**`deploy.sh` / `deploy-run.sh` changes (hr-docs, `main`, commit `17e309d`).** The only two places anonymous HTTPS was load-bearing: `deploy.sh`'s own bootstrap clone of `hr-docs` (to reach the target SHA before `exec`-ing the real logic), and `deploy-run.sh`'s three app-repo clones. Both now use the aliased SSH URLs (`git@github-hr-backend:pedram-kh/hr-backend.git`, …). **Self-healing, not a one-time migration:** `clone_or_checkout()` (and `deploy.sh`'s own hr-docs bootstrap) now runs `git remote set-url origin "$url"` on every run, before fetching — a no-op once the remote already matches, but it meant the box's four *pre-existing* checkouts (cloned months ago over HTTPS) flipped onto the new URL on the very next `deploy.sh` run with no separate step, and would do the same automatically for anyone else's stale checkout later.
+
+**The test, exactly as the spec asked, twice:**
+
+| Run | Repos' visibility | Result |
+|---|---|---|
+| 1 | still public | ✅ green, health attempt 3/90. All four `origin` remotes confirmed switched to `git@github-hr-*:...` (not just "the run succeeded" — the actual remote URL was read back after). |
+| 2 | **private** (Pedram flipped all four in the console between runs) | ✅ green, health attempt 2/90. Confirmed via `gh api repos/pedram-kh/<repo>` → `"private": true` on all four immediately before this run. |
+
+No PAT was ever created, used, or considered as a fallback. No `.git-credentials`/`.netrc`/`credential.helper`/`gh` exists on the box — the only credential material on it is the four scoped private keys above.
+
+**Rotation procedure** (per key, independently — rotating one never touches the other three):
+1. **Delete** the deploy key in GitHub (repo → Settings → Deploy keys → Delete). The box's copy is now unusable against GitHub the moment this happens.
+2. **Regenerate**: `ssh-keygen -t ed25519 -f ~/.hr-staging/deploy-keys/<repo>-deploy-key -N "" -C "hr-staging-deploy-key-<repo>"` locally (overwrite the old files — same path, so no `~/.ssh/config`/box change is needed later).
+3. **Add** the new public half back as a read-only deploy key in GitHub (same human-paste checkpoint as the original install).
+4. **Replace on the box**: `scp` the new private half to `/opt/hr-staging/keys/<repo>-deploy-key`, `chmod 600`. No `~/.ssh/config` edit needed — the alias points at the same path.
+5. **Verify**: `ssh -T github-<alias>` should return the per-repo GitHub confirmation; then re-run `deploy.sh` and confirm a green health check.
+
+**What this replaces, on the record:** anonymous HTTPS clone/fetch of all four repos had been load-bearing in the deploy path since Sprint 0 of this project and was never once flagged as a dependency — it worked, silently, every time, until the repos were made private. It no longer is. All four repos (`hr-backend`, `hr-ai`, `hr-frontend`, `hr-docs`) are now **private** on GitHub, confirmed via `gh api repos/pedram-kh/<repo> --jq .private` → `true` for each.
 
 ---
 
