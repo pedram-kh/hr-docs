@@ -163,6 +163,49 @@ services:
       hr-backend:
         condition: service_healthy
 
+  # hr-backend-scheduler — Sprint 8 Step 1 (ADR-0030). The FIRST scheduler this
+  # stack has ever run. Same image as hr-backend/hr-backend-worker, only the
+  # command differs — `schedule:work` is Laravel's own "tick schedule:run every
+  # 60s, forever" loop, which is exactly "a scheduler compose service running
+  # schedule:run every minute" without a second cron/supervisord layer on top.
+  # Every job it fires is additive analytics work (bootstrap/app.php's
+  # withSchedule()); nothing here touches the answer loop.
+  hr-backend-scheduler:
+    build:
+      context: ./hr-backend
+    image: hr-staging-hr-backend:latest
+    restart: unless-stopped
+    entrypoint:
+      - /entrypoint.sh
+      - APP_KEY=/hr-staging/hr-backend/app-key
+      - DB_PASSWORD=/hr-staging/rds/master-password
+      - HR_AI_INTERNAL_TOKEN=/hr-staging/shared/internal-token
+      - --
+    command: ["php", "artisan", "schedule:work"]
+    environment:
+      APP_ENV: staging
+      APP_DEBUG: "false"
+      LOG_CHANNEL: stack
+      LOG_LEVEL: info
+      DB_CONNECTION: pgsql
+      DB_HOST: ${RDS_ENDPOINT}
+      DB_PORT: "5432"
+      DB_DATABASE: hr_platform
+      DB_USERNAME: hr_staging_admin
+      FILESYSTEM_DISK: s3
+      QUEUE_CONNECTION: database
+      CACHE_STORE: database
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+      AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
+      HR_AI_URL: http://hr-ai:8001
+      AWS_REGION: ${AWS_REGION}
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    logging: *default-logging
+    depends_on:
+      hr-backend:
+        condition: service_healthy
+
   hr-ai:
     build:
       context: ./hr-ai

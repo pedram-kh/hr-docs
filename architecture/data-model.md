@@ -422,8 +422,11 @@ Admin accounts. **Roles/permissions via the `spatie/laravel-permission` package*
 | `history.view_all` (S5) | ✓ | | | ✓ |
 | `admin.manage` (S5) | ✓ | | | |
 | `guardrails.manage` (S6) | ✓ | | | |
+| `analytics.view` (S8, ADR-0030) | ✓ | ✓ | | ✓ |
 
 > Privacy (ADR-0018): `hr_agent` sees **only** its cards' escalated conversations (keyed to `card.chat_session_id`), never every employee's full chat history; the full-history browser is gated on **`history.view_all`** (super_admin + auditor). `admin.manage` (granting `history.view_all`) is the most privileged action — super_admin only. **`guardrails.manage` (S6, ADR-0019)** gates *writes* to the admin guardrail layer — `super_admin` only (the most safety-sensitive surface, beside `admin.manage`); guardrail *reads* are open to any admin (auditor read-only). **Status is enforced on both OTP paths** (an inactive admin *or* employee is refused login) and **deactivation revokes outstanding Sanctum tokens** + the `EnsureActiveAccount` gate ends a live session immediately. **The server is the boundary; the UI only hides.**
+>
+> **`analytics.view` (Sprint 8, ADR-0030)** gates *Analítica* and *Calidad*'s nav entries. *Cobertura* is reachable by `analytics.view` **or** `knowledge.edit` (a `knowledge_editor` needs the coverage-gap view for their own remit without gaining the rest of Analítica) — enforced by a dedicated `coverage.view` middleware alias (`EnsureCanViewCoverage`), not a compound expression inside `EnsureCan`. Quality-sample review reuses `escalation.work` (no new ability for it). Proven the same way as every other role gate: a direct-API-hit test per role per screen (`Sprint8AnalyticsAccessTest`).
 
 ### `login_codes` (email OTP)
 | column | type | notes |
@@ -709,6 +712,98 @@ Generalizes the `topics` propose/approve pattern to the scoping vocabulary. An a
 | note | text NULL | |
 
 > **Variant→alias is the default (ADR-0011).** `VocabularyProposalService::suggestVariant` pre-selects "fold into aliases" above a similarity threshold; "create a new value" is the deliberate fallback. Convenios are **never** created here (registry-owned) — only alias-folded. Approval writes the alias/new value with `admin_manual` `tag_events` provenance and resolves the originating doc's `raw_unmatched_value` (it does **not** auto-write the doc's scope FKs — that is the human verify action).
+
+---
+
+## 10.5. Group H — Analytics & measurement *(Sprint 8, additive — ADR-0030)*
+
+All five tables are read-only measurement over data groups B/E/F already write; none is read by the router/retrieval/synthesis/grounding/escalation code paths (ADR-0030 §1). All are fully rebuildable (delete-then-insert per run) **except `quality_samples`**, which preserves reviewed rows across a re-draw (§the note on that table below).
+
+### `analytics_daily_rollups`
+The deflection/outcome rollup. One row per `(date, territory, sector, convenio, path, authority_used_key, outcome)` combination that **actually occurred** — sparse by construction, no zero-turn rows. Every dimension but `date`/`outcome` is nullable so one `stats:rollup --date=` run writes both the granular rows and an "all scopes" totals row (null territory/sector/convenio) via one Postgres `GROUPING SETS` pass.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| date | date | |
+| territory_id / sector_id / convenio_id | bigint FK NULL | null = "all" in that dimension (the totals row) |
+| path | string(64) NULL | `salary_sql` \| `reference_fact` \| `reference_fact_composition` \| `salary_prose_crosspath` \| `prose` |
+| authority_used_key | string(128) NULL | sorted+joined `authority_used` array, e.g. `official_convenio+structured_reference` |
+| outcome | string(32) | `answer` \| `escalate` \| `needs_category` \| `unknown` — **`needs_category` is excluded from the deflection ratio** (resolved question #2), shown as its own tile |
+| turn_count | unsigned int | |
+
+Idempotent per date (delete-then-insert, never upsert-per-row — a re-run is a clean replace). `stats:deflection` reads this table by default; `--live` bypasses it and re-runs the raw per-turn query as the rollup's own correctness test.
+
+### `coverage_snapshots`
+One row per `(date, convenio, knowledge_type)` — the ✓/✗ + reason code **at that point in time**. Kept separate from `analytics_daily_rollups` on purpose: coverage is a state-of-the-world snapshot (dense per convenio, re-derivable any day), not an event-count aggregate.
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| snapshot_date | date | |
+| convenio_id | bigint FK → convenios | |
+| knowledge_type | string(32) | `prose` \| `salary` \| `facts` \| `rulings` |
+| covered | boolean | |
+| amendment_only / group_only | boolean | default false |
+| reason_code | string(64) NULL | one of `CorpusCoverageService`'s reason constants (`SCAN_NO_TEXT`, `UNDER_REVIEW_SCOPE`, `EXPIRED_NO_SUCCESSOR`, `SALARY_PDF_NOT_IMPORTED`, `FACT_NEEDS_REVIEW`) or `coverage_gap_unclassified` |
+| detail | text NULL | |
+| headcount | int | default 0 |
+
+Unique on `(snapshot_date, convenio_id, knowledge_type)`. "Gaps closed per week" = a self-join on this table (rows ✗ last week, ✓ this week) — no separate trend table needed. Written nightly by `coverage:snapshot`, alongside `stats:rollup`.
+
+### `question_clusters` + `question_cluster_members`
+The nightly greedy single-link clustering job's storage (τ=0.80, cosine over BGE-M3 embeddings from `/embed-batch`). **No LLM label** — the label is the **medoid** (the member with the highest mean similarity to every other member), computed directly from the same similarity matrix the clustering pass already builds.
+
+| column (`question_clusters`) | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| run_date | date | the nightly run this cluster belongs to (re-clustered fresh each run) |
+| medoid_text | text | the real question chosen as the label |
+| distinct_text_count | unsigned int | |
+| member_count | unsigned int | total `chat_messages` occurrences, not just distinct strings |
+| min_similarity / max_similarity | float NULL | null when `member_count = 1`; **shown on the cluster row** so a bad merge is eyeball-able without a query (resolved question #3) |
+| threshold_used | float | τ at run time, logged so a later recalibration is auditable |
+| first_seen_at / last_seen_at | timestamp NULL | |
+| top_escalation_reason | string(64) NULL | |
+| escalation_rate | float NULL | |
+| headcount_weight | unsigned int | sum of askers' convenio headcount — the unanswered-question ranking's weighting, sharing the coverage headcount helper |
+
+`question_cluster_members`: `question_cluster_id` FK, `chat_message_id` FK (unique pair) — the join table back to the real messages a cluster groups.
+
+### `quality_samples`
+One row per turn drawn by the monthly stratified (path × territory) sample, seeded and reproducible (`quality:sample --month --n --seed`, seed defaults to `crc32($month)`).
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| uuid | uuid UNIQUE | |
+| message_id | bigint FK → chat_messages | |
+| sampled_for_month | string(7) | `YYYY-MM` |
+| seed | int | |
+| stratum_path | string(64) NULL | **frozen at draw time** — a later re-classification of the underlying turn must not retroactively change what was sampled for |
+| stratum_territory_id | bigint FK NULL | frozen at draw time, same reasoning |
+| reviewed_by | bigint FK → admins NULL | |
+| verdict | string(16) NULL | `correct` \| `partially` \| `wrong` — one decision per turn |
+| failure_kind | string(32) NULL | `wrong_scope` \| `wrong_figure` \| `stale_document` \| `unclear` \| `other` — shown only when verdict ≠ `correct` |
+| note | text NULL | |
+| reviewed_at | timestamp NULL | |
+| escalation_card_id | bigint FK → escalation_cards NULL | set when a `wrong` verdict opens a fix task via the existing ADR-0029 `EscalationExplainer` machinery (reason `quality_sample_wrong`) — no second task-creation path |
+
+> **The one table in this group that is NOT a clean rebuild.** A monthly re-run of `quality:sample` for a month already sampled **replaces only unreviewed rows** (`verdict IS NULL`) — already-reviewed rows are preserved. A re-draw must never destroy a human reviewer's completed work. Opening a sampled turn logs to `conversation_access_log` (ADR-0018) with a `quality_sample:<uuid>` context marker.
+
+### `message_feedback` *(Sprint 8, Step 8 — optional, shipped)*
+One row per **assistant** message per employee. The strictest read-only boundary in this sprint: nothing — not the router, not the floor decision, not any later turn — ever reads this table back into a live decision; it feeds exactly one aggregate (the satisfaction tile).
+
+| column | type | notes |
+|---|---|---|
+| id | bigint PK | |
+| message_id | bigint FK → chat_messages, UNIQUE | a second click on the same message **replaces** the row (`updateOrCreate`), never duplicates |
+| employee_id | bigint FK → employees | denormalized for query convenience, the same pattern `escalation_cards.employee_id` already uses |
+| rating | enum | `up` \| `down` |
+| comment | text NULL | |
+| created_at | timestamp | no `updated_at` (`UPDATED_AT = null` on the model) |
+
+Server-verified at write time: the target message must be `role = assistant` **and** belong to the caller's own `chat_session` (else 404) — an employee can never rate another employee's message or a `user`-role turn.
 
 ---
 

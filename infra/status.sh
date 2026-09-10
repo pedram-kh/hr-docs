@@ -23,6 +23,11 @@ EIP=$(cat "${LOCAL_STATE_DIR}/eip_address" 2>/dev/null || echo "")
 if [[ -n "$EIP" && -f "$KEY_FILE" ]]; then
   ssh -i "$KEY_FILE" -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 ubuntu@"$EIP" \
     "cd /opt/hr-staging 2>/dev/null && docker compose -f docker-compose.staging.yml ps 2>/dev/null || echo '(no docker-compose.staging.yml deployed yet — session 2)'; echo; df -h / ; free -m" 2>&1 || echo "(SSH not reachable right now)"
+
+  echo
+  echo "=== Scheduler heartbeat (Sprint 8 — schedule:heartbeat, once/minute) ==="
+  ssh -i "$KEY_FILE" -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 ubuntu@"$EIP" \
+    "cd /opt/hr-staging 2>/dev/null && docker compose -f docker-compose.staging.yml logs --tail=200 hr-backend-scheduler 2>/dev/null | grep -F '[schedule:heartbeat]' | tail -3 || echo '(no hr-backend-scheduler logs yet)'" 2>&1 || echo "(SSH not reachable right now)"
 else
   echo "(no EIP/key recorded yet)"
 fi
