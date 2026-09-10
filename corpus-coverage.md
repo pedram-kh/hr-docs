@@ -3,42 +3,40 @@
 > Sprint 8 (ADR-0030): this file is the direct, unedited output of `php artisan corpus:coverage --out=hr-docs/corpus-coverage.md` (or `--print` to inspect first) against real `hr-staging` data. `CorpusCoverageService::grid()` is the one query behind both this export and the *Cobertura* admin screen — never hand-edit this file; re-run the command instead. The pre-Sprint-8 hand-run narrative (Sprint 1 through Sprint 7g's close — per-document flows, reason codes, and the story of why each gap exists) is preserved verbatim at `sprints/sprint-08/corpus-coverage-pre-sprint8-archive.md`; the diff between that archive and this first generated export is recorded in `sprints/sprint-08/review.md` §6.
 >
 > **Regenerated 2026-09-10, same day, after a two-bug fix found by comparing this export against the archive above:** (1) convenios `99100055012011` (COEAS Estatal) and `28102145012018` (COEAS Madrid) were misread as `SCAN_NO_TEXT`; both have full page-level text (74/74 and 49/49 `pages_with_text`, confirmed live) and are blocked only by `tagging_status = under_review` — now correctly `UNDER_REVIEW_SCOPE` (`CorpusCoverageService::proseCell()` fix). (2) the `DEV-FIXTURE-0001` seed convenio (Sprint-0 test-employee FK scaffolding, `TestUserSeeder`) was appearing as a 27th row with a real headcount — `grid()`/`headcounts()` now exclude any `DEV-FIXTURE-%` convenio. See `deploy.md` §4 for the corresponding pre-production scrub item. 26 rows below (was 27).
+>
+> **Regenerated again 2026-09-10, same day, after the eyes-on round-2 fix:** the bare `✗` salary cells that had no reason code at all now read `` ✗ `NO_SALARY_SOURCE` `` — a real, deliberately-added code, replacing the `reason_code = null` fallback the coverage-lens leaf view was rendering as a misleading "Unclassified gap" badge (`sprints/sprint-08/review.md` §15). Rulings' `✗` is unchanged here (never carried a code in this export, and still doesn't) — it is no longer treated as a gap at all in the coverage-lens leaf view specifically, which this table doesn't render. Still 26 rows.
 
 Generated: 2026-09-10 (as-of year: 2026)
 
 | convenio | territory | sector | headcount | prose | salary | facts | rulings |
 |---|---|---|---|---|---|---|---|
-| 01003205012006 ACTIVIDADES DEPORTIVAS | Álava | ACTIVIDADES DEPORTIVAS | 1 | ✓ | ✗ | ✓ | ✗ |
+| 01003205012006 ACTIVIDADES DEPORTIVAS | Álava | ACTIVIDADES DEPORTIVAS | 1 | ✓ | ✗ `NO_SALARY_SOURCE` | ✓ | ✗ |
 | 01100635012017 OCIO EDUCATIVO Y ANIMACION SOCIOCUL | Álava | OCIO EDUCATIVO Y ANIMACION SOCIOCUL | 1 | ✓ | ✓ (2026) | ✓ (group-only) | ✗ |
-| 71103505012022 OCIO EDUCATIVO Y ANIMACION ANDALUCIA | Andalucía | OCIO EDUCATIVO Y ANIMACION | 2 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ | ✓ (group-only) | ✗ |
+| 71103505012022 OCIO EDUCATIVO Y ANIMACION ANDALUCIA | Andalucía | OCIO EDUCATIVO Y ANIMACION | 2 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `NO_SALARY_SOURCE` | ✓ (group-only) | ✗ |
 | 33000325011978 DEPORTE ASTURIAS | Asturias | DEPORTE | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `SALARY_PDF_NOT_IMPORTED` | ✗ | ✗ |
 | 39100935012024 DEPORTE CANTABRIA | Cantabria | DEPORTE | 0 | ✓ | ✓ (2026) | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 99016085012007 ACCIÓN E INTERVENCIÓN SOCIAL ESTATAL | Estatal | ACCIÓN E INTERVENCIÓN SOCIAL | 0 | ✗ | ✗ | ✗ | ✗ |
+| 99016085012007 ACCIÓN E INTERVENCIÓN SOCIAL ESTATAL | Estatal | ACCIÓN E INTERVENCIÓN SOCIAL | 0 | ✗ | ✗ `NO_SALARY_SOURCE` | ✗ | ✗ |
 | 99008825011994 ENSEÑANZA Y FORMACION NO REGLADA | Estatal | ENSEÑANZA Y FORMACION NO REGLADA | 0 | ✓ | ✗ `SALARY_PDF_NOT_IMPORTED` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 99015105012005 INSTALACIONES DEPORTIVAS Y GIMNASIO | Estatal | INSTALACIONES DEPORTIVAS Y GIMNASIO | 1 | ⚠ amendment-only | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 99015105012005 INSTALACIONES DEPORTIVAS Y GIMNASIO | Estatal | INSTALACIONES DEPORTIVAS Y GIMNASIO | 1 | ⚠ amendment-only | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
 | 99000155011981 AGENCIAS DE VIAJES | Estatal | AGENCIAS DE VIAJES | 0 | ✓ | ✓ (2025) | ✗ | ✗ |
-| 99100055012011 OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL | Estatal | OCIO EDUCATIVO Y ANIMACION SOCIOCUL | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 99100055012011 OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL | Estatal | OCIO EDUCATIVO Y ANIMACION SOCIOCUL | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
 | 20100035012014 ALOJAMIENTOS | Gipuzkoa | ALOJAMIENTOS | 0 | ✓ | ✗ `SALARY_PDF_NOT_IMPORTED` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 20000785011981 LIMPIEZA EDIFICIOS Y LOCALES | Gipuzkoa | LIMPIEZA EDIFICIOS Y LOCALES | 3 | ✓ | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 20100025012011 INTERVENCION SOCIAL GIPUZKOA | Gipuzkoa | INTERVENCION SOCIAL | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 20000785011981 LIMPIEZA EDIFICIOS Y LOCALES | Gipuzkoa | LIMPIEZA EDIFICIOS Y LOCALES | 3 | ✓ | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 20100025012011 INTERVENCION SOCIAL GIPUZKOA | Gipuzkoa | INTERVENCION SOCIAL | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
 | 20104415012022 INFORMACIÓN Y DOCUMENTACIÓN | Gipuzkoa | INFORMACIÓN Y DOCUMENTACIÓN | 1 | ✓ | ✓ (2026) | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 22000175012004 HOSTELERIA Y TURISMO HUESC | Huesca | HOSTELERIA Y TURISMO HUESC | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ | ✗ | ✗ |
-| 28102145012018 OCIO EDUCATIVO Y ANIMACIÓN MADRID | Madrid | OCIO EDUCATIVO Y ANIMACION | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 22000175012004 HOSTELERIA Y TURISMO HUESC | Huesca | HOSTELERIA Y TURISMO HUESC | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ `NO_SALARY_SOURCE` | ✗ | ✗ |
+| 28102145012018 OCIO EDUCATIVO Y ANIMACIÓN MADRID | Madrid | OCIO EDUCATIVO Y ANIMACION | 0 | ✗ `UNDER_REVIEW_SCOPE` | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
 | 31101815012021 ACCIÓN E INTERVENCIÓN SOCIAL | Navarra | ACCIÓN E INTERVENCIÓN SOCIAL | 1 | ✓ | ✓ (2026) | ✗ `FACT_NEEDS_REVIEW` | ✗ |
 | 31102195012024 COEAS NAVARRA | Navarra | COEAS | 0 | ✓ | ✓ (2026) | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 31008235012003 GESTIÓN DEPORTIVA NAVARRA | Navarra | GESTIÓN DEPORTIVA | 1 | ✓ | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 31003805011981 HOSTELERIA NAVARRA | Navarra | HOSTELERIA | 1 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ | ✓ (group-only) | ✗ |
+| 31008235012003 GESTIÓN DEPORTIVA NAVARRA | Navarra | GESTIÓN DEPORTIVA | 1 | ✓ | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 31003805011981 HOSTELERIA NAVARRA | Navarra | HOSTELERIA | 1 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `NO_SALARY_SOURCE` | ✓ (group-only) | ✗ |
 | 31004605011982 LIMPIEZA DE EDIFICIOS Y LOCALES | Navarra | LIMPIEZA DE EDIFICIOS Y LOCALES | 1 | ✓ | ✓ (2026) | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 31005105011984 OFICINAS Y DESPACHOS | Navarra | OFICINAS Y DESPACHOS | 0 | ✓ | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 37000375011982 OFICINAS Y DESPACHOS SALAMANCA | Salamanca | OFICINAS Y DESPACHOS | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 46000805011981 OFICINAS Y DESPACHOS VALENCIA | Valencia | OFICINAS Y DESPACHOS | 0 | ✓ | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 48006185012006 INTERVENCION SOCIAL | Vizcaya | INTERVENCION SOCIAL | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ | ✗ `FACT_NEEDS_REVIEW` | ✗ |
-| 48001455011981 LOCALES Y CAMPOS DEPORTIVOS | Vizcaya | LOCALES Y CAMPOS DEPORTIVOS | 0 | ✗ | ✗ | ✗ | ✗ |
+| 31005105011984 OFICINAS Y DESPACHOS | Navarra | OFICINAS Y DESPACHOS | 0 | ✓ | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 37000375011982 OFICINAS Y DESPACHOS SALAMANCA | Salamanca | OFICINAS Y DESPACHOS | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 46000805011981 OFICINAS Y DESPACHOS VALENCIA | Valencia | OFICINAS Y DESPACHOS | 0 | ✓ | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 48006185012006 INTERVENCION SOCIAL | Vizcaya | INTERVENCION SOCIAL | 0 | ✗ `EXPIRED_NO_SUCCESSOR` | ✗ `NO_SALARY_SOURCE` | ✗ `FACT_NEEDS_REVIEW` | ✗ |
+| 48001455011981 LOCALES Y CAMPOS DEPORTIVOS | Vizcaya | LOCALES Y CAMPOS DEPORTIVOS | 0 | ✗ | ✗ `NO_SALARY_SOURCE` | ✗ | ✗ |
 
 ## No-registry-convenio rows (plan.md §5.3)
 
 (none found)
-
-## How to keep this current
-
-Re-run `php artisan corpus:coverage --out=../hr-docs/corpus-coverage.md` (or `--print` to inspect first) from `hr-backend`, against the real staging database, after any ingest, tagging, salary import, or reference-fact verification session. Do not hand-edit this file — `CorpusCoverageService::grid()` is the one place this definition lives (ADR-0030), and a hand-typed copy is exactly the drift that rule exists to prevent.
