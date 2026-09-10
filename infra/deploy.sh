@@ -32,12 +32,21 @@ sudo mkdir -p "$ROOT"
 sudo chown "$(id -u):$(id -g)" "$ROOT"
 cd "$ROOT"
 
+HR_DOCS_SSH_URL="git@github-hr-docs:pedram-kh/hr-docs.git"
+
 if [[ -d hr-docs/.git ]]; then
+  # Self-healing: a checkout made before Item 0 still has origin pointed at
+  # the old anonymous-HTTPS URL — re-assert it every run (no-op once it
+  # already matches), same pattern as deploy-run.sh's clone_or_checkout.
   log "hr-docs: fetching..."
+  git -C hr-docs remote set-url origin "$HR_DOCS_SSH_URL"
   git -C hr-docs fetch --all --tags -q
 else
   log "hr-docs: cloning..."
-  git clone -q https://github.com/pedram-kh/hr-docs.git hr-docs
+  # Sprint 7g Item 0: aliased SSH via a read-only, per-repo deploy key
+  # (~/.ssh/config on the box maps this alias -> github.com + the one key
+  # scoped to this repo) — never anonymous HTTPS, never a PAT. See deploy.md.
+  git clone -q "$HR_DOCS_SSH_URL" hr-docs
 fi
 git -C hr-docs checkout -q "$HR_DOCS_SHA"
 log "hr-docs @ $(git -C hr-docs rev-parse HEAD)"

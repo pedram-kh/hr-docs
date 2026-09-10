@@ -34,7 +34,13 @@ cd "$ROOT"
 clone_or_checkout() {
   local name="$1" url="$2" sha="$3"
   if [[ -d "$name/.git" ]]; then
+    # Self-healing: a checkout made before Item 0 still has origin pointed
+    # at the old anonymous-HTTPS URL (git never rewrites a remote on its
+    # own). Re-asserting the URL every run is a no-op once it matches, and
+    # is what lets this same idempotent function carry a pre-existing box
+    # across the HTTPS->SSH switch with no separate one-time migration step.
     log "${name}: fetching..."
+    git -C "$name" remote set-url origin "$url"
     git -C "$name" fetch --all --tags -q
   else
     log "${name}: cloning..."
@@ -44,9 +50,15 @@ clone_or_checkout() {
   log "${name} @ $(git -C "$name" rev-parse HEAD)"
 }
 
-clone_or_checkout hr-backend  https://github.com/pedram-kh/hr-backend.git  "$HR_BACKEND_SHA"
-clone_or_checkout hr-ai       https://github.com/pedram-kh/hr-ai.git       "$HR_AI_SHA"
-clone_or_checkout hr-frontend https://github.com/pedram-kh/hr-frontend.git "$HR_FRONTEND_SHA"
+# Sprint 7g Item 0: aliased SSH via a read-only, per-repo deploy key, never
+# anonymous HTTPS and never a PAT (a PAT is account-wide and write-capable —
+# a compromised staging host would expose every repo the account can touch;
+# a deploy key is one repo, read-only, individually revocable). The four
+# aliases resolve via ~/.ssh/config on the box, each to its own key under
+# /opt/hr-staging/keys/ — see deploy.md for the keys' location and rotation.
+clone_or_checkout hr-backend  git@github-hr-backend:pedram-kh/hr-backend.git  "$HR_BACKEND_SHA"
+clone_or_checkout hr-ai       git@github-hr-ai:pedram-kh/hr-ai.git       "$HR_AI_SHA"
+clone_or_checkout hr-frontend git@github-hr-frontend:pedram-kh/hr-frontend.git "$HR_FRONTEND_SHA"
 log "hr-docs @ $(git -C hr-docs rev-parse HEAD) (already checked out by deploy.sh's bootstrap step)"
 
 # Flatten the compose assets from hr-docs alongside the four repo checkouts —
