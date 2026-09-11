@@ -1,0 +1,32 @@
+{
+  "_about": "Sprint 10a (ADR-0032) — the Estatuto fallback gold set, plan §D.10.1. Run with `php artisan estatuto:gold-eval`.",
+  "_positive_profile": "test-fullgap@example.com — convenio 7, ACCIÓN E INTERVENCIÓN SOCIAL ESTATAL. No prose document of any retrieval status, no chunks of any status, no salary table, no reference fact. classifyProseGap() = never_ingested, so the fallback is the only way this employee gets an answer.",
+  "_negative_profile": "test-andalucia@example.com — convenio 4. One HISTORICAL convenio text with 151 chunks. classifyProseGap() = expired_only, so under ultraactividad (ET 86.4) the Estatuto must NOT substitute: every answerable question must escalate estatuto_fallback_gap with no floor_decision.fallback key.",
+  "_second_negative_profile": "test-midingest@example.com — convenio 16. One HISTORICAL convenio text with ZERO chunks. Reaches expired_only by D3's document-existence check rather than by having chunks, which is the mid-ingest fail-closed path. Same expectation as the negative profile.",
+  "_note_on_convenio_16": "The build authorization's D5 named convenio 16 as the POSITIVE profile. D3 (a review addition) tightened never_ingested to require no prose document of ANY status, and convenio 16 has a historical one — so it moved to the other side of the split. Convenio 7 is the only non-fixture convenio in the corpus that satisfies D3.",
+  "_expectations": {
+    "answer": "must answer, grounded, from the named Estatuto article, with the fallback caveat persisted on chat_messages.content",
+    "escalate_salary": "must escalate on the salary path with NO floor_decision.fallback key — the fallback is prose-only",
+    "escalate_sensitive": "must escalate on the pre-router guardrail, before the router and before any fallback decision"
+  },
+  "_gold_set_correction": "Q6 was listed as 'clean' in plan §D.10.1, which was written without checking it against the guardrail layer. Measured: the sensitive-topic guardrail fires pre-router on a despido question, on every profile. That is the product behaving correctly — dismissal goes to a human — so the expectation is corrected here rather than the guardrail being weakened to make a gold row pass.",
+  "_note_on_negative_runs": "On the negative profiles the invariant is 'no Estatuto answer and no fallback key', not a specific reason. Some questions are stopped by an earlier gate that has nothing to do with the fallback: Q6 by the guardrail on every profile, and Q3/Q4 on convenio 4 by the reference-fact pre-check, because that convenio has a verified periodo-de-prueba fact and the test employee has no job category to scope it to. Both still satisfy the split, and Q3/Q4 doubling as evidence that the pre-check still runs ahead of the prose path is what invariant T8 asserts.",
+
+  "questions": [
+    { "id": 1,  "question": "¿Cuántos días de vacaciones me corresponden al año?", "expect": "answer", "article": "38",    "expect_content": "30 días naturales", "status_at_plan": "clean" },
+    { "id": 2,  "question": "¿Pueden sustituirme las vacaciones por dinero?",       "expect": "answer", "article": "38",    "expect_content": "no sustituible por compensación económica", "status_at_plan": "clean" },
+    { "id": 3,  "question": "¿Cuánto puede durar mi periodo de prueba?",            "expect": "answer", "article": "14",    "expect_content": "seis meses técnicos titulados / dos meses", "status_at_plan": "clean" },
+    { "id": 4,  "question": "¿Me pueden despedir durante el periodo de prueba?",    "expect": "answer", "article": "14",    "expect_content": "resolución libre durante el periodo de prueba", "status_at_plan": "clean" },
+    { "id": 5,  "question": "¿Cuánto preaviso tengo que dar si me voy?",            "expect": "answer", "article": "49",    "expect_content": "el preaviso que señale el convenio o la costumbre", "status_at_plan": "clean" },
+    { "id": 6,  "question": "¿Qué preaviso me deben dar en un despido objetivo?",   "expect": "escalate_sensitive", "article": "53", "expect_content": null, "status_at_plan": "plan said clean; measured: guardrail intercepts pre-router (see _gold_set_correction)" },
+    { "id": 7,  "question": "¿Cuál es la jornada máxima anual?",                    "expect": "answer", "article": "34",    "expect_content": "cuarenta horas semanales de promedio en cómputo anual", "status_at_plan": "clean" },
+    { "id": 8,  "question": "¿Cuántas horas extraordinarias puedo hacer al año?",   "expect": "answer", "article": "35",    "expect_content": "ochenta horas", "status_at_plan": "clean" },
+    { "id": 9,  "question": "¿Cuánto descanso semanal me corresponde?",             "expect": "answer", "article": "37",    "expect_content": "día y medio ininterrumpido", "status_at_plan": "blocked_on_f2" },
+    { "id": 10, "question": "¿Cuántos días de permiso por matrimonio?",             "expect": "answer", "article": "37",    "expect_content": "quince días naturales", "status_at_plan": "blocked_on_f2" },
+    { "id": 11, "question": "¿Qué permiso tengo por fallecimiento de un familiar?", "expect": "answer", "article": "37",    "expect_content": "dos días", "status_at_plan": "blocked_on_f2" },
+    { "id": 12, "question": "¿Cuántos días festivos al año?",                       "expect": "answer", "article": "37",    "expect_content": "catorce fiestas al año", "status_at_plan": "blocked_on_f2" },
+    { "id": 13, "question": "¿Cuánto dura el permiso por nacimiento?",              "expect": "answer", "article": "48",    "expect_content": "dieciséis semanas", "status_at_plan": "clean" },
+    { "id": 14, "question": "¿Cuánto cobro de salario base?",                       "expect": "escalate_salary", "article": null, "expect_content": null, "status_at_plan": "salary path, no fallback" },
+    { "id": 15, "question": "¿Cuál es el SMI este año?",                            "expect": "escalate_salary", "article": null, "expect_content": null, "status_at_plan": "excluded" }
+  ]
+}
