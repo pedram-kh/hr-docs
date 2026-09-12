@@ -41,6 +41,19 @@ Why the Laravel + Python split (full reasoning in ADR-0007): Laravel is excellen
 
 **Outside the chat loop, `hr-ai` also serves one read-only COMPARISON primitive** — `POST /compare-scope` *(Sprint 7d, ADR-0024)*. It embeds N probe texts with the same BGE-M3 model the corpus uses and ranks a scope's chunks against each, with the **`authority_level` filter applied in the SQL** (so a threshold decision on `max_score` is **k-independent** — no `k` can hide the best eligible passage, which is what makes it safe to hang a gate on). Probes come either from `texts` (an unpublished draft) or from `document_ids` (those documents' own chunk texts, for document↔document comparison). It is SELECT-only: no LLM, no write, no migration. Three surfaces use it — the semantic publish fence and the reverse re-check (§8.3, §8.5) and the succession proposal (§10) — and in all three `hr-backend` decides and writes (ADR-0007).
 
+### Models in use (tooling)
+
+Every model is configured as **non-secret** config in `hr-backend/config/services.php` (`services.hr_ai.*`, `env('HR_AI_*_MODEL', ...)`) and passed to hr-ai per call as `provider_config.model` — hr-ai never chooses a model itself (ADR-0015); its own `app/config.py` defaults are a display-only fallback for `/health/config`, kept in sync but never load-bearing for a real call. Embeddings are the one exception: self-hosted BGE-M3, in-process, no external model string (ADR-0006).
+
+| endpoint(s) | config knob | model | why |
+|---|---|---|---|
+| `/synthesise`, `/ground` | `HR_AI_ANSWER_MODEL` (`answer_model`) | `claude-sonnet-5` (Sprint 10-M; was `claude-sonnet-4-5`) | The capable, quality-dominant model — both employee-answer synthesis and the per-claim entailment check share this one knob (`GroundingService` deliberately reuses it, never the cheap router model — entailment is subtle). |
+| `/route`, `/explain` | `HR_AI_ROUTER_MODEL` (`router_model`) | `claude-haiku-4-5` | Cheap/fast classifier (0.95-confidence threshold, deterministic fail-safe) and the guarded escalation-explanation paragraph (ADR-0029) — both reuse this same knob deliberately, never the answer model. |
+| `/ocr-page` | `HR_AI_OCR_MODEL` (`ocr_model`) | `claude-opus-5` | Its own eval, its own ADR-0026 — deliberately never aliased to `answer_model`, so a chat-quality-driven answer-model change can never silently change the OCR engine. |
+| embeddings, `/compare-scope` | `EMBED_MODEL` (`embed_model_hf`) | `BAAI/bge-m3` (self-hosted) | ADR-0006 — quality-dominant trade doesn't apply here; self-hosting removes a per-token cost and an external dependency for a background/admin-path model. |
+
+**Sprint 10-M** (2026-09-12) raised `/synthesise`'s `max_tokens` 1024 → 4096 alongside the model swap — a named, narrow exception to that sprint's own "model swap only" fence, because the 1024 ceiling had been tuned against `claude-sonnet-4-5`'s shorter completion style and, left unchanged, silently truncated a fraction of `claude-sonnet-5`'s longer real answers (measured, not assumed — see `sprints/sprint-10-M/step3-halt.md`). Per-token pricing is identical between the two Sonnet versions as of this sprint ($3/$15 per MTok); the real cost delta is a token-count effect from the new tokenizer and longer completions (`sprints/sprint-10-M/review.md` §5).
+
 ---
 
 ## 3. Storage — three layers by nature of data
