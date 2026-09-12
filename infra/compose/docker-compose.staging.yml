@@ -91,7 +91,9 @@ services:
       # a change to that default would silently re-run every fact proposal on
       # a different model, and an eval baseline would drift with nothing in a
       # diff to show it. Pinned so model changes are deliberate.
-      HR_AI_ANSWER_MODEL: claude-sonnet-4-5
+      # Sprint 10-M: claude-sonnet-4-5 -> claude-sonnet-5 (governs /synthesise
+      # and /ground; /route and /explain stay on HR_AI_ROUTER_MODEL, Haiku).
+      HR_AI_ANSWER_MODEL: claude-sonnet-5
       # Obviously-fake placeholder identities for `php artisan
       # staging:seed-test-users` (staging plan, Session 2) — NOT real people.
       # Nothing is ever emailed to them (MAIL_MAILER=log); they exist only as
@@ -155,7 +157,9 @@ services:
       # Sprint 7f: and the answer model, for the same reason — the SEGMENTATION
       # jobs run in THIS container, so this is the copy that decides which
       # model a fact proposal actually runs on.
-      HR_AI_ANSWER_MODEL: claude-sonnet-4-5
+      # Sprint 10-M: claude-sonnet-4-5 -> claude-sonnet-5, same reasoning as
+      # hr-backend above.
+      HR_AI_ANSWER_MODEL: claude-sonnet-5
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
     logging: *default-logging
