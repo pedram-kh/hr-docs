@@ -1,0 +1,25 @@
+{
+  "_description": "Sprint 10b (ADR-0033), plan §A.1/§C.2, §E.9 item 2. Consolidates the union of TopicLexicon::ANCHORS topics into one canonical question per topic (the question-side of the SAME shared lexicon the precedence re-rank uses chunk-side) — no such consolidated list existed before this sprint (Sprint7cReferenceFactAnswerTest.php carries only 'periodo de prueba' inline). No code change to TopicLexicon in this sprint (D1: no real gap found); this file exists so the full anchor set has a re-runnable regression fixture. Metric: every question anchors to the SAME topic_key it does today (TopicLexicon::matchTopicKeys), unchanged by anything else this sprint touches. Harness: Sprint10bInvariantTest.php-adjacent — a direct unit check against TopicLexicon::matchTopicKeys(), not a full chat-loop run (no LLM/DB needed; ReferenceFactRouter::detectTopic() additionally requires a verified fact row to actually route, which is a fixture concern, not a lexicon one).",
+  "regression": [
+    { "topic_key": "vacaciones", "question": "¿cuántos días de vacaciones tengo?" },
+    { "topic_key": "jornada", "question": "¿cuál es mi jornada laboral?" },
+    { "topic_key": "permisos", "question": "¿cuántos días de asuntos propios tengo?", "note": "D1 confirmed already covered — no change." },
+    { "topic_key": "excedencia", "question": "¿cómo pido una excedencia?" },
+    { "topic_key": "periodo_prueba", "question": "¿cuál es mi periodo de prueba?", "note": "the pre-existing inline case (Sprint7cReferenceFactAnswerTest.php)." },
+    { "topic_key": "trabajo_distancia", "question": "¿tengo derecho a teletrabajo?" },
+    { "topic_key": "horas_extra", "question": "¿cómo se pagan las horas extraordinarias?" },
+    { "topic_key": "preaviso", "question": "¿cuánto preaviso tengo que dar si me voy?" },
+    { "topic_key": "lactancia", "question": "¿cuánto dura el permiso de lactancia?" },
+    { "topic_key": "maternidad", "question": "¿cuánto dura el permiso de paternidad?" },
+    { "topic_key": "descanso", "question": "¿cuál es mi descanso semanal?" },
+    { "topic_key": "festivos", "question": "¿qué días festivos me corresponden?" },
+    { "topic_key": "movilidad", "question": "¿qué compensación tengo si hay un traslado a otro centro?" },
+    { "topic_key": "antiguedad", "question": "¿cómo se calculan mis trienios?" },
+    {
+      "topic_key": "despido",
+      "question": "¿qué pasa con mi finiquito?",
+      "note": "D1 confirmed: this anchors to 'despido' by TopicLexicon, but in practice never reaches the reference-fact pre-check at all — GuardrailService::SENSITIVE_PATTERNS intercepts 'finiquito' first (Step 2, before Step 2c/2d). Listed for lexicon completeness, not as a reachable reference-fact path."
+    },
+    { "topic_key": "ascensos", "question": "¿cómo funcionan los ascensos en mi categoría?" }
+  ]
+}
