@@ -1,0 +1,59 @@
+{
+  "_description": "Sprint 10b (ADR-0033), plan §E.1 item 3 / §E.9 item 3. CONSTRUCTED — per §0/§A.1, there is no real situational phrasing on staging to draw from; real staging traffic is entirely self-authored canonical test questions (D6's pre-pilot rationale). Each pair: a canonical form (already in corpus vocabulary — several are real gold questions from sprint-2c/10a) + a constructed situational/colloquial variant of the SAME underlying question. One canonical-only control with no situational twin, to prove the no-op requirement on a question decomposition should never touch.",
+  "_status": "CP-4 (build authorization): constructed set only — presented for Pedram's realism check BEFORE the eval harness is built or run. No driver script exists yet; do not run this set until CP-4 is cleared.",
+  "_metrics_per_spec_4_2": [
+    "Retrieval hit-rate delta on situational forms: does adding decomposed_queries recover the same top chunk the canonical form gets, that the situational form alone misses?",
+    "Zero change on canonical forms: decomposed_queries empty, OR non-empty but changing no citations — assert on the retrieval union's CHUNK-ID SET, not just the final answer text (T-superset, build authorization) — the answer could coincidentally match while the evidence set differs.",
+    "Watch-for failure mode: a decomposition that adds noise which changes the citations WITHOUT changing the answer's substance."
+  ],
+  "pairs": [
+    {
+      "id": "s1",
+      "topic_key": "periodo_prueba",
+      "canonical": { "source": "real (sprint-07c gold)", "question": "¿cuál es mi periodo de prueba?" },
+      "situational": { "source": "constructed", "question": "llevo tres meses en la empresa, ¿cuándo dejo de estar a prueba?" },
+      "note": "plan.md §B's own worked example."
+    },
+    {
+      "id": "s2",
+      "topic_key": "vacaciones",
+      "canonical": { "source": "real (sprint-10a gold, id 1)", "question": "¿Cuántos días de vacaciones me corresponden al año?" },
+      "situational": { "source": "constructed", "question": "mi jefe me ha denegado las vacaciones, ¿puede hacerlo?" },
+      "note": "spec §6 item 1's own eyes-on example — used here as the constructed situational half of a canonical/situational pair, not as a live browser check."
+    },
+    {
+      "id": "s3",
+      "topic_key": "preaviso",
+      "canonical": { "source": "constructed (mirrors reference-fact-lexicon-gold.json)", "question": "¿cuánto preaviso tengo que dar si me voy?" },
+      "situational": { "source": "constructed", "question": "quiero dejar la empresa el mes que viene, ¿con cuánto tiempo tengo que avisar?" }
+    },
+    {
+      "id": "s4",
+      "topic_key": "festivos",
+      "canonical": { "source": "constructed (mirrors reference-fact-lexicon-gold.json)", "question": "¿qué días festivos me corresponden?" },
+      "situational": { "source": "constructed", "question": "el próximo lunes es fiesta en mi pueblo pero no en la empresa, ¿tengo que ir a trabajar?" }
+    },
+    {
+      "id": "s5",
+      "topic_key": "horas_extra",
+      "canonical": { "source": "constructed (mirrors reference-fact-lexicon-gold.json)", "question": "¿cómo se pagan las horas extraordinarias?" },
+      "situational": { "source": "constructed", "question": "me han hecho quedarme dos horas más ayer, ¿me tienen que pagar algo por eso?" }
+    }
+  ],
+  "canonical_only_control": [
+    {
+      "id": "c1",
+      "topic_key": "permisos",
+      "question": "¿cuántos días de asuntos propios tengo?",
+      "label": "semi-colloquial control (citation-neutrality)",
+      "note": "Pedram's review decision (§3.5, this sprint): the acceptance bar is citation-neutrality, not decomposed_queries emptiness. This question routes non-empty on every real run observed (hr-ai proposes 1-2 rephrasings every time, e.g. 'permisos por asuntos propios o permisos retribuidos') — that non-empty decomposition is EXPECTED for this phrasing and is not itself a finding. What must hold is that its final citation set (chunk-ids AND documents) does not move between decomposition-suppressed and decomposition-applied runs. Kept in the set specifically because it is a good semi-colloquial stress case (short, everyday phrasing of a real permiso type), not because it is linguistically canonical."
+    },
+    {
+      "id": "c2",
+      "topic_key": "permisos_matrimonio",
+      "question": "¿Cuántos días de permiso por matrimonio?",
+      "label": "truly canonical control (citation-neutrality)",
+      "note": "Added per Pedram's review decision (§3.5): a second control drawn verbatim from 'the real 39' — the 39 distinct real/test question strings pulled from staging chat_messages (plan.md §A.1) — chosen because it is already in exact corpus/legal register (no situational framing, no colloquialism) and has a known-good real answer (art. 37 ET, 'quince días naturales', sprint-10a gold id 10). Same citation-neutrality bar as c1: decomposed_queries may fire, but the final citation set must not move."
+    }
+  ]
+}

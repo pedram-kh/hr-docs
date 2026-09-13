@@ -1,0 +1,55 @@
+{
+  "_description": "Sprint 10b (ADR-0033), plan §E.1 item 1 / §E.9 item 1. Real + constructed, labelled. Metric: 100% of positives fire escalation_reason=explicit_request; 0% of negatives do. Harness: Sprint10bInvariantTest.php (pure deterministic string-classification check, no LLM, no staging DB needed) — see test_explicit_request_fires_on_the_closed_positive_list / test_explicit_request_does_not_fire_on_near_miss_negatives.",
+  "positives": [
+    {
+      "id": "p1",
+      "source": "real",
+      "question": "Quiero hablar con una persona de Recursos Humanos, por favor.",
+      "note": "card 9 verbatim (plan.md §A.1 Table 3) — the sole real motivating case on staging."
+    },
+    {
+      "id": "p2",
+      "source": "constructed",
+      "question": "necesito hablar con alguien de RRHH",
+      "note": "RRHH-qualified paraphrase, abbreviation form."
+    },
+    {
+      "id": "p3",
+      "source": "constructed",
+      "question": "me gustaría contactar con RR.HH.",
+      "note": "direct-RRHH paraphrase, no intervening 'una persona/alguien'."
+    },
+    {
+      "id": "p4",
+      "source": "constructed",
+      "question": "quiero hablar con una persona",
+      "note": "bare request, no RRHH qualifier at all — must still fire (D2: the qualifier is optional, never required)."
+    }
+  ],
+  "negatives": [
+    {
+      "id": "n1",
+      "source": "constructed",
+      "question": "¿con quién hablo para pedir mis vacaciones?",
+      "note": "interrogative asking HOW to reach someone, not a first-person request — no 'quiero/necesito/me gustaría'."
+    },
+    {
+      "id": "n2",
+      "source": "constructed",
+      "question": "necesito hablar con mi jefe sobre las vacaciones",
+      "note": "a named person, not RRHH — bare 'mi jefe', no 'una persona/alguien' branch at all."
+    },
+    {
+      "id": "n3",
+      "source": "constructed",
+      "question": "necesito hablar con alguien de mi equipo sobre el horario",
+      "note": "D2's own correction case (build authorization): a non-RRHH 'de <team>' qualifier must NOT fire — the negative-lookahead contract."
+    },
+    {
+      "id": "n4",
+      "source": "constructed",
+      "question": "quiero hablar con una persona de mi departamento",
+      "note": "same shape as n3, with 'una persona' instead of 'alguien' — both branches of the pattern must reject a non-RRHH qualifier."
+    }
+  ]
+}

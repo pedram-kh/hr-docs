@@ -1,0 +1,90 @@
+{
+  "_description": "Sprint 10b (ADR-0033), plan §A.1/§C.1, §E.9 item 2. Regression (real, must stay unchanged) + the one approved new positive (constructed — no real staging question motivated it; flagged as anticipatory, not corrective). Metric: every regression case routes identically (source=deterministic_salary*, never llm); the new positive now matches. Harness: Sprint10bInvariantTest.php — test_every_real_salary_question_still_routes_deterministically_to_salary / test_the_new_colloquial_salary_pattern_matches_deterministically. `correction01_statutory_escalation` below (Sprint10bCorrection01Test.php) pins the downstream ESCALATION OUTCOME across both the no-tables and with-tables employee profiles — a second, distinct thing from this file's other sections, which only pin pattern MATCHING.",
+  "regression_real": [
+    { "id": "r1", "question": "¿Cuál es mi salario base mensual y mi salario anual según las tablas salariales vigentes?", "expect_source_prefix": "deterministic_salary" },
+    { "id": "r2", "question": "¿Cuánto cobro de salario base?", "expect_source_prefix": "deterministic_salary" },
+    { "id": "r3", "question": "¿Cuánto cobro este mes según mi tabla salarial?", "expect_source_prefix": "deterministic_salary" },
+    { "id": "r4", "question": "¿Cuánto gano?", "expect_source_prefix": "deterministic_salary" },
+    { "id": "r5", "question": "¿cuánto gana mi categoría este año?", "expect_source_prefix": "deterministic_salary" }
+  ],
+  "regression_pattern_unit_cases": [
+    { "id": "u1", "pattern_example": "paga extra", "question": "¿cuándo me pagan la paga extra de verano?", "expect_match": true },
+    { "id": "u2", "pattern_example": "nómina", "question": "no me ha llegado la nómina de este mes", "expect_match": true },
+    {
+      "id": "u3",
+      "pattern_example": "bare 'paga' verb, conservative negative",
+      "question": "¿me paga el gimnasio la empresa?",
+      "expect_match": false,
+      "note": "the pattern's own doc-comment worked example — deliberately NOT salary (a benefit question, not a pay-figure question)."
+    }
+  ],
+  "new_positive_constructed": [
+    {
+      "id": "c1",
+      "source": "constructed",
+      "question": "¿Cuánto es el plus de transporte este mes?",
+      "expect_match": true,
+      "note": "D1's one approved addition — a plus/complemento is a salary-table line item, same tier as 'paga extra'. No real staging question motivated this."
+    },
+    {
+      "id": "c2",
+      "source": "constructed",
+      "question": "¿tengo derecho a pluses de transporte y nocturnidad?",
+      "expect_match": true,
+      "note": "plural form ('pluses') coverage."
+    }
+  ],
+  "new_positive_real_d1bis": [
+    {
+      "id": "d1",
+      "source": "real",
+      "question": "¿Cuál es el SMI este año?",
+      "expect_match": true,
+      "note": "D1-bis (build-authorization amendment, post-review). This is the exact question that was the CP-3 staging gold-eval's single miss (expected escalate_salary, got escalate_off_domain) — re-diagnosed as a genuine lexicon gap (the acronym 'SMI' never spells out 'salario'), not just pre-existing router flap. Now routes deterministically via the new /\\bSMI\\b/iu pattern; expected downstream outcome for the fixture employee with no salary table is a STABLE escalate_salary/salary_coverage_gap, never off_domain again — see review.md §3.2 for the re-run."
+    },
+    {
+      "id": "d2",
+      "source": "constructed",
+      "question": "¿ha subido el salario mínimo interprofesional este año?",
+      "expect_match": true,
+      "note": "spelled-out variant of the same concept. Already covered by the pre-existing bare 'salario' pattern (matches the substring 'salario' regardless of what follows); the new explicit /\\bsalario\\s+m[ií]nimo(\\s+interprofesional)?\\b/iu pattern is redundant here by design (added for clarity of intent, not because it is load-bearing) — this row proves the redundancy holds, not a new capability."
+    }
+  ],
+  "confirmed_no_change_needed": [
+    { "topic": "asuntos propios", "note": "D1: already covered by TopicLexicon::ANCHORS['permisos'] (question-side) and unaffected by this sprint's salary-pattern change — a permisos question, not a salary one." },
+    { "topic": "finiquito", "note": "D1: no change. GuardrailService::SENSITIVE_PATTERNS already intercepts it in the disciplinary bucket, before the salary pre-classifier or the router ever runs — out of scope per spec §3." }
+  ],
+  "correction01_statutory_escalation": {
+    "_description": "Sprint 10b, Correction-01 (post-D1-bis regression, found on Pedram's eyes-on pass). D1-bis only proved the SMI/salario-mínimo pattern MATCHES (the rows above) and only re-ran the no-tables gold-eval profile downstream — it never checked the downstream OUTCOME for an employee who has a resolvable salary table and category, where `SalaryAnswerService::answer()` used to return OUTCOME_ANSWER with the employee's own category cell, a real but non-responsive figure. These rows pin the outcome contract directly: SMI/salario-mínimo questions must escalate `salary_coverage_gap` (sub_outcome `statutory_figure`) for EVERY employee profile, tables or not. Harness: Sprint10bCorrection01Test.php.",
+    "no_tables_profile": [
+      { "id": "e1", "employee_profile": "no_tables (mirrors test-fullgap@example.com)", "question": "¿Cuál es el SMI este año?", "expect_outcome": "escalate", "expect_reason": "salary_coverage_gap", "expect_sub_outcome": "statutory_figure" },
+      { "id": "e2", "employee_profile": "no_tables (mirrors test-fullgap@example.com)", "question": "¿ha subido el salario mínimo interprofesional este año?", "expect_outcome": "escalate", "expect_reason": "salary_coverage_gap", "expect_sub_outcome": "statutory_figure" }
+    ],
+    "with_tables_profile": [
+      {
+        "id": "e3",
+        "employee_profile": "with_tables (mirrors test-navarra@example.com — resolvable table + category)",
+        "question": "¿Cuál es el SMI este año?",
+        "expect_outcome": "escalate",
+        "expect_reason": "salary_coverage_gap",
+        "expect_sub_outcome": "statutory_figure",
+        "note": "THE regression case. Before Correction-01: OUTCOME_ANSWER with the employee's own category-cell figure — a real number, non-responsive to the statutory figure actually asked."
+      },
+      {
+        "id": "e4",
+        "employee_profile": "with_tables (mirrors test-navarra@example.com — resolvable table + category)",
+        "question": "¿ha subido el salario mínimo interprofesional este año?",
+        "expect_outcome": "escalate",
+        "expect_reason": "salary_coverage_gap",
+        "expect_sub_outcome": "statutory_figure"
+      },
+      {
+        "id": "e5",
+        "employee_profile": "with_tables (mirrors test-navarra@example.com — resolvable table + category)",
+        "question": "¿Cuánto gano?",
+        "expect_outcome": "answer",
+        "note": "No-change control — an ORDINARY salary question for the SAME with-tables employee must still answer from the SQL row exactly as before. Proves the fix is narrow (SMI/salario-mínimo only), not a blanket new escalation on the whole salary path."
+      }
+    ]
+  }
+}
