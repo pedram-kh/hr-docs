@@ -1,0 +1,14 @@
+Source: documents.id=52, convenio_id=18 (ACCIÓN E INTERVENCIÓN SOCIAL, Navarra), document_pages page_number=27
+Pulled live from staging 2026-09-13.
+
+CAPÍTULO II.–VACACIONES
+Artículo 31. Vacaciones retribuidas.
+Todas las personas trabajadoras tendrán derecho a disfrutar de los días establecidos para cada año de vigencia del presente convenio, por año trabajado o la parte proporcional que corresponda en función del tiempo trabajado.
+Se cumplirá tanto el número de horas de jornada anual como el número de días de vacaciones a que tenga derecho cada persona trabajadora. Una vez acordadas las vacaciones de manera definitiva cada organización podrá hacer una regularización de calendario para cuadrar las horas de jornada anual y los días de vacaciones establecidos.
+Las vacaciones anuales como mínimo serán de 33 días laborables o 45 días naturales, para toda la vigencia del convenio.
+En las distintas entidades se podrán negociar acuerdos de aplicación de estas vacaciones, a los efectos de gestión.
+En todos los casos, de los días de vacaciones 3 de ellos podrán ser dispuestos como días sueltos. En este último caso, dichos días deberán ser solicitados con quince días de antelación a fin de garantizar el funcionamiento de servicio, y deberá responderse antes de siete días de manera afirmativa, salvo que se acredite causas organizativas que lo impida.
+Las vacaciones, si no se disfrutan por meses completos, comenzarán a contarse a partir del primer día laborable que tuviere el calendario asignado al trabajador o trabajadora y después del descanso semanal que le corresponda.
+En el supuesto de que el periodo de vacaciones, coincida con una incapacidad temporal que imposibilite a la trabajadora o trabajador su disfrute durante el año natural al que corresponden, podrá hacerlo una vez finalice su IT, sea cual sea la contingencia que lo haya originado, siempre que no hayan transcurrido más de dieciocho meses a partir del final del año en que se hayan originado.
+
+DELIBERATE TRAP (plan §D.10): the entitlement is stated as a DUAL UNIT — "33 días laborables O 45 días naturales" — both units must survive into the fact's value/raw_values; a proposed fact that silently drops one unit (reports only "33 días" or only "45 días" without naming which unit) is a value error the scorer must catch.

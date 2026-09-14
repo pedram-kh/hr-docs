@@ -1,0 +1,181 @@
+{
+  "_about": "Sprint 10c vacaciones gold set (plan §D.10, CP-B). Hand-built from REAL 'Artículo — Vacaciones' passages pulled live from staging (document_pages, document_type='Convenio (texto)', retrieval_status=active), verified line-by-line against the real text (see quotes/ for the raw pulled pages). Same 6 convenios as the permisos eval (2, 3, 10, 18, 20, 25), reused for continuity and because plan §D.10's own named traps (c.18's dual-unit sentence, c.20's declining schedule) live inside this set. IMPORTANT CORRECTION vs plan.md: c.20's 'four-year declining schedule' is JORNADA content (Art. 22), not vacaciones (Art. 25, a flat 30 días naturales) — verified directly against document_pages 50/9-10; the plan's shallow sample misattributed it, most likely from a running chapter-header/page-break artifact. That schedule is used here as a NEGATIVE/restraint gold entry instead (see quotes/c20_p9-10.txt for the full finding). The genuine 'multi-year schedule in one fact' test case (D5's precedent) is instead covered by c.2 (3-year) and c.3 (4-year), both real vacaciones multi-year schedules found live.",
+  "convenios": {
+    "2": {
+      "numero": "01003205012006",
+      "name": "ACTIVIDADES DEPORTIVAS (Álava)",
+      "article": "Artículo 33. Vacaciones"
+    },
+    "3": {
+      "numero": "01100635012017",
+      "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL / COEAS (Álava)",
+      "article": "Artículo 25. Vacaciones (Capítulo II)"
+    },
+    "10": {
+      "numero": "99000155011981",
+      "name": "AGENCIAS DE VIAJES (Estatal, BOE)",
+      "article": "Vacaciones (article number not captured on the pulled page; body only)"
+    },
+    "18": {
+      "numero": "31101815012021",
+      "name": "ACCIÓN E INTERVENCIÓN SOCIAL (Navarra)",
+      "article": "Artículo 31. Vacaciones retribuidas"
+    },
+    "20": {
+      "numero": "31008235012003",
+      "name": "GESTIÓN DEPORTIVA (Navarra)",
+      "article": "Art. 25. Vacaciones"
+    },
+    "25": {
+      "numero": "46000805011981",
+      "name": "OFICINAS Y DESPACHOS (Valencia)",
+      "article": "Artículo 36. Vacaciones"
+    }
+  },
+  "expected_facts": [
+    {
+      "convenio_id": 2,
+      "motivo": "vacaciones 2024",
+      "keywords": ["2024"],
+      "value_contains": ["30"],
+      "quote": "2024: 30 días naturales de vacaciones por año."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "vacaciones 2025",
+      "keywords": ["2025"],
+      "value_contains": ["32"],
+      "quote": "2025: 32 días naturales de vacaciones por año, de los cuales, al menos, 2 días serán a elección de la persona trabajadora."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "vacaciones 2026",
+      "keywords": ["2026"],
+      "value_contains": ["33"],
+      "quote": "2026: 33 días naturales de vacaciones por año, de los cuales, al menos, 3 días serán a elección de la persona trabajadora."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "vacaciones 2023",
+      "keywords": ["2023"],
+      "value_contains": ["35"],
+      "quote": "2023: 35 días naturales."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "vacaciones 2024",
+      "keywords": ["2024"],
+      "value_contains": ["36"],
+      "quote": "2024: 36 días naturales."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "vacaciones 2025",
+      "keywords": ["2025"],
+      "value_contains": ["37"],
+      "quote": "2025: 37 días naturales."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "vacaciones 2026",
+      "keywords": ["2026"],
+      "value_contains": ["37"],
+      "quote": "2026: 37 días naturales."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "asuntos propios (2023-2025 vs 2026)",
+      "keywords": ["asuntos propios"],
+      "value_contains": ["1", "2"],
+      "quote": "Durante los años 2023, 2024 y 2025, se podrá elegir anualmente 1 día de vacaciones como asuntos propios. Durante el año el 2026, se podrán elegir 2 días como asuntos propios."
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "vacaciones anuales",
+      "keywords": ["treinta dias", "30 dias"],
+      "value_contains": ["30"],
+      "quote": "el período de treinta días de vacaciones anuales retribuidas al que se refiere el párrafo primero de este artículo"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "computo sabados y domingos",
+      "keywords": ["sabados", "domingos"],
+      "value_contains": ["4", "4"],
+      "quote": "dentro de dichos treinta días, estarán comprendidos necesariamente cuatro sábados y cuatro domingos"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "vacaciones anuales (unidad dual)",
+      "keywords": ["laborables", "naturales"],
+      "value_contains": ["33", "45"],
+      "quote": "Las vacaciones anuales como mínimo serán de 33 días laborables o 45 días naturales, para toda la vigencia del convenio.",
+      "spot_check": "DUAL-UNIT TRAP (plan D.10): both 33 (laborables) and 45 (naturales) must appear in the value; reporting only one unit without naming it is a value error, not a pass."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "dias sueltos",
+      "keywords": ["dias sueltos"],
+      "value_contains": ["3"],
+      "quote": "de los días de vacaciones 3 de ellos podrán ser dispuestos como días sueltos"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "vacaciones anuales",
+      "keywords": ["periodo anual de vacaciones", "30 dias naturales"],
+      "value_contains": ["30"],
+      "quote": "Se establece un periodo anual de vacaciones retribuidas de 30 días naturales."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "reparto empresa/trabajador",
+      "keywords": ["15 seran senalados"],
+      "value_contains": ["15", "15"],
+      "quote": "De los 30 días naturales, 15 serán señalados por la empresa y 15 por el trabajador."
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "vacaciones anuales",
+      "keywords": ["30 dias naturales de vacaciones"],
+      "value_contains": ["30"],
+      "quote": "Todo el personal sujeto al presente convenio disfrutará de 30 días naturales de vacaciones."
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "minimo consecutivo",
+      "keywords": ["consecutivos", "minimo"],
+      "value_contains": ["21"],
+      "quote": "De éstos deberán ser consecutivos 21 como mínimo, pudiendo por tanto ser fraccionadas."
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "periodo de disfrute (1 junio - 30 septiembre)",
+      "keywords": ["1 de junio", "30 de septiembre"],
+      "value_contains": [],
+      "quote": "Se deberán disfrutar en el período comprendido entre el 1 de junio y el 30 de septiembre, ambos inclusive."
+    },
+    {
+      "convenio_id": 20,
+      "expect": "no_fact",
+      "motivo": "jornada anual declining schedule (NOT vacaciones)",
+      "keywords": ["1704 horas", "1700 horas", "1696 horas", "1692 horas", "1637 horas", "1634 horas", "1631 horas", "1628 horas", "1613 horas", "1610 horas", "1607 horas", "1604 horas"],
+      "quote": "Año 2025: 1704 horas al año de trabajo efectivo. [...] (Art. 22 JORNADA, not Art. 25 VACACIONES — a page-break/running-header trap this eval pass found live; plan.md's D.10 had misattributed this schedule to vacaciones)",
+      "spot_check": "TOPIC-BOUNDARY TRAP (found live, not predicted by plan.md): the four-year declining jornada-hours schedule (three job-category variants) sits directly above the real Art. 25 body text after a running chapter-header repeat at a page break. A proposal for convenio 20's vacaciones topic must not report any of these hour figures as its value."
+    },
+    {
+      "convenio_id": 25,
+      "expect": "no_fact",
+      "motivo": "interrupcion de vacaciones por nacimiento (sin cifra, articulo distinto)",
+      "keywords": ["interrumpira el disfrute", "baja por nacimiento y cuidado"],
+      "quote": "Cuando la persona trabajadora se encuentre disfrutando las vacaciones y sea baja por nacimiento y cuidado del menor, interrumpirá el disfrute de las mismas...",
+      "spot_check": "RESTRAINT CASE (matches plan D.10's prediction, found on a different page/article than guessed): pure interruption-mechanics narrative, no day-count figure, embedded in the nacimiento/maternidad article (not Art. 36 Vacaciones). Must not produce a separate vacaciones fact."
+    },
+    {
+      "convenio_id": 10,
+      "expect": "no_fact",
+      "motivo": "horas anuales maximas (NOT vacaciones, same paragraph)",
+      "keywords": ["1.752 horas", "1752 horas"],
+      "quote": "Las horas anuales máximas de trabajo son 1.752 horas.",
+      "spot_check": "RESTRAINT CASE (found live): this jornada-hours figure appears in the same paragraph block as the vacaciones day-count content (no new article heading in between on the pulled page) — a proposal for convenio 10's vacaciones topic must not report 1.752 as a vacaciones value."
+    }
+  ]
+}

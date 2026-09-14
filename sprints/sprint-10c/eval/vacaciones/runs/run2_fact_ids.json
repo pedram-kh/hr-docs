@@ -1,0 +1,20 @@
+{
+  "run": 2,
+  "topic": "vacaciones",
+  "status": "PASSED — kept",
+  "convenios": [2, 3, 10, 18, 20, 25],
+  "fact_ids_written": [117, 118, 119, 120, 121, 122],
+  "fact_ids_by_convenio": {
+    "18": 117,
+    "3": 118,
+    "2": 119,
+    "20": 120,
+    "10": 121,
+    "25": 122
+  },
+  "prompt_fix_between_run1_and_run2": [
+    "hr-ai/app/providers/claude.py rule 3 extended: explicit cross-passage-merge clause -- if the same scope/topic content appears in more than one filtered passage (a secondary/tangential mention in a different article or chapter), merge into the SAME fact; never propose a second independent fact for the secondary passage, since persist()'s upsert silently overwrites on a same-scope collision.",
+    "hr-ai/app/providers/claude.py: new VACACIONES_DISAMBIGUATION_ES (rule 15), wired for topic_lower == 'vacaciones': excludes (a) jornada/horas-anuales figures even when interleaved via page-break/running-header or same paragraph block, (b) nacimiento/maternidad vacation-interruption procedural narrative with no day-count figure."
+  ],
+  "score": "17/17 correct, 0 wrong-value, 0 missed, 0 mis-scoped, 0/3 restraint failures (score_eval.py, all 6 convenios)"
+}

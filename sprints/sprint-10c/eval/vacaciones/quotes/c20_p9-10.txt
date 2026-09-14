@@ -1,0 +1,39 @@
+Source: documents.id=50, convenio_id=20 (GESTIÓN DEPORTIVA, Navarra), document_pages page_number=9 and 10
+Pulled live from staging 2026-09-13.
+
+--- page 9 (tail) ---
+CAPITULO CUARTO: JORNADA, DESCANSOS, PERMISOS EXCEDENCIAS Y VACACIONES
+Art. 22- JORNADA
+[...] se establece con carácter general [...] la jornada anual a tiempo completo que se establece a continuación para cada uno de los años de vigencia del convenio:
+- Año 2025: 1704 horas al año de trabajo efectivo.
+- Año 2026: 1700 horas al año de trabajo efectivo
+- Año 2027: 1696 horas al año de trabajo efectivo
+- Año 2028: 1692 horas al año de trabajo efectivo
+Atendiendo a las condiciones [...] de los Técnicos de Actividad deportiva (monitores), se establece [...] la jornada anual [...]:
+- Año 2025: 1613 horas al año de trabajo efectivo.
+- Año 2026: 1610 horas al año de trabajo efectivo
+- Año 2027: 1607 horas al año de trabajo efectivo
+- Año 2028: 1604 horas al año de trabajo efectivo
+Igualmente [...] para los Técnicos de Sala, la jornada anual [...] que se especifica a continuación para cada uno de los [años de vigencia del convenio.]
+
+--- page 10 (head, continuing the Técnicos de Sala jornada schedule, then the real Art. 25) ---
+[Técnicos de Sala jornada schedule, continued:]
+- Año 2025: 1637 horas al año de trabajo efectivo.
+- Año 2026: 1634 horas al año de trabajo efectivo
+- Año 2027: 1631 horas al año de trabajo efectivo
+- Año 2028: 1628 horas al año de trabajo efectivo
+[... jornada narrative continues: computo de tiempo de trabajo, descanso de 15 minutos, 2 días de libre disposición no recuperable...]
+
+Art. 23- JORNADA IRREGULAR
+De conformidad con [...] artículo 34.2 del Estatuto de los Trabajadores, las partes acuerdan que la jornada se distribuirá de modo irregular en un 0%
+
+Art. 24- DESCANSO SEMANAL
+Se establece que el disfrute del descanso semanal de día y medio ininterrumpido se podrá acumular por periodos de hasta catorce días [...]
+
+Art. 25- VACACIONES
+Se establece un periodo anual de vacaciones retribuidas de 30 días naturales.
+De los 30 días naturales, 15 serán señalados por la empresa y 15 por el trabajador.
+[... scheduling mechanics, compensation days for late employer scheduling, closure-period rules ...]
+
+CRITICAL FINDING (this eval pass, not predicted correctly by plan.md's D.10 §B.4 sample):
+plan.md's D.10 text predicted "c.20's four-year declining schedule ... a deliberate test of the multi-year-in-one-fact shape" for VACACIONES. That prediction is WRONG — verified directly against the live document: the four-year declining schedule (1704/1700/1696/1692 and the two other job-category variants, including 1637/1634/1631/1628 for Técnicos de Sala) is JORNADA content under Art. 22, not vacaciones. It appears immediately before the running chapter header "CAPITULO CUARTO: JORNADA, DESCANSOS, PERMISOS EXCEDENCIAS Y VACACIONES" repeats at a page break, which is almost certainly what caused the plan's shallow sample to misattribute it to "Art. 25- VACACIONES" (a running article-list header that appears at the top of page 10, immediately BEFORE the tail end of the Técnicos de Sala jornada figures, followed only much later on the same page by the REAL Art. 25 body text: "Se establece un periodo anual de vacaciones retribuidas de 30 días naturales"). c.20's REAL vacaciones entitlement is a flat, single-year 30 días naturales — not a multi-year schedule. This is now used as a NEGATIVE/restraint gold entry instead: a proposal for convenio 20 must not report 1704/1700/1696/1692 (or any Técnicos variant) as its vacaciones value.

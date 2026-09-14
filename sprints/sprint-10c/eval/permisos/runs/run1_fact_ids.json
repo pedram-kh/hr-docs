@@ -1,0 +1,10 @@
+{
+  "run": 1,
+  "topic": "permisos retribuidos",
+  "topic_id": 5,
+  "at": "2026-09-13T03:40:02Z",
+  "convenio_ids": [2, 3, 10, 18, 20, 25],
+  "fact_ids": [89, 90, 91, 92, 93, 94],
+  "verdict": "FAILED — superseded, deleted",
+  "reason": "Two distinct real bugs, not a prompt-wording nit: (1) CRITICAL — logical-key collapse: reference_facts' upsert key (source, source_document_id, convenio_id, topic_id, job_category_id, group_label, validity_start, validity_end) has no per-motivo discriminator; when the model correctly proposed 5 independent facts (matrimonio, fallecimiento, traslado, etc.) for one document, facts 2-5 silently overwrote fact 1 via upsert — convenio 3/10/18's surviving fact is NOT about matrimonio at all, it's whichever motivo the model happened to emit last (union-rep hour credits, formación remission, court-appearance comp respectively) — 4 of 5 real, correctly-extracted facts were destroyed before any human ever saw them, an ADR-0020-adjacent data-loss, not a flag-and-persist outcome. (2) topic-boundary trap confirmed live: convenio 20 and 25's surviving facts are BOTH about cuidado del lactante (wrong topic), and convenio 2's single bundled fact folded a lactancia clause into raw_values.j_lactancia. See review.md for the full analysis and the run2 prompt-only mitigation attempt."
+}

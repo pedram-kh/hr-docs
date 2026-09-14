@@ -1,0 +1,542 @@
+{
+  "_about": "Sprint 10c permisos gold set (plan §D.10). Hand-built from REAL 'Artículo — Permisos/Licencias retribuidas' passages pulled live from staging (document_pages, document_type=convenio_text, retrieval_status=active), verified line-by-line against the real text (see quotes/ for the raw pulled pages). Unlike 7b-2's gold set (cross-province scope matching), this driver is SINGLE-CONVENIO per call — 'scope' correctness here means (a) the proposed fact's convenio_id is the call's own convenio (structurally near-guaranteed by the single-candidate binding, but asserted directly per the 0-tolerance gate) and (b) the model did NOT extract content belonging to a DIFFERENT topic that happens to share the word 'permiso' (the real trap this pull surfaced: lactancia/maternidad/paternidad clauses live inside or beside the same 'Permisos'/'Licencias' article in several real convenios). Each entry is matched to a proposed fact by KEYWORD, not group/scope (permisos facts are almost never group-split in this corpus).",
+  "convenios": {
+    "2": {
+      "numero": "01003205012006",
+      "name": "ACTIVIDADES DEPORTIVAS (Álava)",
+      "article": "Artículo 29. Permisos retribuidos"
+    },
+    "3": {
+      "numero": "01100635012017",
+      "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL / COEAS (Álava)",
+      "article": "Artículo 34. Licencias retribuidas"
+    },
+    "10": {
+      "numero": "99000155011981",
+      "name": "AGENCIAS DE VIAJES (Estatal, BOE)",
+      "article": "Artículo 28. Licencias retribuidas"
+    },
+    "18": {
+      "numero": "31101815012021",
+      "name": "ACCIÓN E INTERVENCIÓN SOCIAL (Navarra)",
+      "article": "Artículo 40. Licencias retribuidas"
+    },
+    "20": {
+      "numero": "31008235012003",
+      "name": "GESTIÓN DEPORTIVA (Navarra)",
+      "article": "Art. 27. Licencias retribuidas"
+    },
+    "25": {
+      "numero": "46000805011981",
+      "name": "OFICINAS Y DESPACHOS (Valencia)",
+      "article": "Artículo 31. Licencias (A. Retribuidas)"
+    }
+  },
+  "expected_facts": [
+    {
+      "convenio_id": 2,
+      "motivo": "matrimonio",
+      "keywords": [
+        "matrimonio"
+      ],
+      "value_contains": [
+        "17"
+      ],
+      "quote": "17 días naturales en caso de matrimonio o constitución de pareja de hecho"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "enfermedad grave / hospitalización familiar",
+      "keywords": [
+        "hospitalizacion",
+        "enfermedad grave",
+        "reposo domiciliario"
+      ],
+      "value_contains": [
+        "5"
+      ],
+      "quote": "5 días laborables por accidente, enfermedad grave, hospitalización..."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "fallecimiento (breakdown por grado)",
+      "keywords": [
+        "fallecimiento"
+      ],
+      "value_contains": [
+        "5",
+        "3",
+        "2"
+      ],
+      "quote": "5 días... hijo/cónyuge; 3 días... padres/hermanos; 2 días... 2º grado",
+      "spot_check": "DEGREE-BREAKDOWN TRAP: must be ONE fact with 5/3/2 inside value/raw_values, not three separate facts (plan §D.10's stated trap)"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "asuntos propios (breakdown por tipo de contrato)",
+      "keywords": [
+        "asuntos propios"
+      ],
+      "value_contains": [
+        "4",
+        "3",
+        "1"
+      ],
+      "quote": "4 días... personal indefinido, 3 días... fijo discontinuo invierno, 1 día... fijo discontinuo verano",
+      "spot_check": "another degree/category-breakdown trap, contract-type this time (echoes 7b-2's own contract-type-breakdown trap)"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "traslado de domicilio",
+      "keywords": [
+        "traslado de domicilio"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Un día laborable por traslado de domicilio habitual"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "deber inexcusable (NO FIGURE)",
+      "keywords": [
+        "deber inexcusable"
+      ],
+      "expect": "context_ok",
+      "quote": "Por el tiempo indispensable para el cumplimiento de un deber inexcusable...",
+      "note": "no day-count figure exists in the source; a proposed fact here is over-extraction, not a real number [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "funciones sindicales (NO FIGURE)",
+      "keywords": [
+        "funciones sindicales"
+      ],
+      "expect": "context_ok",
+      "quote": "Para realizar las funciones sindicales o representación...",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "examenes titulo academico (NO FIGURE, this article)",
+      "keywords": [
+        "realizacion de examenes",
+        "titulo academico"
+      ],
+      "expect": "context_ok",
+      "quote": "Por el tiempo indispensable para la realización de exámenes, previo aviso...",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "examenes prenatales (NO FIGURE + maternidad-adjacent)",
+      "keywords": [
+        "examenes prenatales",
+        "tecnicas de preparacion al parto"
+      ],
+      "expect": "context_ok",
+      "quote": "Se concederán los permisos necesarios a las trabajadoras embarazadas para la realización de exámenes prenatales...",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "lactancia (WRONG TOPIC)",
+      "keywords": [
+        "hijo o hija menor de nueve meses",
+        "una hora de ausencia del trabajo, que podran dividir"
+      ],
+      "expect": "no_fact",
+      "quote": "Las personas trabajadoras por lactancia de hijo o hija menor de nueve meses tendrán derecho a una hora...",
+      "spot_check": "TOPIC-BOUNDARY TRAP: lives inside the SAME lettered list as the real permisos motivos (letter j), but 'lactancia' is its own TopicLexicon topic — must NOT be extracted under target_topic=permisos",
+      "note": "Keywords deliberately avoid the bare word 'lactancia' — run2 showed the model may legitimately NAME it once in an exclusion note ('excluidos: apartado j) lactancia'), which must NOT itself count as a failure; this checks for the ENTITLEMENT DETAIL being restated instead."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "matrimonio",
+      "keywords": [
+        "matrimonio"
+      ],
+      "value_contains": [
+        "15"
+      ],
+      "quote": "15 días naturales en caso de matrimonio o parejas de hecho"
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "matrimonio de familiar 1er grado",
+      "keywords": [
+        "matrimonio de familiar"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Un día por matrimonio de familiar de primer grado afinidad o consanguinidad"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "matrimonio",
+      "keywords": [
+        "matrimonio"
+      ],
+      "value_contains": [
+        "16"
+      ],
+      "quote": "Matrimonio o pareja de hecho: 16 días naturales"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "fallecimiento conyuge/ascendientes/descendientes 1er grado",
+      "keywords": [
+        "fallecimiento de conyuge",
+        "fallecimiento"
+      ],
+      "value_contains": [
+        "6"
+      ],
+      "quote": "Fallecimiento de cónyuge o pareja de hecho, ascendientes o descendientes en primer grado: 6 días naturales"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "fallecimiento hermanos",
+      "keywords": [
+        "fallecimiento de hermanos"
+      ],
+      "value_contains": [
+        "3"
+      ],
+      "quote": "Fallecimiento de hermanos/as: 3 días naturales"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "examenes titulo academico (limite 10 dias)",
+      "keywords": [
+        "examenes para la obtencion de un titulo",
+        "titulo academico"
+      ],
+      "value_contains": [
+        "10"
+      ],
+      "quote": "Exámenes para la obtención de un título académico: el tiempo indispensable con un límite de 10 días retribuidos al año"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "fuerza mayor familiar (4 dias)",
+      "keywords": [
+        "fuerza mayor"
+      ],
+      "value_contains": [
+        "4"
+      ],
+      "quote": "tendrá un límite de 4 días laborables al año"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "imposibilidad acceso centro trabajo (4 dias)",
+      "keywords": [
+        "imposibilidad de acceder al centro"
+      ],
+      "value_contains": [
+        "4"
+      ],
+      "quote": "Hasta cuatro días por imposibilidad de acceder al centro de trabajo..."
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "deberes publicos/notario (NO FIGURE)",
+      "keywords": [
+        "cumplimiento de deberes publicos",
+        "renovacion de permisos de trabajo"
+      ],
+      "expect": "context_ok",
+      "quote": "el tiempo indispensable cuando la cita coincida en el horario laboral",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "examen carnet de conducir (NO FIGURE)",
+      "keywords": [
+        "examen del carnet de conducir"
+      ],
+      "expect": "context_ok",
+      "quote": "Tiempo imprescindible para el examen del carnet de conducir",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "matrimonio",
+      "keywords": [
+        "matrimonio",
+        "pareja de hecho"
+      ],
+      "value_contains": [
+        "16"
+      ],
+      "quote": "Dieciséis (16) días naturales en caso de matrimonio o constitución como pareja de hecho...no procederá el disfrute de este permiso por las dos modalidades con la misma pareja",
+      "spot_check": "COMPOUND ELIGIBILITY TRAP: the 'no procede...misma pareja' condition is part of the real rule and must not be dropped from source_excerpt/value"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "enfermedad grave / hospitalizacion familiar",
+      "keywords": [
+        "accidente o enfermedad graves",
+        "hospitalizacion"
+      ],
+      "value_contains": [
+        "5"
+      ],
+      "quote": "Cinco días laborales por accidente o enfermedad graves, hospitalización..."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "fallecimiento conyuge/parientes 2do grado",
+      "keywords": [
+        "fallecimiento del conyuge"
+      ],
+      "value_contains": [
+        "3"
+      ],
+      "quote": "Hasta tres días por el fallecimiento del cónyuge, pareja de hecho o parientes hasta el segundo grado..."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "traslado domicilio",
+      "keywords": [
+        "traslado de domicilio"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Un (1) día laborable por traslado de domicilio habitual justificado"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "consulta medica familiar (10h/ano)",
+      "keywords": [
+        "limite de diez horas",
+        "consulta medica"
+      ],
+      "value_contains": [
+        "10"
+      ],
+      "quote": "El tiempo indispensable con el límite de diez horas al año, para asistir a consulta médica..."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "fuerza mayor familiar (4 dias/ano)",
+      "keywords": [
+        "fuerza mayor"
+      ],
+      "value_contains": [
+        "4"
+      ],
+      "quote": "equivalentes a cuatro días al año"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "boda familiar 2do grado",
+      "keywords": [
+        "ceremonia de matrimonio de familiares"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "El día de la ceremonia de matrimonio de familiares hasta el segundo grado..."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "tecnicas de fecundacion (21h/ano)",
+      "keywords": [
+        "tecnicas de fecundacion"
+      ],
+      "value_contains": [
+        "21"
+      ],
+      "quote": "sometersen a las técnicas de fecundación, con un límite de 21 horas al año"
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "deber inexcusable generico (NO FIGURE)",
+      "keywords": [
+        "deber inexcusable de caracter publico"
+      ],
+      "expect": "context_ok",
+      "quote": "Por el tiempo indispensable para el cumplimiento de un deber inexcusable de carácter público y personal",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "matrimonio",
+      "keywords": [
+        "matrimonio del trabajador"
+      ],
+      "value_contains": [
+        "18"
+      ],
+      "quote": "Por matrimonio del trabajador: 18 días naturales"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "fallecimiento (breakdown por grado)",
+      "keywords": [
+        "fallecimiento"
+      ],
+      "value_contains": [
+        "6",
+        "3",
+        "2"
+      ],
+      "quote": "Cónyuge e hijos: 6 días; Padres/hermanos: 3 días; Padres políticos/abuelos/hermanos políticos: 2 días",
+      "spot_check": "another degree-breakdown-in-one-fact trap"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "traslado domicilio",
+      "keywords": [
+        "traslado de domicilio"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Por traslado de domicilio habitual (no coincidente con el de matrimonio): 1 día"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "matrimonio de padres/hijos/hermanos",
+      "keywords": [
+        "matrimonio de padres"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Por matrimonio de padres, hijos o hermanos: 1 día natural"
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "consulta medica familiar (15h/ano)",
+      "keywords": [
+        "limitacion horaria",
+        "15 horas"
+      ],
+      "value_contains": [
+        "15"
+      ],
+      "quote": "Licencia retribuida con limitación horaria de hasta un máximo de 15 horas al año..."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "deber inexcusable (NO FIGURE)",
+      "keywords": [
+        "deber inexcusable"
+      ],
+      "expect": "context_ok",
+      "quote": "Por el tiempo indispensable para el cumplimiento de un deber inexcusable de carácter público y personal",
+      "note": " [Sprint 10c run2 reclass: figure-less same-real-article motivo, informational bundle inclusion only, not scored pass/fail]"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "matrimonio y pareja de hecho",
+      "keywords": [
+        "matrimonio y registro de parejas"
+      ],
+      "value_contains": [
+        "15"
+      ],
+      "quote": "Matrimonio y registro de parejas de hecho: 15 días naturales"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "matrimonio de familiar 1o/2o grado",
+      "keywords": [
+        "matrimonio de familiares"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Por matrimonio de familiares de 1º y 2º grado: 1 día (EL DE LA BODA)"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "divorcio",
+      "keywords": [
+        "divorcio"
+      ],
+      "value_contains": [
+        "1"
+      ],
+      "quote": "Por divorcio: 1 día laborable"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "fallecimiento familiares 1er grado",
+      "keywords": [
+        "fallecimiento de familiares 1",
+        "fallecimiento de familiares de 1"
+      ],
+      "value_contains": [
+        "5"
+      ],
+      "quote": "Por fallecimiento de familiares 1º grado: 5 días laborables"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "fallecimiento familiares 2do grado",
+      "keywords": [
+        "fallecimiento familiares 2",
+        "fallecimiento de familiares de 2"
+      ],
+      "value_contains": [
+        "3"
+      ],
+      "quote": "Por fallecimiento familiares 2º grado: 3 días laborables"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "enfermedad grave / hospitalizacion",
+      "keywords": [
+        "enfermedad grave"
+      ],
+      "value_contains": [
+        "5"
+      ],
+      "quote": "Por accidente o enfermedad graves, hospitalización o intervención quirúrgica... 5 días laborables"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "nacimiento de hijo (sin cobertura paternidad)",
+      "keywords": [
+        "nacimiento de hijo"
+      ],
+      "value_contains": [
+        "3"
+      ],
+      "quote": "Por nacimiento de hijo/a 3 días, para las personas trabajadoras que no tengan cubierta la carencia...",
+      "spot_check": "IN-SCOPE despite mentioning 'nacimiento' — it is the numbered permisos article's OWN entry (Art.31.7), unlike the dedicated maternidad/lactancia CAPÍTULO below (see the negative test) — a genuine same-word, different-article distinction"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "consanguinidad/afinidad scope note",
+      "keywords": [
+        "consanguinidad y/o afinidad"
+      ],
+      "expect": "context_note_not_a_fact",
+      "quote": "Todos los permisos que se refieran a grados lo hacen en referencia a la consanguinidad y/o afinidad.",
+      "note": "a scope-note the agent must not DROP when present in an extracted motivo's value (per plan §D.10), but is itself not a separate fact — informational only, not scored as fact/no_fact"
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "nacimiento/adopcion/lactancia/permiso-parental article (WRONG TOPIC, whole article)",
+      "keywords": [
+        "cuidado del lactante",
+        "permiso parental",
+        "guarda con fines de adopcion",
+        "suspendera el contrato de trabajo",
+        "dieciseis semanas",
+        "16 semanas"
+      ],
+      "expect": "no_fact",
+      "quote": "a) Nacimiento, adopción... 16 semanas... b) Cuidado del lactante... c) ...e) Permiso parental... f) Adaptación de jornada.",
+      "spot_check": "THE BIG TOPIC-BOUNDARY TRAP: a whole separate CAPÍTULO (statutory suspension-of-contract machinery: 16 semanas, permiso parental, adaptación de jornada) anchors on 'permiso'/'licencia' throughout but belongs to maternidad/paternidad/lactancia topics, not permisos. Must yield ZERO permisos facts from this passage.",
+      "note": "'adaptacion de jornada' dropped from keywords — run2 showed it collides with an unrelated, legitimate item ('adaptación de jornada para formación profesional', c.25's own item 15), a false-positive keyword, not a real topic-boundary violation."
+    }
+  ]
+}

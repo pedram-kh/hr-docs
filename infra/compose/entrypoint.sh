@@ -60,4 +60,17 @@ for mapping in "${mappings[@]}"; do
   export "$var=$value"
 done
 
+# Staging OTP uses MAIL_MAILER=log, which writes laravel.log. Artisan
+# one-offs run as root and otherwise recreate that file as root:root 644;
+# php-fpm (www-data) then cannot append, Send code 500s, and retries trip
+# the OTP throttle. Keep the file group-writable whenever this entrypoint
+# runs (container start and every `docker exec ... /entrypoint.sh` artisan).
+if [[ -d /var/www/storage/logs ]]; then
+  chmod 777 /var/www/storage/logs 2>/dev/null || true
+  if [[ ! -f /var/www/storage/logs/laravel.log ]]; then
+    touch /var/www/storage/logs/laravel.log 2>/dev/null || true
+  fi
+  chmod 666 /var/www/storage/logs/laravel.log 2>/dev/null || true
+fi
+
 exec "$@"
