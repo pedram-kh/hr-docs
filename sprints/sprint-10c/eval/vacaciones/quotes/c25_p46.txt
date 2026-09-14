@@ -1,0 +1,6 @@
+Source: documents.id=92, convenio_id=25 (OFICINAS Y DESPACHOS, Valencia), document_pages page_number=46
+Pulled live from staging 2026-09-13.
+
+Artículo 36.- Vacaciones.
+Todo el personal sujeto al presente convenio disfrutará de 30 días naturales de vacaciones. De éstos deberán ser consecutivos 21 como mínimo, pudiendo por tanto ser fraccionadas. Se deberán disfrutar en el período comprendido entre el 1 de junio y el 30 de septiembre, ambos inclusive.
+Se establecerá el calendario vacacional con 2 meses de antelación, al período estival.

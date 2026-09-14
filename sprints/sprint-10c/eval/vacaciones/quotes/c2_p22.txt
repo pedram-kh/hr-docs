@@ -1,0 +1,8 @@
+Source: documents.id=58, convenio_id=2 (ACTIVIDADES DEPORTIVAS, Álava), document_pages page_number=22
+Pulled live from staging 2026-09-13.
+
+Artículo 33. Vacaciones
+Las personas trabajadoras tendrán derecho a:
+— 2024: 30 días naturales de vacaciones por año.
+— 2025: 32 días naturales de vacaciones por año, de los cuales, al menos, 2 días serán a elección de la persona trabajadora.
+— 2026: 33 días naturales de vacaciones por año, de los cuales, al menos, 3 días serán a elección de la persona trabajadora.

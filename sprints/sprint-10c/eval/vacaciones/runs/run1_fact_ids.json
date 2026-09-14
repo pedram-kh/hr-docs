@@ -1,0 +1,22 @@
+{
+  "run": 1,
+  "topic": "vacaciones",
+  "status": "FAILED — deleted",
+  "convenios": [2, 3, 10, 18, 20, 25],
+  "fact_ids_written": [111, 112, 113, 114, 115, 116],
+  "fact_ids_by_convenio": {
+    "18": 111,
+    "3": 112,
+    "2": 113,
+    "20": 114,
+    "10": 115,
+    "25": 116
+  },
+  "deleted_at": "2026-09-13T22:44:38Z (staging clock)",
+  "delete_statement": "DB::table('reference_facts')->whereIn('id',[113,112,115,111,114,116])->where('source','ai_agent')->where('status','needs_review')->delete() -- 6 rows deleted, confirmed by re-query",
+  "why_failed": [
+    "convenio 3 (id=112): logical-key collision — model proposed 4 facts for the same (document,topic,convenio,no-group) scope; 3 silently overwrote each other via persist()'s upsert, leaving id=112 as the ONLY survivor — and it was a narrow group-specific accrual clause (estancias vacacionales/educativas), NOT the real Art. 25 multi-year schedule (35/36/37/37 dias). The real schedule was destroyed before any human saw it. Bug A (ADR-0034) recurring in a NEW shape: cross-passage collision, not within-one-enumerated-list.",
+    "convenio 25 (id=116): same collision shape, 2 facts proposed, 1 overwrote the other. The survivor was a vacation-interruption-by-birth-leave narrative (no day-count figure, self-flagged uncertainty, embedded in the nacimiento article) that overwrote the real Art. 36 fact (30 dias, 21 consecutive, 1 junio-30 sept).",
+    "convenio 10 (id=115): no collision, but a restraint failure -- the bundled fact's value included 'Las horas anuales maximas de trabajo son 1.752' (a JORNADA figure from the same paragraph block, no heading in between), which does not belong under the vacaciones topic."
+  ]
+}

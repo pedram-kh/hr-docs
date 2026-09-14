@@ -1,0 +1,9 @@
+Source: documents.id=77, convenio_id=10 (AGENCIAS DE VIAJES, Estatal BOE), document_pages page_number=38
+Pulled live from staging 2026-09-13.
+
+[...preceding narrative on vacation scheduling/exclusion by the employer, school-age preference, non-computation of public holidays falling within the vacation period...]
+
+Para computar el período de treinta días de vacaciones anuales retribuidas al que se refiere el párrafo primero de este artículo, deberá tenerse en cuenta que, dentro de dichos treinta días, estarán comprendidos necesariamente cuatro sábados y cuatro domingos, independientemente de que las vacaciones se disfruten por periodo completo o de forma fraccionada.
+En el supuesto de que el periodo de vacaciones coincida con una Incapacidad Temporal por contingencias distintas a las señaladas en el artículo 38.3 ET que imposibilite al trabajador/a disfrutarlas total o parcialmente durante el año natural que corresponda, el trabajador/a podrá hacerlo una vez finalice su incapacidad y siempre que no hayan transcurrido más de dieciocho meses desde el final del año en que se haya originado la incapacidad.
+
+[Note: the article number heading itself was on a preceding page not re-pulled for this eval; the "treinta días" (30 days) figure and the four Saturdays/four Sundays inclusion rule are the scoped, quotable content. Immediately following this passage, a new heading "CAPÍTULO VIII / Licencias y permisos / Artículo 28. Licencias retribuidas." begins — the topic boundary this eval's negative/restraint side must respect: horas-anuales-máximas content (1.752 horas) appearing in the same paragraph is a JORNADA figure, not a vacaciones day-count, and must not be reported as the vacaciones value.]

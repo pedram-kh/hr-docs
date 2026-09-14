@@ -21,3 +21,47 @@ A document reaches review for one of two distinct reasons, and they route differ
 - The vocabulary can grow without losing the anti-drift guarantee — growth is gated by human approval, biased toward absorbing variants into aliases.
 - The review queue must, **from Sprint 1**, record (a) the **reason** (`unresolved` vs `conflict`) and (b) the **raw unmatched value** the parser couldn't resolve. These two small fields are the seed the later LLM-rescue and vocabulary-suggestion flows grow from; capturing them now avoids a migration later.
 - Implementation of the LLM rescue path and the propose-new-value UI is deferred to the LLM-tagging-tier sprint; Sprint 1 only lays the data foundations above.
+
+## Lineage — Sprint 10c: `topic` joins the managed-growth lane
+
+Sprint 7a built the propose→approve mechanism this ADR calls for (§1) as
+`VocabularyProposalService` / `vocabulary_proposals`, generalizing the
+pattern from `topics` (which had had a first-class `status` /
+`proposed_by` / `approved_by` shape on its own table since ~Sprint 3) to
+territory/sector/convenio — but topics themselves were never wired INTO
+the generalized lane. Every one of the ~12 topics that existed before
+Sprint 10c was seeded directly (migration/seeder/tinker) — the `status`/
+`proposed_by`/`approved_by` columns on `topics` sat unused, a designed-but-
+never-connected shape.
+
+Sprint 10c needed to create a new topic (`preaviso`) mid-sprint and, per
+this ADR's own standing rule ("the AI never creates a scoping value
+autonomously" — and by extension, no value should be silently seeded
+outside *any* human-gated lane, topics included), stopped rather than
+seed it directly. The question this raised: build topics their own
+bespoke propose/approve lane, or extend the existing one?
+
+**Decision: extend the existing lane.** This ADR's actual guarantee is the
+**gate** — "a human approves, the AI never creates" — not the specific
+mechanism enforcing it. `VocabularyProposalService::FACET_MODEL` gained a
+`'topic' => Topic::class` entry; `createValue()` gained one branch writing
+`topics.status/proposed_by/approved_by` (finally, their first real writer);
+`vocabulary.approve` and the existing proposals-queue UI needed no new
+code to handle the new facet generically. A second, bespoke lane would
+have been more surface — more code, more tests, more routes — guarding the
+exact same guarantee this one already enforces. `topics.status`/
+`proposed_by`/`approved_by` were, it turns out, always this lane's future
+entry point; Sprint 10c is just the sprint that finally connected it.
+
+One deliberate asymmetry: topics have no `aliases` column and no
+alias-fold concept — a topic's spelling/synonym variants are resolved in
+code, at match time, via `TopicLexicon` (not by growing a controlled
+alias list the way a territory or sector name does). `approve(..., 'alias',
+...)` for `facet=topic` is therefore a named, explicit rejection
+(`VocabularyProposalService::foldAlias()`), not a silent no-op or a SQL
+error from writing to a column `topics` doesn't have.
+
+See `hr-docs/sprints/sprint-10c/review.md` for the `preaviso` creation that
+was this lane's first real use — proposed and approved through the actual
+service (`propose()` + `approve()`), the same methods the HTTP controller
+calls.

@@ -1,0 +1,10 @@
+Source: staging document_pages, document_id=77, page_number=35, convenio_id=10
+(AGENCIAS DE VIAJES, Estatal BOE) — NEGATIVE gold trap, same page as the
+positive libranza fact above: retribución, not festivos.
+
+23.3 Trabajo en festivos. La prestación de servicio realizada en domingo y/o festivo,
+a jornada completa, en los términos anteriormente descritos, tendrá una retribución
+adicional en concepto de compensación económica por dicha prestación de servicio. Se
+abonará en el recibo de salarios del mes siguiente, en concepto de Plus de Festivos, por
+importe de 51,50 euros. A partir del séptimo domingo y/o festivo trabajado en cada año
+natural recibirá la cantidad de 57,68 euros.

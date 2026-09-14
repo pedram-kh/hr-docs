@@ -1,0 +1,12 @@
+Source: documents.id=92, convenio_id=25 (OFICINAS Y DESPACHOS, Valencia), document_pages page_number=34
+Pulled live from staging 2026-09-13.
+
+[...preceding text: nacimiento/adopción suspension-of-contract machinery, ten remaining weeks, adopción internacional...]
+
+Cuando la persona trabajadora se encuentre disfrutando las vacaciones y sea baja por nacimiento y cuidado del menor, interrumpirá el disfrute de las mismas, tomando los días restantes, de mutuo acuerdo con la empresa cuando cause alta por aquel motivo. Se permitirá la acumulación de las vacaciones a la licencia de gestación o alumbramiento, aun expirado el año natural a que tal período corresponda.
+Si antes del inicio de las vacaciones, la persona trabajadora se encontrase en situación de descanso por nacimiento y cuidado del menor, las mismas se disfrutarán íntegramente una vez finalizado el período de baja, aún expirado el año natural a que tal período corresponde, fijando el período de disfrute, de mutuo acuerdo con la empresa.
+
+b) Cuidado del lactante.
+[...continues into the lactancia article, a separate topic...]
+
+NEGATIVE GOLD CASE (matches plan §D.10's prediction exactly, found on a different page than plan.md's shallow sample guessed — this passage lives INSIDE the nacimiento/maternidad suspension-of-contract article, not the dedicated "Artículo 36.- Vacaciones" article on page 46): pure interruption-mechanics narrative, no day-count figure at all, and topically embedded in a different article (nacimiento, not vacaciones). Must NOT produce a vacaciones fact.

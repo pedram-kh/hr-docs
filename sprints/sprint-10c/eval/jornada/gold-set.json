@@ -1,0 +1,192 @@
+{
+  "_about": "Sprint 10c jornada gold set (topic 3, next checkpoint after CP-B). Hand-built from REAL 'Artículo — Jornada' passages pulled live from staging (document_pages, document_type='Convenio (texto)', retrieval_status=active), verified line-by-line against the real text (see quotes/ for the raw pulled pages). Same 6 convenios as permisos/vacaciones (2, 3, 10, 18, 20, 25), reused for continuity. c.20's Art. 22 JORNADA is the SAME four-year/three-job-category declining schedule the vacaciones eval found misattributed by plan.md and used as a NEGATIVE there — it is jornada's own genuine positive case here (its correct home). c.10's 'Artículo 23. Jornada y horario' (1.752 horas) is the SAME bare figure the vacaciones eval found leaking near vacaciones content there (restraint-fixed on that side); here it is jornada's own correct positive fact. This topic's OWN, reverse-direction boundary risk (not predicted by plan.md, since plan.md never named jornada's traps in detail): jornada's TopicLexicon anchor 'horas anuales' also appears, unrelated, inside formación-credit-hours clauses (c.3 Art. 22 'de la formación continua', 20 horas anuales de formación profesional) and jornada's own real articles sit directly beside vacaciones articles (c.20 Art. 22 JORNADA immediately followed by Art. 25 VACACIONES on the same/adjacent page) — both used here as negative/restraint gold entries.",
+  "convenios": {
+    "2": {
+      "numero": "01003205012006",
+      "name": "ACTIVIDADES DEPORTIVAS (Álava)",
+      "article": "Artículo 25. Jornada de trabajo (Capítulo IV)"
+    },
+    "3": {
+      "numero": "01100635012017",
+      "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL / COEAS (Álava)",
+      "article": "Artículo 24. Jornada máxima (Título IV, Capítulo I)"
+    },
+    "10": {
+      "numero": "99000155011981",
+      "name": "AGENCIAS DE VIAJES (Estatal, BOE)",
+      "article": "Artículo 23. Jornada y horario (Capítulo VII)"
+    },
+    "18": {
+      "numero": "31101815012021",
+      "name": "ACCIÓN E INTERVENCIÓN SOCIAL (Navarra)",
+      "article": "Artículo 28. Jornada y calendario laboral (Título IV, Capítulo I)"
+    },
+    "20": {
+      "numero": "31008235012003",
+      "name": "GESTIÓN DEPORTIVA (Navarra)",
+      "article": "Art. 22. JORNADA (Capítulo Cuarto)"
+    },
+    "25": {
+      "numero": "46000805011981",
+      "name": "OFICINAS Y DESPACHOS (Valencia)",
+      "article": "Artículo 33. Jornada Laboral (Capítulo VI)"
+    }
+  },
+  "expected_facts": [
+    {
+      "convenio_id": 2,
+      "motivo": "jornada 2024 grupos 1-2",
+      "keywords": ["2024", "grupos profesionales 1 y 2"],
+      "value_contains": ["1592", "2024"],
+      "quote": "Para el año 2024: Grupos profesionales 1 y 2: 1.592 horas anuales."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "jornada 2024 grupos 3-4",
+      "keywords": ["2024", "grupos profesionales 3 y 4"],
+      "value_contains": ["1705", "2024"],
+      "quote": "Para el año 2024: Grupos profesionales 3 y 4: 1.705 horas anuales."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "jornada 2025 grupos 1-2",
+      "keywords": ["2025", "grupos profesionales 1 y 2"],
+      "value_contains": ["1585", "2025"],
+      "quote": "Para el año 2025: Grupos profesionales 1 y 2: 1.585 horas anuales."
+    },
+    {
+      "convenio_id": 2,
+      "motivo": "jornada 2026 grupos 3-4",
+      "keywords": ["2026", "grupos profesionales 3 y 4"],
+      "value_contains": ["1650", "2026"],
+      "quote": "Para el año 2026: Grupos profesionales 3 y 4: 1.650 horas anuales.",
+      "spot_check": "MULTI-YEAR x GROUP-SPLIT TRAP (compound case, not seen in permisos/vacaciones): 3 years x 2 groups = 6 figures. All 6 must land in one bundled fact per convenio (D5 x D4 combined) — a model that bundles only by year OR only by group, not both, fails this the same way a partial bundle failed permisos/vacaciones."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "jornada maxima 2023",
+      "keywords": ["2023"],
+      "value_contains": ["1650", "2023"],
+      "quote": "2023: 1.650 horas (incluidas 20 horas de formación)."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "jornada maxima 2024",
+      "keywords": ["2024"],
+      "value_contains": ["1645", "2024"],
+      "quote": "2024: 1.645 horas (incluidas 20 horas de formación)."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "jornada maxima 2025",
+      "keywords": ["2025"],
+      "value_contains": ["1634", "2025"],
+      "quote": "2025: 1.634 horas (incluidas 20 horas de formación)."
+    },
+    {
+      "convenio_id": 3,
+      "motivo": "jornada maxima 2026",
+      "keywords": ["2026"],
+      "value_contains": ["1620", "2026"],
+      "quote": "2026: 1.620 horas (incluidas 20 horas de formación).",
+      "spot_check": "The '20 horas de formación' caveat is part of THIS same clause (Art. 24) and belongs in the value — do not drop it. Distinct from the negative gold entry below (Art. 22, a different, unrelated training-CREDIT clause with its own separate 20 horas anuales figure)."
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "jornada ordinaria anual",
+      "keywords": ["mil setecientas cincuenta y dos", "1752", "1.752"],
+      "value_contains": ["1752"],
+      "quote": "23.1 Jornada. La jornada ordinaria de trabajo será de mil setecientas cincuenta y dos horas (1.752) de trabajo efectivo, en cómputo anual."
+    },
+    {
+      "convenio_id": 10,
+      "motivo": "jornada maxima diaria y descanso entre jornadas",
+      "keywords": ["descanso entre jornadas", "doce horas"],
+      "value_contains": ["12", "9"],
+      "quote": "El descanso entre jornadas será al menos de 12 horas y la jornada máxima diaria de nueve horas."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "jornada anual maxima 2025",
+      "keywords": ["jornada anual maxima", "2025"],
+      "value_contains": ["1620", "2025"],
+      "quote": "La jornada anual máxima para el año 2025 será de 1620 horas de trabajo efectivo."
+    },
+    {
+      "convenio_id": 18,
+      "motivo": "descanso en jornada continuada",
+      "keywords": ["jornada continuada", "periodo de descanso"],
+      "value_contains": ["6", "15"],
+      "quote": "Siempre que la duración de la jornada diaria continuada exceda de seis horas, deberá establecerse un periodo de descanso durante la misma de duración no inferior a quince minutos.",
+      "spot_check": "Source spells the numbers out ('seis horas', 'quince minutos'); a faithful proposal may reasonably paraphrase them as digits ('6 horas', '15 minutos') — keywords match on the surrounding text, not the number's spelling, and value_contains checks the digits either way."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "jornada general 2025",
+      "keywords": ["2025", "1704 horas"],
+      "value_contains": ["1704", "2025"],
+      "quote": "Año 2025: 1704 horas al año de trabajo efectivo."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "jornada general 2028",
+      "keywords": ["2028", "1692 horas"],
+      "value_contains": ["1692", "2028"],
+      "quote": "Año 2028: 1692 horas al año de trabajo efectivo."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "jornada tecnicos actividad deportiva (monitores) 2025",
+      "keywords": ["tecnicos de actividad deportiva", "1613 horas"],
+      "value_contains": ["1613", "2025"],
+      "quote": "Técnicos de Actividad deportiva (monitores)... Año 2025: 1613 horas al año de trabajo efectivo."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "jornada tecnicos de sala 2025",
+      "keywords": ["tecnicos de sala", "1637 horas"],
+      "value_contains": ["1637", "2025"],
+      "quote": "Técnicos de Sala... Año 2025: 1637 horas al año de trabajo efectivo.",
+      "spot_check": "TRIPLE-GROUP x 4-YEAR TRAP (the richest compound case in this set, 3 groups x 4 years = 12 figures — same document the vacaciones eval already found via a page-break/running-header repeat). A model that only captures the general staff's schedule (the first one it reads) and drops the two specialist groups fails this the same way a partial group-split failed elsewhere."
+    },
+    {
+      "convenio_id": 20,
+      "motivo": "jornada irregular 0%",
+      "keywords": ["distribuira de modo irregular", "articulo 34"],
+      "value_contains": [],
+      "quote": "Art. 23- JORNADA IRREGULAR. De conformidad con lo regulado en el artículo 34.2 del Estatuto de los Trabajadores, las partes acuerdan que la jornada se distribuirá de modo irregular en un 0%",
+      "spot_check": "SCORER-BUG TRAP (found live, fixed reactively): the original keywords included the bare token '0%', which normalizes to the single character '0' — a substring that trivially appears inside any nearby year or hour figure (2025, 1704, 2028...), so keyword_hit could match the WRONG fact in this convenio's multi-fact bundle. value_contains is left empty for the same reason (a lone '0' is not a meaningful digit check); correctness here rests on keyword_hit alone matching the irregular-jornada fact specifically, not a nearby one."
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "jornada laboral computo anual",
+      "keywords": ["jornada laboral", "1750 horas"],
+      "value_contains": ["1750"],
+      "quote": "Durante los siguientes años de vigencia del convenio la jornada en cómputo anual será 1750 horas."
+    },
+    {
+      "convenio_id": 25,
+      "motivo": "jornada intensiva periodo",
+      "keywords": ["jornada intensiva", "15 de junio", "15 de septiembre"],
+      "value_contains": [],
+      "quote": "Todas las empresas establecerán durante el período del 15 de junio al 15 de septiembre con carácter general la jornada intensiva.",
+      "spot_check": "Art. 34 is a DIFFERENT article than Art. 33 (Jornada Laboral) — per ADR-0034's article-level granularity, this is legitimately its OWN fact (a distinct provision: WHICH weeks get the intensive schedule, not the annual-hours figure), not a value the annual-hours fact must also carry, and not a value that should be silently dropped either."
+    },
+    {
+      "convenio_id": 20,
+      "expect": "no_fact",
+      "motivo": "vacaciones anuales (Art. 25, NOT jornada, adjacent article)",
+      "keywords": ["periodo anual de vacaciones", "30 dias naturales de vacaciones"],
+      "quote": "Art. 25- VACACIONES. Se establece un periodo anual de vacaciones retribuidas de 30 días naturales.",
+      "spot_check": "REVERSE-DIRECTION BOUNDARY TRAP (the mirror image of the vacaciones eval's c.20 finding): Art. 25 VACACIONES sits immediately after Art. 22 JORNADA / Art. 23 JORNADA IRREGULAR / Art. 24 DESCANSO SEMANAL in the same running-header block. A proposal for convenio 20's jornada topic must not report the 30-día vacation figure as jornada content."
+    },
+    {
+      "convenio_id": 3,
+      "expect": "no_fact",
+      "motivo": "credito horario formacion continua (Art. 22, NOT jornada, different article)",
+      "keywords": ["20 horas anuales de formacion profesional", "credito horario formativo"],
+      "quote": "Las personas trabajadoras con al menos un año de antigüedad en la empresa tienen derecho a un permiso retribuido de veinte horas anuales de formación profesional para el empleo... (Art. 22, De la formación continua)",
+      "spot_check": "ANCHOR-COLLISION TRAP (found live, not a lexical topic-name collision like permisos' lactancia leak, but a shared ANCHOR TERM — TopicLexicon's jornada anchors include 'horas anuales', which also appears inside this unrelated training-credit clause two articles before the real Art. 24 Jornada máxima). A proposal for convenio 3's jornada topic must not report this training-credit figure as a jornada value — it is a permisos/formación-scoped provision, not jornada, even though it shares the anchor word."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "run": 2,
+  "topic": "permisos retribuidos",
+  "topic_id": 5,
+  "at": "2026-09-13T04:46:44Z",
+  "convenio_ids": [2, 3, 10, 18, 20, 25],
+  "fact_id_by_convenio": {"2": 97, "3": 96, "10": 99, "18": 95, "20": 98, "25": 100},
+  "fact_ids": [95, 96, 97, 98, 99, 100],
+  "prompt_iteration": "hr-ai/app/providers/claude.py: rule 3 extended (mandatory bundling of enumerated multi-motivo lists into ONE convenio-wide fact, closing the persist()-logical-key collision run1 exposed) + new PERMISOS_DISAMBIGUATION_ES (rule 14: explicit exclusion of lactancia/maternidad-paternidad-suspension/permiso-parental/adaptacion-de-jornada/permisos-no-retribuidos/bare-ET-remission content).",
+  "verdict": "see review.md for the scored verdict"
+}
