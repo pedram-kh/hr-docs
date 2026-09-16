@@ -197,3 +197,55 @@ preaviso just proved out.
 - **Worker-restart-on-deploy** is now a documented runbook step
   (`deploy.md`) — an engineering/ops note, not a data-pass action, listed
   here only for completeness of "everything this sprint touched."
+
+## 9. Convenio 4 joins the ultraactividad-status list — its salary is now current while its prose is still expired (added 2026-09-16, Correction-salary-02)
+
+Convenio **4** (Ocio Educativo y Animación Andalucía) now has two
+different temporal states live at once, and an employee on it will see
+both in the same conversation without any indication they're
+inconsistent:
+
+- **Salary: current.** Correction-salary-02 bound and imported COEAS
+  Andalucía's real table (doc #11), which covers **2025 and 2026** —
+  i.e. a year *past* the convenio text's nominal end. A salary question
+  now answers cleanly from the 2026 table.
+- **Prose: expired, no successor.** Convenio 4's `convenio_text` ended
+  **2025-12-31** with nothing to replace it in the corpus (`deploy.md`'s
+  existing go-live item). A prose question on the same convenio either
+  escalates `estatuto_fallback_gap` or answers from the Estatuto baseline
+  — by design, because the Estatuto deliberately does not stand in for a
+  convenio that may still govern under ultraactividad (ET 86.4,
+  ADR-0032).
+
+**Why this is worth flagging rather than leaving as two separate,
+already-documented facts.** The 2026 salary table is itself indirect
+evidence *for* ultraactividad — someone kept revising this convenio's pay
+scale for a year after its nominal expiry, which is exactly what
+continuing-in-force behaviour looks like. But nothing in the corpus
+*states* that the text remains in force; the salary table's existence is
+suggestive, not confirmed. Until the client confirms, an employee on
+convenio 4 gets a **live, specific salary figure** and a **historical-or-
+escalated prose answer** from what is presented to them as one and the
+same convenio — a split that reads as inconsistent unless someone knows
+why.
+
+**Convenio 4 now joins convenios 10, 18 and 21 on the "unresolved
+ultraactividad status" list** that has been accumulating across this
+sprint's own work rather than living in one place before now:
+
+| convenio | what's unresolved | where it surfaced |
+|---|---|---|
+| **4** | Ocio Educativo Andalucía — text expired 2025-12-31, no successor; salary table now runs through 2026 (new, this correction) | `deploy.md` (expired/no-successor item) + this note |
+| **10** | Agencias de Viajes — vigencia backfill was withheld during the triage batch specifically because of ultraactividad risk (treated like c18 rather than the instructed backfill) | `sprints/sprint-10c/triage/triage.md` §0 |
+| **18** | Acción e Intervención Social (Navarra) — text states its own ultraactividad schedule through 2028, but validity is null pending the client's decision; facts left unverified | `sprints/sprint-10c/triage/triage.md` fact #134; `data-pass-handoff.md` §4 |
+| **21** | Hostelería Navarra — text expired 2025-12-31, no successor | `deploy.md` (same item as c4) |
+
+**The ask is the same for all four, and is genuinely one client
+decision each, not a data-pass judgment call:** for each convenio, either
+(a) confirm the text remains in force under ultraactividad and
+re-activate it (`retrieval_status = active`) so prose answers resume, or
+(b) supply the successor text if one exists, or (c) confirm it has
+genuinely lapsed with no continuing effect. Whichever answer, the
+resolution is a `retrieval_status`/validity write a human makes
+deliberately — not something inferred from a salary table still being
+updated.
