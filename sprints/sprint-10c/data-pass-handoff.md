@@ -249,3 +249,97 @@ genuinely lapsed with no continuing effect. Whichever answer, the
 resolution is a `retrieval_status`/validity write a human makes
 deliberately — not something inferred from a salary table still being
 updated.
+
+## 10. Two genuine registry gaps for the client to confirm (added 2026-09-16)
+
+Found while reviewing the documents Cobertura counts as "sin ámbito"
+(`convenio_id IS NULL AND authority_level != 'national_law'`, 44 documents
+on staging). Most of that pile is a *tagging* backlog — 31 of the 44 name
+a convenio the registry already holds, and several state the official
+14-digit code in their own text. **Three documents are different: the
+convenio they belong to is not in the registry at all.** No amount of
+tagging work will bind them, so they need a client decision, not a
+reviewer's judgment:
+
+| doc | title | what its text states | registry status |
+|---|---|---|---|
+| 20 | `TABLAS SALARIALES HOSTELERIA` | Gipuzkoa, *Hostelería y turismo*, convenio code **2000705** (salary revision for 2010) | **no Gipuzkoa hostelería row exists** — the registry's hostelería rows are Huesca (c16) and Navarra (c21) |
+| 21 | `HOSTELERIA  2008 2010` | Gipuzkoa, *Hostelería y turismo*, convenio code **2000705** (the 2008–2010 text) | same gap as doc 20 — these two are the text and its salary revision, one convenio |
+| 61 | `INTERVENCIÓN SOCIAL ALAVA` | Intervención social, **Álava** | the registry has intervención social for Gipuzkoa (c14), Vizcaya (c26), Navarra (c18) and Estatal (c7) — **but not Álava** |
+
+**Why this is worth an explicit ask rather than a silent skip.** These are
+true `NO_CONVENIO_MATCH` cases in the ledger's own vocabulary — the code
+`CorpusCoverageService` documents as describing *a document with no
+convenio tag*, not a convenio's own gap. Both gaps are also
+**employee-relevant in principle**: the registry is the arbiter of which
+scopes we serve, so a scope that has documents but no registry row is
+invisible to Cobertura's convenio-level grid entirely (the grid iterates
+registry convenios, so a missing row cannot show up as a gap in it — it
+can only show up here). That is the blind spot this note exists to cover.
+
+**The ask, per gap:** (a) is this a scope the client actually employs
+people in? If yes, the registry needs the row added (and then docs 20/21
+or 61 bind normally and become answerable). (b) If no — if these
+documents were supplied as reference material for a scope with no
+employees — say so, and they can be marked as out-of-scope corpus rather
+than sitting in the unbound pile looking like unfinished tagging work.
+
+Note both gaps are **historical** material (all three documents are
+`retrieval_status = 'historical'`), so neither is urgent for answering
+today; the value of resolving them is closing the "why is this
+unbindable?" question permanently instead of re-litigating it at every
+corpus review.
+
+## 11. One document needs a year the source never states — doc #7, Deporte Estatal (added 2026-09-16)
+
+Doc **#7** (`TABLAS SALARIALES Deporte Estatal.xlsx`, `salary_tables`,
+`active`) belongs to convenio **9** (Instalaciones Deportivas y Gimnasios
+Estatal) — its own title cell reads `DEPORTE ESTATAL`, and doc #73
+(`99015105012005 Deporte Estatal 2023 2025`) already binds to that
+convenio, so the scope is not in question. **It was deliberately left
+unbound for one reason: the file states no year, and a salary table with
+no year is unreachable.**
+
+**Why the year is not a detail.** Every consumer of `salary_tables`
+selects by year — `SalaryAnswerService::resolveTable()` matches the exact
+year and then falls back through two `whereNotNull('year')` branches, and
+Cobertura's salary cell applies the same filter. A table imported with
+`year = NULL` would write real rows, print an ordinary success line, and
+still answer nobody, while the convenio kept reporting
+`NO_SALARY_SOURCE`. So the year has to come from somewhere before the
+import is worth running.
+
+**What was checked, exhaustively.** Every non-empty cell of the file's
+only sheet is: the title `DEPORTE ESTATAL`, one header row (`Grupo`,
+`Bruto año`, `Salario Base`, `Comp. SMI`, `Salario Hora`, `Plus
+Tpte/día`, `Plus hora nocturna`) and **eight** data rows for groups 1
+through 5. No year, no BOE/BON reference, no validity dates, no second
+sheet, no defined names. The file's own document properties carry only
+authoring timestamps (created 2026-02-25, modified 2026-03-26 by named
+individuals) — when someone edited the spreadsheet, not which year the
+table governs.
+
+**The inference we deliberately did NOT act on.** `Bruto año` floors at
+exactly **17.094 €** for groups 3.1–5 alongside a `Comp. SMI` top-up
+column, and 17.094 € is the SMI-compensated annual floor that COEAS
+Estatal's *explicitly dated* 2026 sheet also uses (its 2024–2025 sheet
+floors at 16.576 € instead). That points hard at **2026**. But it is an
+inference from an SMI floor, not a statement by the source, and the year
+decides which questions this table answers — the same reason a salary
+figure here is a source cell or it is not stored (ADR-0027) applies to
+the year that scopes it.
+
+**The ask:** confirm the year these tables apply to (from the convenio's
+own gazette publication, or from whoever supplied the file). With that
+one fact, the document binds and imports normally — the parse is
+otherwise clean (8 rows, a legitimately labelled `Salario Base` monthly
+column, `Comp. SMI`, hourly and two pluses all typed). Until then
+convenio 9's salary coverage stays a gap, which is the honest state
+rather than a table nobody can reach. A parser-side ticket to make
+`salary:import` **refuse** a year-less table (instead of writing an
+unreachable one) is recorded in `roadmap.md`.
+
+One secondary note for whoever works this document: its categories are
+bare group codes (`1`, `2.1`, `2.2`, `3.1`, `3.2`, `4.1`, `4.2`, `5`)
+with no role names, so employees on convenio 9 will only match a salary
+row if their profile's job category is recorded in that same coded form.
