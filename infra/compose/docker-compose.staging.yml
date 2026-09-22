@@ -104,6 +104,14 @@ services:
       SEED_EDITOR_EMAIL: editor@hr-staging.internal
       SEED_AUDITOR_EMAIL: auditor@hr-staging.internal
       SEED_HR_AGENT_EMAIL: agent@hr-staging.internal
+      # Sprint 11a (spec §2.6): a fixed OTP for @hr-staging.internal test
+      # accounts ONLY (AuthController::STAGING_FIXED_OTP_ALLOWED_DOMAINS) —
+      # replaces the otp.sh log-grep convenience. Empty/unset = fully inert
+      # (StagingFixedOtpGuard also refuses to boot if this is non-empty AND
+      # APP_ENV=production, as a second independent guard). Set to a real
+      # 6-digit value here only when this convenience is wanted; blank by
+      # default so a fresh deploy never has it on by accident.
+      STAGING_FIXED_OTP_CODE: ""
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
       - ingest-scratch:/opt/hr-staging/ingest-scratch
