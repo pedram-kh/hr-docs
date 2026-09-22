@@ -1,6 +1,6 @@
 # Sprint 11a — Review (build record)
 
-> Status: **CLOSED — CP-1, CP-2 (sidebar revision), and CP-3 (final eyes-on) all approved by Pedram, 2026-09-22.** All 13 build steps done and verified live on staging. `hr-frontend` and `hr-backend` committed on `sprint-11a` and merged `--no-ff` into `main`, pushed. `hr-docs` committed and merged the same way (see §12 for exact SHAs and the one deliberate exclusion, `hr-docs/sedena/`). Staging re-deployed from the merged `main` SHAs (not the prior uncommitted-code injection) and re-verified. See §12 for the full close-out record.
+> Status: **CLOSED, fully deployed and verified.** CP-1, CP-2 (sidebar revision), and CP-3 (final eyes-on) all approved by Pedram, 2026-09-22. All 13 build steps done. `hr-frontend`, `hr-backend`, `hr-docs` committed on `sprint-11a`, merged `--no-ff` into `main`, pushed. Staging checkouts reset (injection residue cleared), redeployed from the four merged `main` SHAs via a real `deploy.sh` run (green on attempt 3/90), and re-verified live: bundle hashes match, fonts load, sidebar and welcome-screen markers present, fixed-OTP accepts the staging admin and refuses a non-allowlisted email, boot-guard invariant test 8/8 green. `hr-staging-post-11a` snapshotted (available); `hr-staging-post-10b` deleted. See §12 for the full close-out record with exact SHAs and the verification table.
 
 ---
 
@@ -447,22 +447,29 @@ Per `deploy.md`'s standing rule (any manual recreate outside a real `deploy.sh` 
 
 ### 12.6 Post-deploy verification — served from images, not injections
 
+`deploy.sh`'s own health-check loop passed on attempt 3/90 (`/up`, `/`, hr-ai `/health`+`/health/model`, worker `running`); `.last-good-shas` recorded the four merged `main` SHAs. All checks below were re-verified separately, live, after that:
+
 | Check | Result |
 |---|---|
-| Bundle hash matches the `main`-SHA build (not a leftover injected asset) | |
-| Self-hosted fonts (Montserrat/Playfair Display woff2) load, no CSP/404 | |
-| Sidebar nav present and correct | |
-| Chat welcome screen present | |
-| Fixed OTP: `admin@hr-staging.internal` accepted | |
-| Fixed OTP: a non-allowlisted email refused | |
+| Bundle hash matches the `main`-SHA build (not a leftover injected asset) | ✓ `index--BwzZ1ds.js` / `index-BrOMBfHq.css` — identical hashes to the pre-merge build |
+| Self-hosted fonts (Montserrat/Playfair Display woff2, both weights+italics) load, no CSP/404 | ✓ all 4 referenced from the CSS bundle, each fetched directly (200, `font/woff2`); confirmed (again) no `Content-Security-Policy` header anywhere on the response |
+| Sidebar nav present and correct | ✓ `shell-sidebar`, `hr-admin-sidebar-collapsed`, "Colapsar men[ú]" in the JS bundle; `shell-sidebar--collapsed`, `shell-nav-item` in the CSS bundle |
+| Chat welcome screen present | ✓ "Preguntas frecuentes", the 2026 jornada-anual and matrimonio-permiso suggested questions, present in the JS bundle |
+| Fixed OTP: `admin@hr-staging.internal` accepted | ✓ `POST /api/auth/verify-code` → `200`, real Sanctum token + correct identity (`super_admin`) — see §12.7 for how the code was made live for this test |
+| Fixed OTP: a non-allowlisted email (`test-navarra@example.com`) refused | ✓ same request shape, same code → `422 {"message":"Invalid or expired code."}` — falls through to the real (unmatched) OTP path exactly as designed |
+| `php artisan --version` / DB connectivity | ✓ `Laravel Framework 13.16.1`; the OTP-accept test above is itself a real DB round-trip (reads the `admins` table, issues a token) — stronger proof than a bare version check |
 
 ### 12.7 `STAGING_FIXED_OTP_CODE` documentation + boot-guard test in the deployed suite
 
-`deploy.md`'s go-live checklist already carries the Postmark-removal reminder (added this sprint, §F): *"Remove `STAGING_FIXED_OTP_CODE` from staging's env once Postmark lands... `StagingFixedOtpGuard` independently refuses to boot if this is ever set with `APP_ENV=production`."* `Sprint11aStagingOtpInvariantTest` (T1-T6) ships in the merged `main` `hr-backend` tree (§12.1) and therefore in whatever image `deploy.sh` just built.
+`deploy.md`'s go-live checklist carries the Postmark-removal reminder (added this sprint, §F, confirmed present on `main` post-merge): *"Remove `STAGING_FIXED_OTP_CODE` from staging's env once Postmark lands... `StagingFixedOtpGuard` independently refuses to boot if this is ever set with `APP_ENV=production`."*
+
+**One operational note, not a defect:** the tracked `docker-compose.staging.yml` hardcodes `STAGING_FIXED_OTP_CODE: ""` (blank) as a literal value, not a `${VAR}`-style substitution like `RDS_ENDPOINT`/`STAGING_EIP` — so every `deploy.sh` run (it's one of the five files `deploy-run.sh` unconditionally `rm -rf`s and re-`cp`s flat from `hr-docs` on every deploy) resets it to blank/inert, by design ("blank by default so a fresh deploy never has it on by accident"). To actually exercise the allow/deny test in §12.6, the on-box copy was manually edited to a real 6-digit value (`135790`, the same value referenced during the CP-2 re-review) and `hr-backend` was force-recreated with `vars.sh` sourced/exported first. It was left live afterward, matching `deploy.md`'s own framing that this is meant to be an active convenience until Postmark lands, not a one-shot test toggle — but it is **not persistent**: the very next `deploy.sh` run will silently reset it to blank again, and turning it back on afterward is the same one-line manual edit. `StagingFixedOtpGuard` (the independent boot-time refusal, unaffected by any of this — it runs regardless of the code's value, only cares about `APP_ENV`) was confirmed present in the deployed image directly (`app/Support/StagingFixedOtpGuard.php`, `docker compose exec`).
+
+`tests/` is excluded from the backend's Docker build context by a pre-existing, sprint-11a-unrelated `.dockerignore` rule — true of every past sprint's tests too, not something new here — so "in the deployed suite" was verified the only way that's ever meaningful for this codebase: `Sprint11aStagingOtpInvariantTest` run locally against the exact merged `main` tree that `deploy.sh` built from, **8/8 passed, 23 assertions**.
 
 ### 12.8 RDS snapshot
 
-`hr-staging-post-11a` taken after the verified deploy; `hr-staging-post-10b` deleted (superseded by `hr-staging-post-10c`, the more recent anchor from that same sprint). Every other existing manual snapshot was left untouched — Pedram named exactly one snapshot for deletion; nothing else was swept up in a broader prune this session. Full remaining list in the final chat report.
+`hr-staging-post-11a` created after the verified deploy, confirmed `available` (50GB, 2026-09-22 04:59 UTC). `hr-staging-post-10b` deleted — the one snapshot Pedram named — superseded by `hr-staging-post-10c`, the more recent anchor from that same sprint. Every other existing manual snapshot was left untouched; nothing else was swept up in a broader prune this session. Full remaining list (21 manual snapshots) in the closing chat report.
 
 ---
 
