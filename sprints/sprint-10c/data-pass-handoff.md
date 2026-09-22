@@ -1,5 +1,7 @@
 # Sprint 10c — Data-pass handoff
 
+> **The consolidated, client-facing version of the asks below lives in `hr-docs/client-asks.md` — send that, not this file, to the client.**
+>
 > Named deliverable per plan §D.11 step 11 / the build-authorization's
 > file path. Written at sprint close (after topic 4/festivos, the
 > tranche's authorized stopping point), for whoever runs the go-live data
