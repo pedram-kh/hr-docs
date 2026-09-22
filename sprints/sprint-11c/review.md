@@ -177,3 +177,97 @@ Backend PHPUnit (734/734) and the frontend suite (59/59, lint, build) are both g
 ## 5a. CP-2 — closed
 
 Approved as built, no changes requested: filter chips (territory dim + the two hide toggles), the chat header wordmark, and the mobile polish (chat hamburger + admin sidebar overlay) all passed eyes-on, including on an actual phone per `deploy.md`'s standing browser-only-bug note. Sprint 11c is complete — proceeding to close-out (§6): commit/merge/push all three repos, reset staging's injection residue, redeploy via a real `deploy.sh` run (not file-injection), re-verify served-from-images, and snapshot.
+
+---
+
+## 6. Close-out — commit, merge, redeploy, snapshot
+
+Written in the order the close-out actually happened, same convention as `sprint-11a/review.md` §12: §6.1 was committed *as part of* the `sprint-11c` branch commit; §6.2 onward is a follow-up commit made directly to `main`, since restating the deploy-verification record on an already-merged feature branch is pure ceremony.
+
+### 6.1 Commit, merge, push
+
+Three repos had `sprint-11c` work; `hr-ai` was never touched this sprint (confirmed: clean, on `main`, throughout — its current `main` SHA was still passed to `deploy.sh` §6.3, since the script always takes all four).
+
+**One deliberate exclusion, `hr-docs/sedena/`:** the same raw brand-asset drop already flagged and left untracked at sprint-11a's close-out (`review.md` §12.1) — untouched since, still unreferenced by anything tracked, still not committed here either.
+
+**One near-miss, caught before committing:** this machine's `~/.gitignore_global` carries a blanket `_*` rule that silently matches `__tests__`/`__snapshots__` directories (anything starting with `_`) — so `git add -A` silently dropped `src/pages/admin/__tests__/KnowledgeMapPage.test.tsx` and `src/pages/admin/grafo/__snapshots__/layoutSeed.test.ts.snap` from every prior status check this sprint. Both exist and both were exercised by the frontend suite (§4a's 59/59 count includes them, run directly by path), they just weren't going to make it into the commit. Found by diffing `git status --ignored` against what actually sits on disk before staging; both force-added (`git add -f`) and are in the commit below. (This is a machine-level config, not a project one — worth a `.gitignore` exception or a global-ignore fix at some point, flagged here rather than silently worked around.)
+
+```
+hr-backend   sprint-11c  a4b8234  "Sprint 11c: knowledge-graph endpoint + honesty-rule builder"
+             main        63cfa10  Merge branch 'sprint-11c' into main (--no-ff)
+hr-frontend  sprint-11c  c9bbca1  "Sprint 11c: knowledge graph view (Grafo), filter chips, chat/mobile polish"
+             main        1551ee7  Merge branch 'sprint-11c' into main (--no-ff)
+hr-docs      sprint-11c  2dd68c6  "Sprint 11c: knowledge graph view — spec, plan, review"
+             main        ca5249f  Merge branch 'sprint-11c' into main (--no-ff)
+hr-ai        main        d6b17b2  (unchanged, untouched this sprint)
+```
+All three `main` branches pushed clean, fast-forward-free (`--no-ff`, one merge commit each); local `main` was verified in sync with `origin/main` before merging on every repo (no divergence, no conflicts on any of the three merges). Both the `sprint-11c` branch and `main` were pushed for each repo.
+
+### 6.2 Staging reset — clear injection residue
+
+Every round this sprint from Step 6 onward (the first working 3D/2D render, then CP-1's fixes, then filter chips/chat header/mobile polish) was shipped to staging by direct `docker cp` into the running containers and — for the frontend bundle specifically — a throwaway Alpine container writing straight into the `frontend-dist` named volume, never through the `/opt/hr-staging/hr-backend` or `/opt/hr-staging/hr-frontend` git checkouts on the box. Checked (not assumed) before running the real `deploy.sh`: all four checkouts (`hr-backend`, `hr-frontend`, `hr-ai`, `hr-docs`) were already `git status`-clean — this sprint's injections genuinely never touched them. Reset anyway, defensively, per the standing rule from `sprint-11a/review.md` §12.2 (nothing from an injection round should be able to silently survive a `deploy.sh` run just because it happened not to land in a tracked path this time):
+
+```bash
+ssh -i ~/.hr-staging/hr-staging-ec2-key.pem ubuntu@52.211.251.235 '
+  for repo in hr-backend hr-frontend hr-ai hr-docs; do
+    cd /opt/hr-staging/$repo && git checkout -- . && git clean -fdx && cd ..
+  done
+'
+```
+
+### 6.3 `deploy.sh` — the four merged `main` SHAs
+
+```bash
+ssh -i ~/.hr-staging/hr-staging-ec2-key.pem ubuntu@52.211.251.235 \
+  'bash /opt/hr-staging/hr-docs/infra/deploy.sh 63cfa107484c62d10e815dc51733386e6a1df795 d6b17b2cb429c4de02c864e3caf7c2de88e15ae1 1551ee7cbc74aa88ce2e959157b335d1262c307e ca5249f441c8b2e810cdf44378c74b659caa6ccd'
+```
+Clean run: leak scan passed, all five images built (`hr-backend`/`hr-backend-worker`/`hr-backend-scheduler`/`hr-ai`/`frontend-dist`/`db-backup`), `php artisan migrate --force` reported "Nothing to migrate" (expected — no new migrations this sprint), stack brought up, `hr-backend`/`hr-backend-worker`/`hr-ai`/`caddy` force-recreated. **Health-check loop green on attempt 3/90.** `.last-good-shas` now holds exactly the four SHAs above.
+
+### 6.4 Manual container recreate — env exports
+
+Not needed as a separate manual step this time: `deploy-run.sh` itself `source`s `vars.sh` and exports `AWS_REGION`/`RDS_ENDPOINT`/`STAGING_EIP`/`S3_DOCUMENTS_BUCKET`/`S3_BACKUPS_BUCKET` before its own `--force-recreate` (lines 88–90, 112–113) — the real `deploy.sh` run in §6.3 already carries this correctly, confirmed rather than assumed: see §6.5.
+
+### 6.5 Artisan health
+
+```
+$ docker compose exec hr-backend php artisan --version
+Laravel Framework 13.16.1
+
+$ docker compose exec hr-backend php artisan tinker --execute="echo config('app.url').PHP_EOL.config('database.connections.pgsql.host');"
+http://52.211.251.235
+hr-staging-db.cpsukkwcomk6.eu-west-1.rds.amazonaws.com
+```
+Both real values, not blank — the Sprint 10a incident this exact check exists to catch (`deploy.md` Session 8) did not recur. All five services `running`/`healthy`: `caddy`, `hr-ai`, `hr-backend`, `hr-backend-scheduler`, `hr-backend-worker`.
+
+### 6.6 Post-deploy verification — served from images, not injections
+
+| Check | Result |
+|---|---|
+| Bundle hash matches the `main`-SHA build | ✓ `index-CiGxuFme.js` / `index-Bu8EjnkV.css` — same filenames deploy.sh's own build log printed; pulled both back down and **SHA-256'd them against the local `dist/`, byte-for-byte match**, plus the two Grafo chunks (`GrafoView-CqB3lyvg.js`, `Grafo2D-DEfy6VEk.js`) and `nodeSize-BMyhgxU7.js` |
+| `GET /api/admin/knowledge-graph` — real Sanctum token, freshly minted against the deployed image (not a leftover) | ✓ **261 nodes / 421 edges** — exact match to §2's `measure-graph.php` cross-check and to the local `KnowledgeGraphBuilderTest`/`Sprint11cKnowledgeGraphTest` expectations. Token minted via `tinker`, exercised, revoked immediately after |
+| Grafo renders | ✓ `GrafoView`/`Grafo2D`/`GrafoSection` all present as their own lazy chunks in the served bundle, wired from `index-CiGxuFme.js`; combined with the API check above (real graph data reaching a real render path) — the same bundle-presence standard `sprint-11a/review.md` §12.6 used for its own UI markers |
+| Filter chips work | ✓ `Ocultar históricos`, `Ocultar IA sin verificar`, `Limpiar filtros` all present in the served JS bundle (Spanish UI copy, not a stale/placeholder string) |
+| Chat wordmark present | ✓ `shell-header--chat`, `shell-header-logo`, `shell-header-menu-btn` all present in the served bundle |
+| Mobile breakpoint CSS in the served bundle | ✓ `@media (width<=640px)` (the minifier's rewrite of `max-width: 640px`) present in `index-Bu8EjnkV.css`, alongside `shell-sidebar--mobile-open`, `shell-sidebar-backdrop`, `shell-mobile-nav-btn` |
+| `php artisan --version` / real DB + `APP_URL` | ✓ see §6.5 |
+
+### 6.7 RDS snapshot + prune
+
+`hr-staging-post-11c` created after the verified deploy, waited on `aws rds wait db-snapshot-available` (not polled by hand), confirmed `available` (50GB, 2026-09-22 18:12 UTC).
+
+Pruned per this close-out's explicit instruction — keep `post-10c`, `post-11a`, `post-11c`, plus one deep anchor, delete everything else. The anchor is `hr-staging-post-ingest-20260906`: the oldest manual snapshot in the account and the one `deploy.md` itself already calls "the baseline... a same-day recovery point independent of the nightly automated ones" (§ Session 3-ish, the restore-rehearsal record) — the one snapshot in the whole set that predates every sprint this project has, the natural deep anchor. 18 snapshots deleted (`hr-staging-post-salary-fix-20260906-220241`, `pre-7d`, `post-7d`, `pre-7e`, `post-7e`, `correction-salary-01`, `correction-salary-01b`, `post-binds`, `7f-phase0`, `post-7f`, `post-7g`, `pre-8`, `post-8`, `post-10m`, `pre-triage-apply`, `pre-salary-bind`, `post-salary-bind`, `post-queue-source`). RDS's own 7-day automated-snapshot retention (`deploy.md` §"Backups bucket cost hygiene") remains the independent safety net underneath all of this, unaffected by any manual-snapshot pruning.
+
+**Remaining manual snapshots (4):**
+
+| Snapshot | Created | Role |
+|---|---|---|
+| `hr-staging-post-ingest-20260906` | 2026-09-06 | deep anchor — pre-sprint baseline |
+| `hr-staging-post-10c` | 2026-09-14 | named keep |
+| `hr-staging-post-11a` | 2026-09-22 04:59 UTC | named keep |
+| `hr-staging-post-11c` | 2026-09-22 18:12 UTC | this close-out |
+
+---
+
+## 7. Sprint 11c — CLOSED
+
+Both checkpoints (CP-1 §3a, CP-2 §5a) approved, all three touched repos merged to `main` and pushed, staging redeployed from the merged `main` SHAs (not injected code) and re-verified served-from-images, `hr-staging-post-11c` snapshotted and the manual-snapshot set pruned to the four listed in §6.7. See the closing chat message for exact SHAs and the full verification table.
