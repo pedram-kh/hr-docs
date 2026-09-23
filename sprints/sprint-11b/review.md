@@ -1,13 +1,11 @@
 # Sprint 11b — Review notes
 
-> Status: **CP-2 passed** (Pedram, 2026-09-23). Mass extraction complete
-> (`PENDING_EXTRACTION_FILES = []`), `BACKEND_MESSAGE_MAP` (22 entries) +
-> Intl sites wired, English pass against the approved glossary. **AC5
-> deviation accepted at close:** entry gzip delta **+14.95 KB** vs the
-> revised ≤14 KB budget (~1 KB over) — the eager Spanish dictionary at full
-> corpus. Lazy `en-*.js` still holds. Close-out (commit/merge/push, staging
-> reset, real `deploy.sh`, served-from-images verification, snapshot) follows
-> the sprint-11c §6 convention and is recorded below once it lands.
+> Status: **CLOSED.** CP-2 passed (Pedram, 2026-09-23). **AC5 deviation
+> accepted at close:** entry gzip delta **+14.95 KB** vs the revised ≤14 KB
+> budget (~1 KB over) — the eager Spanish dictionary at full corpus. Lazy
+> `en-*.js` still holds. `hr-frontend` and `hr-docs` committed on
+> `sprint-11b`, merged `--no-ff` into `main`, pushed. Close-out (staging
+> reset, real `deploy.sh`, served-from-images verification, snapshot) is §6.
 
 ---
 
@@ -304,4 +302,109 @@ and employee chat header; switch ES↔EN across both shells / both themes for
 ### Spec §6 checklist for Pedram (eyes-on)
 Walk on staging in both languages, both shells, both themes — switcher,
 sidebar + major admin pages, employee chat welcome/input, Grafo toggles,
-dates/% following locale.
+dates/% following locale. **CP-2 passed** on that walk (Pedram, 2026-09-23).
+
+---
+
+## 6. Close-out — commit, merge, redeploy, snapshot
+
+Same convention as `sprint-11c/review.md` §6: §6.1 was the `sprint-11b`
+branch commit (already merged); §6.2 onward is this follow-up, committed
+directly to `main` after the verified deploy. `hr-backend` and `hr-ai` were
+not touched.
+
+**Left untracked, on purpose:** `hr-docs/sedena/` (same raw brand-asset drop
+excluded at the 11a and 11c close-outs). `hr-frontend`'s root
+`count-strings.mjs` / `count-strings-output.json` are the planning probe;
+the copies under `sprints/sprint-11b/` are what got committed.
+
+### 6.1 Commit, merge, push
+
+```
+hr-frontend  sprint-11b  0693d507e129a285c6909cd9f6d277699e811929
+             main        c02af90f0936f82d9f37eda03704a92a02698539  Merge branch 'sprint-11b' (--no-ff)
+hr-docs      sprint-11b  d78f7092629ce6ab70ca3a14935ef5b064f685ba
+             main        056747da285d62580febc5854a4483ac050df343  Merge branch 'sprint-11b' (--no-ff)
+hr-backend   main        63cfa107484c62d10e815dc51733386e6a1df795  (unchanged)
+hr-ai        main        d6b17b2cb429c4de02c864e3caf7c2de88e15ae1  (unchanged)
+```
+
+Local `main` matched `origin/main` on both repos before the merge. Both
+branches and both `main`s pushed. `.last-good-shas` records these four
+merge SHAs — this §6 note is a docs-only follow-up after that deploy, not
+a fifth SHA in the deploy set.
+
+### 6.2 Staging reset
+
+All four `/opt/hr-staging/{hr-backend,hr-frontend,hr-ai,hr-docs}` checkouts
+were already `git status`-clean (detached HEAD, injection had gone into the
+`frontend-dist` volume, not the checkouts). Reset anyway:
+
+```bash
+for repo in hr-backend hr-frontend hr-ai hr-docs; do
+  cd /opt/hr-staging/$repo && git checkout -- . && git clean -fdx
+done
+```
+
+### 6.3 `deploy.sh`
+
+```bash
+bash /opt/hr-staging/hr-docs/infra/deploy.sh \
+  63cfa107484c62d10e815dc51733386e6a1df795 \
+  d6b17b2cb429c4de02c864e3caf7c2de88e15ae1 \
+  c02af90f0936f82d9f37eda03704a92a02698539 \
+  056747da285d62580febc5854a4483ac050df343
+```
+
+Clean run. `php artisan migrate --force`: "Nothing to migrate." Image build
+emitted `index-B_k-CXbP.js` (164.55 KB gzip), `en-BjUcAEI1.js` (18.99 KB
+gzip, separate chunk), `index-Bu8EjnkV.css`. **Health-check loop green on
+attempt 2/90.** `.last-good-shas` holds the four SHAs above.
+
+### 6.4 Env exports
+
+`deploy-run.sh` sources `vars.sh` and exports `AWS_REGION` / `RDS_ENDPOINT` /
+`STAGING_EIP` / `S3_DOCUMENTS_BUCKET` / `S3_BACKUPS_BUCKET` before
+`--force-recreate`. Confirmed by the running container, not by a second
+recreate: see §6.5. A later ad-hoc `docker compose exec` without those
+exports prints the usual "variable is not set" warnings and does not
+recreate anything.
+
+### 6.5 Artisan health
+
+```
+Laravel Framework 13.16.1
+http://52.211.251.235
+hr-staging-db.cpsukkwcomk6.eu-west-1.rds.amazonaws.com
+```
+
+`APP_URL` and the DB host are real values, not blank. All five services
+`Up` (`hr-ai` and `hr-backend` healthy).
+
+### 6.6 Post-deploy verification — served from images
+
+| Check | Result |
+|---|---|
+| Bundle hashes vs local `dist/` of the merged SHA | **Byte-identical.** `index-B_k-CXbP.js` `f404b3e8…`, `en-BjUcAEI1.js` `6628f73c…`, `index-Bu8EjnkV.css` `3b01d6a0…`. `index.html` references only the entry JS + CSS |
+| `en-*.js` lazy | ✓ `GET /assets/en-BjUcAEI1.js` → 200 `text/javascript`, 53886 bytes. Not referenced from `index.html` |
+| Switcher live | ✓ Served entry contains `Switch to ` and `Español` (the endonym toggle). Served `en` chunk contains `Ask me about your convenio` and `annual leave` |
+| §2 English UI, Spanish answer | ✓ Live `POST /api/chat/message` as `employee@hr-staging.internal` (token minted via entrypoint + tinker, revoked after): **HTTP 200**, `outcome=escalate`, answer exactly `Un/a compañero/a de Recursos Humanos revisará tu consulta y te responderá.` |
+| §2 caveat | That turn escalated before an answer, so `FALLBACK_CAVEAT` was not appended (it only decorates estatuto-fallback answers). The exact Spanish caveat sentence is still in **26** stored `chat_messages` rows, and it occurs **0** times in either served JS bundle. Welcome chips stay Spanish in the entry chunk (`vacaciones me corresponden`) |
+
+### 6.7 RDS snapshot
+
+`hr-staging-post-11b` created after the verified deploy, `aws rds wait
+db-snapshot-available`, confirmed **available** (50 GB, 2026-09-23 00:08:53
+UTC). Nothing else deleted — the manual set was already exactly the keep
+list.
+
+**Remaining manual snapshots (5):**
+
+| Snapshot | Created | Role |
+|---|---|---|
+| `hr-staging-post-ingest-20260906` | 2026-09-06 | deep anchor |
+| `hr-staging-post-10c` | 2026-09-14 | named keep |
+| `hr-staging-post-11a` | 2026-09-22 04:59 UTC | named keep |
+| `hr-staging-post-11c` | 2026-09-22 18:12 UTC | named keep |
+| `hr-staging-post-11b` | 2026-09-23 00:08 UTC | this close-out |
+
