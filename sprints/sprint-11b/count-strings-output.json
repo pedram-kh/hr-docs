@@ -1,0 +1,594 @@
+{
+  "totals": {
+    "jsxText": 787,
+    "jsxAttr": 88,
+    "objectLiteral": 222,
+    "templateOrCall": 11
+  },
+  "grandTotal": 1108,
+  "rows": [
+    {
+      "file": "src/pages/admin/DocumentDetailPanel.tsx",
+      "jsxText": 83,
+      "jsxAttr": 7,
+      "objectLiteral": 8,
+      "templateOrCall": 0,
+      "total": 98,
+      "samples": [
+        "jsxText:\"Error\"",
+        "jsxAttr:\"Close\"",
+        "jsxText:\"Loading…\"",
+        "jsxAttr:\"Close\"",
+        "jsxText:\"Loading…\"",
+        "jsxText:\"Resolución RR. HH.\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/BrandPreviewPage.tsx",
+      "jsxText": 35,
+      "jsxAttr": 10,
+      "objectLiteral": 34,
+      "templateOrCall": 0,
+      "total": 79,
+      "samples": [
+        "objectLiteral:\"label=Accent (Verde Sedena)\"",
+        "objectLiteral:\"note=primary actions, active nav, links\"",
+        "objectLiteral:\"label=Accent hover\"",
+        "objectLiteral:\"label=Accent weak (Verde Niebla)\"",
+        "objectLiteral:\"note=tinted backgrounds only — never text\"",
+        "objectLiteral:\"label=Accent contrast\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/ReviewQueuePage.tsx",
+      "jsxText": 73,
+      "jsxAttr": 0,
+      "objectLiteral": 4,
+      "templateOrCall": 0,
+      "total": 77,
+      "samples": [
+        "jsxText:\"AI tagging\"",
+        "jsxText:\"Reference facts\"",
+        "jsxText:\"Groups\"",
+        "jsxText:\"Vocabulary proposals\"",
+        "jsxText:\"Expiry\"",
+        "jsxText:\"Reference facts awaiting verification — AI-segmented or manu\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/EscalationCardDrawer.tsx",
+      "jsxText": 52,
+      "jsxAttr": 9,
+      "objectLiteral": 7,
+      "templateOrCall": 0,
+      "total": 68,
+      "samples": [
+        "objectLiteral:\"new=Nueva\"",
+        "objectLiteral:\"assigned=Asignada\"",
+        "objectLiteral:\"in_progress=En curso\"",
+        "objectLiteral:\"resolved=Resuelta\"",
+        "objectLiteral:\"closed=Cerrada\"",
+        "jsxText:\"Error\""
+      ]
+    },
+    {
+      "file": "src/lib/statusLabels.ts",
+      "jsxText": 0,
+      "jsxAttr": 0,
+      "objectLiteral": 60,
+      "templateOrCall": 0,
+      "total": 60,
+      "samples": [
+        "objectLiteral:\"sensitive_topic.pattern_baseline=Tema sensible (base)\"",
+        "objectLiteral:\"sensitive_topic.admin_blocked_topic=Tema bloqueado por admin\"",
+        "objectLiteral:\"off_domain.legal_medical=Consejo legal/médico\"",
+        "objectLiteral:\"off_domain.other_employee_data=Datos de otra persona\"",
+        "objectLiteral:\"off_domain.router_off_domain=Fuera de ámbito\"",
+        "objectLiteral:\"off_domain.admin_off_domain=Fuera de ámbito (admin)\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/ReferenceFactPanel.tsx",
+      "jsxText": 50,
+      "jsxAttr": 7,
+      "objectLiteral": 1,
+      "templateOrCall": 0,
+      "total": 58,
+      "samples": [
+        "jsxText:\"Reference fact\"",
+        "jsxText:\"Reference fact\"",
+        "jsxText:\"Loading…\"",
+        "jsxAttr:\"Reference fact\"",
+        "jsxText:\"Reference fact\"",
+        "jsxText:\"dato\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/QualitySampleQueue.tsx",
+      "jsxText": 37,
+      "jsxAttr": 3,
+      "objectLiteral": 13,
+      "templateOrCall": 1,
+      "total": 54,
+      "samples": [
+        "objectLiteral:\"correct=Correcta\"",
+        "objectLiteral:\"partially=Parcialmente correcta\"",
+        "objectLiteral:\"wrong=Incorrecta\"",
+        "objectLiteral:\"wrong_scope=Ámbito incorrecto\"",
+        "objectLiteral:\"wrong_figure=Cifra incorrecta\"",
+        "objectLiteral:\"stale_document=Documento obsoleto\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/DirectoryPage.tsx",
+      "jsxText": 46,
+      "jsxAttr": 7,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 53,
+      "samples": [
+        "jsxAttr:\"Buscar por nombre o correo…\"",
+        "jsxAttr:\"Buscar empleados\"",
+        "jsxAttr:\"Filtrar por convenio\"",
+        "jsxText:\"Todos los convenios\"",
+        "jsxAttr:\"Filtrar por estado\"",
+        "jsxText:\"Activos e inactivos\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/GuardrailsPage.tsx",
+      "jsxText": 37,
+      "jsxAttr": 1,
+      "objectLiteral": 11,
+      "templateOrCall": 4,
+      "total": 53,
+      "samples": [
+        "objectLiteral:\"low_confidence=Baja confianza\"",
+        "objectLiteral:\"salary_coverage_gap=Hueco en tablas salariales\"",
+        "objectLiteral:\"off_domain=Fuera de ámbito\"",
+        "objectLiteral:\"explicit_request=Petición explícita\"",
+        "objectLiteral:\"sensitive_topic=Tema sensible\"",
+        "objectLiteral:\"label=Umbral de recuperación (Check A)\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/GroupsQueue.tsx",
+      "jsxText": 50,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 51,
+      "samples": [
+        "jsxText:\"Cargando…\"",
+        "jsxText:\"Estructura de grupos por convenio. Los nodos propuestos por \"",
+        "jsxText:\"Convenio\"",
+        "jsxText:\"Pendientes\"",
+        "jsxText:\"Aprobados\"",
+        "jsxText:\"Datos con grupo\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/HistoryPage.tsx",
+      "jsxText": 34,
+      "jsxAttr": 10,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 44,
+      "samples": [
+        "jsxAttr:\"Buscar en el contenido de las conversaciones…\"",
+        "jsxAttr:\"Buscar en conversaciones\"",
+        "jsxText:\"Ver listado\"",
+        "jsxAttr:\"Convenio\"",
+        "jsxText:\"Todos los convenios\"",
+        "jsxAttr:\"Territorio\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/ReferenceFactCreatePanel.tsx",
+      "jsxText": 31,
+      "jsxAttr": 6,
+      "objectLiteral": 0,
+      "templateOrCall": 1,
+      "total": 38,
+      "samples": [
+        "templateOrCall:\"A convenio and a value are required.\"",
+        "jsxAttr:\"New reference fact\"",
+        "jsxText:\"New reference fact\"",
+        "jsxText:\"dato\"",
+        "jsxAttr:\"Close\"",
+        "jsxText:\"Convenio *\""
+      ]
+    },
+    {
+      "file": "src/shells/AdminShell.tsx",
+      "jsxText": 32,
+      "jsxAttr": 2,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 34,
+      "samples": [
+        "jsxAttr:\"Log out\"",
+        "jsxText:\"Log out\"",
+        "jsxAttr:\"Abrir menú\"",
+        "jsxText:\"Conocimiento · Mapa\"",
+        "jsxText:\"Navigate the corpus by lens, spot coverage gaps, and open a \"",
+        "jsxText:\"Conocimiento · Documentos\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/CsvImportPanel.tsx",
+      "jsxText": 28,
+      "jsxAttr": 0,
+      "objectLiteral": 1,
+      "templateOrCall": 0,
+      "total": 29,
+      "samples": [
+        "jsxText:\"Importar empleados (CSV)\"",
+        "jsxText:\"Columnas: , , (obligatorias); opcionales , , , , , , . Prime\"",
+        "jsxText:\"email\"",
+        "jsxText:\"full_name\"",
+        "jsxText:\"convenio_numero\"",
+        "jsxText:\"territory_code\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/FactDuplicatePanel.tsx",
+      "jsxText": 25,
+      "jsxAttr": 3,
+      "objectLiteral": 1,
+      "templateOrCall": 0,
+      "total": 29,
+      "samples": [
+        "jsxAttr:\"Resolver versión\"",
+        "jsxText:\"Resolver versión\"",
+        "jsxAttr:\"Cerrar\"",
+        "jsxText:\"Cargando…\"",
+        "jsxText:\"Solo lectura — necesitas para resolver una versión.\"",
+        "jsxText:\"knowledge.edit\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/DocumentsPage.tsx",
+      "jsxText": 26,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 27,
+      "samples": [
+        "jsxText:\"Upload folder\"",
+        "jsxText:\"Convenio #\"",
+        "jsxAttr:\"Quitar filtro de convenio\"",
+        "jsxText:\"document\"",
+        "jsxText:\"All statuses\"",
+        "jsxText:\"Auto-proposed\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/AnalyticsPage.tsx",
+      "jsxText": 25,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 25,
+      "samples": [
+        "jsxText:\"Loading…\"",
+        "jsxText:\"Periodo → . Deflection rate excluye `needs_category` del den\"",
+        "jsxText:\"Reparto por vía (path_split)\"",
+        "jsxText:\"Reparto por autoridad (authority_split)\"",
+        "jsxText:\"Escalaciones por corrección (§3)\"",
+        "jsxText:\"resueltas en el periodo · tasa de conversión a conocimiento \""
+      ]
+    },
+    {
+      "file": "src/pages/admin/gapMeta.ts",
+      "jsxText": 0,
+      "jsxAttr": 0,
+      "objectLiteral": 24,
+      "templateOrCall": 0,
+      "total": 24,
+      "samples": [
+        "objectLiteral:\"label=Unanswerable\"",
+        "objectLiteral:\"hint=Active document with 0 indexed chunks (e.g. a scanned P\"",
+        "objectLiteral:\"label=No active successor\"",
+        "objectLiteral:\"hint=Only historical prose remains for this scope — no activ\"",
+        "objectLiteral:\"label=Suspected mistag\"",
+        "objectLiteral:\"hint=Tagged as convenio prose but the title/filename says \\\"t\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/AdminsPage.tsx",
+      "jsxText": 14,
+      "jsxAttr": 0,
+      "objectLiteral": 8,
+      "templateOrCall": 0,
+      "total": 22,
+      "samples": [
+        "objectLiteral:\"super_admin=Super admin\"",
+        "objectLiteral:\"hr_agent=Agente de RR. HH.\"",
+        "objectLiteral:\"knowledge_editor=Editor de conocimiento\"",
+        "objectLiteral:\"auditor=Auditor\"",
+        "objectLiteral:\"super_admin=Acceso total · gestiona admins · ve todo el hist\"",
+        "objectLiteral:\"hr_agent=Trabaja escalaciones · gestiona el directorio\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/grafo/GrafoNodeCard.tsx",
+      "jsxText": 7,
+      "jsxAttr": 1,
+      "objectLiteral": 12,
+      "templateOrCall": 0,
+      "total": 20,
+      "samples": [
+        "objectLiteral:\"convenio=Convenio\"",
+        "objectLiteral:\"document=Documento\"",
+        "objectLiteral:\"fact=Dato de referencia\"",
+        "objectLiteral:\"territory=Territorio\"",
+        "objectLiteral:\"sector=Sector\"",
+        "objectLiteral:\"topic=Tema\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/ProposeVocabularyForm.tsx",
+      "jsxText": 19,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 19,
+      "samples": [
+        "jsxText:\"Propose vocabulary for :\"",
+        "jsxText:\"Fold into as an alias\"",
+        "jsxText:\"(similarity %)\"",
+        "jsxText:\"Fold into an existing value\"",
+        "jsxText:\"(nothing close enough was found)\"",
+        "jsxText:\"Create a new\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/CoveragePage.tsx",
+      "jsxText": 16,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 17,
+      "samples": [
+        "jsxText:\"Loading…\"",
+        "jsxAttr:\"View\"",
+        "jsxText:\"Graph\"",
+        "jsxText:\"List\"",
+        "jsxText:\"↻ Actualizar\"",
+        "jsxText:\"a fecha de\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/AnswerModelPage.tsx",
+      "jsxText": 11,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 3,
+      "total": 15,
+      "samples": [
+        "templateOrCall:\"No se pudo cargar el estado.\"",
+        "templateOrCall:\"No se pudo guardar la clave.\"",
+        "templateOrCall:\"No se pudo eliminar la clave.\"",
+        "jsxText:\"Cargando…\"",
+        "jsxText:\"Modelo de respuesta\"",
+        "jsxText:\"La clave del proveedor se guarda cifrada, se muestra enmasca\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/KnowledgeMapPage.tsx",
+      "jsxText": 7,
+      "jsxAttr": 3,
+      "objectLiteral": 4,
+      "templateOrCall": 0,
+      "total": 14,
+      "samples": [
+        "objectLiteral:\"label=Territory\"",
+        "objectLiteral:\"label=Sector\"",
+        "objectLiteral:\"label=Validity\"",
+        "objectLiteral:\"label=Topic\"",
+        "jsxAttr:\"Sección\"",
+        "jsxText:\"Jerarquía\""
+      ]
+    },
+    {
+      "file": "src/pages/chat/ChatScreen.tsx",
+      "jsxText": 6,
+      "jsxAttr": 8,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 14,
+      "samples": [
+        "jsxAttr:\"¿Te ha resultado útil esta respuesta?\"",
+        "jsxAttr:\"Respuesta útil\"",
+        "jsxAttr:\"Respuesta útil\"",
+        "jsxAttr:\"Respuesta no útil\"",
+        "jsxAttr:\"Respuesta no útil\"",
+        "jsxText:\"Gracias por tu valoración.\""
+      ]
+    },
+    {
+      "file": "src/pages/chat/TracePanel.tsx",
+      "jsxText": 3,
+      "jsxAttr": 0,
+      "objectLiteral": 11,
+      "templateOrCall": 0,
+      "total": 14,
+      "samples": [
+        "objectLiteral:\"label=Ámbito resuelto\"",
+        "objectLiteral:\"label=Salvaguarda\"",
+        "objectLiteral:\"label=Enrutado\"",
+        "objectLiteral:\"label=Salario (SQL)\"",
+        "objectLiteral:\"label=Dato de referencia (estructurado)\"",
+        "objectLiteral:\"label=Composición (dato + convenio)\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/grafo/GrafoSection.tsx",
+      "jsxText": 10,
+      "jsxAttr": 2,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 12,
+      "samples": [
+        "jsxText:\"Cargando grafo…\"",
+        "jsxAttr:\"Modo\"",
+        "jsxText:\"3D\"",
+        "jsxText:\"2D\"",
+        "jsxText:\"WebGL no disponible — mostrando 2D.\"",
+        "jsxAttr:\"Filtros del grafo\""
+      ]
+    },
+    {
+      "file": "src/lib/escalationReasons.ts",
+      "jsxText": 0,
+      "jsxAttr": 0,
+      "objectLiteral": 11,
+      "templateOrCall": 0,
+      "total": 11,
+      "samples": [
+        "objectLiteral:\"low_confidence=Baja confianza\"",
+        "objectLiteral:\"off_domain=Fuera de ámbito\"",
+        "objectLiteral:\"sensitive_topic=Tema sensible\"",
+        "objectLiteral:\"explicit_request=Petición explícita\"",
+        "objectLiteral:\"salary_coverage_gap=Hueco salarial\"",
+        "objectLiteral:\"salary_not_in_chat=Salario no disponible\""
+      ]
+    },
+    {
+      "file": "src/pages/LoginPage.tsx",
+      "jsxText": 6,
+      "jsxAttr": 2,
+      "objectLiteral": 0,
+      "templateOrCall": 2,
+      "total": 10,
+      "samples": [
+        "templateOrCall:\"We couldn't send the code. Check the email address and try a\"",
+        "templateOrCall:\"That code didn't match. Request a new one and try again.\"",
+        "jsxText:\"Sign in with a one-time email code (email OTP).\"",
+        "jsxText:\"Email\"",
+        "jsxAttr:\"you@example.com\"",
+        "jsxText:\"We sent a 6-digit code to . In local dev it is visible in Ma\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/EscalationBoardPage.tsx",
+      "jsxText": 4,
+      "jsxAttr": 1,
+      "objectLiteral": 5,
+      "templateOrCall": 0,
+      "total": 10,
+      "samples": [
+        "objectLiteral:\"new=Nuevas\"",
+        "objectLiteral:\"assigned=Asignadas\"",
+        "objectLiteral:\"in_progress=En curso\"",
+        "objectLiteral:\"resolved=Resueltas\"",
+        "objectLiteral:\"closed=Cerradas\"",
+        "jsxText:\"Solo lectura — no tienes el permiso .\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/Hierarchy.tsx",
+      "jsxText": 9,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 10,
+      "samples": [
+        "jsxText:\"Loading map…\"",
+        "jsxText:\"dato\"",
+        "jsxAttr:\"Structured reference fact\"",
+        "jsxText:\"verified\"",
+        "jsxText:\"needs review\"",
+        "jsxText:\"Loading…\""
+      ]
+    },
+    {
+      "file": "src/pages/chat/CitationList.tsx",
+      "jsxText": 2,
+      "jsxAttr": 0,
+      "objectLiteral": 6,
+      "templateOrCall": 0,
+      "total": 8,
+      "samples": [
+        "objectLiteral:\"label=Tabla salarial\"",
+        "objectLiteral:\"label=Dato de referencia\"",
+        "objectLiteral:\"label=Ley nacional\"",
+        "objectLiteral:\"label=Convenio\"",
+        "objectLiteral:\"label=Resolución RR. HH.\"",
+        "objectLiteral:\"label=Fuente\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/Pager.tsx",
+      "jsxText": 3,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 3,
+      "samples": [
+        "jsxText:\"‹ Prev\"",
+        "jsxText:\"Page of\"",
+        "jsxText:\"Next ›\""
+      ]
+    },
+    {
+      "file": "src/pages/admin/charts.tsx",
+      "jsxText": 2,
+      "jsxAttr": 1,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 3,
+      "samples": [
+        "jsxText:\"Sin datos.\"",
+        "jsxText:\"Sin datos.\"",
+        "jsxAttr:\"trend chart\""
+      ]
+    },
+    {
+      "file": "src/components/FilterToolbar.tsx",
+      "jsxText": 2,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 2,
+      "samples": [
+        "jsxText:\"Filtros\"",
+        "jsxText:\"Limpiar filtros\""
+      ]
+    },
+    {
+      "file": "src/components/ProtectedRoute.tsx",
+      "jsxText": 1,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 1,
+      "samples": [
+        "jsxText:\"Loading…\""
+      ]
+    },
+    {
+      "file": "src/shells/EmployeeShell.tsx",
+      "jsxText": 1,
+      "jsxAttr": 0,
+      "objectLiteral": 0,
+      "templateOrCall": 0,
+      "total": 1,
+      "samples": [
+        "jsxText:\"Log out\""
+      ]
+    },
+    {
+      "file": "src/theme/brand.ts",
+      "jsxText": 0,
+      "jsxAttr": 0,
+      "objectLiteral": 1,
+      "templateOrCall": 0,
+      "total": 1,
+      "samples": [
+        "objectLiteral:\"productName=HR Platform\""
+      ]
+    }
+  ]
+}
