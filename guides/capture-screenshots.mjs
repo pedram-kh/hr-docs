@@ -73,9 +73,10 @@ async function readCode(email) {
     if (line === 'Subject: Your HR Platform login code') subjOk = true;
   };
   for (const line of text.split('\n')) {
-    if (/^\[[0-9]{4}-[0-9]{2}-[0-9]{2}[^]]*\] [^:]+: /.test(line)) {
+    // [^\]] — a bare [^]] is an empty class in JS and swallows the bracket.
+    if (/^\[[0-9]{4}-[0-9]{2}-[0-9]{2} [^\]]+\] [^:]+: /.test(line)) {
       flush();
-      rec = line.replace(/^\[[0-9]{4}-[0-9]{2}-[0-9]{2}[^]]*\] [^:]+: /, '');
+      rec = line.replace(/^\[[0-9]{4}-[0-9]{2}-[0-9]{2} [^\]]+\] [^:]+: /, '');
       toOk = false;
       subjOk = false;
       arm(rec);
@@ -173,11 +174,7 @@ async function adminShots(token) {
   await shoot(page, '01-map-jerarquia.png');
 
   await page.getByRole('tab', { name: 'Grafo' }).click();
-  await page.waitForSelector('text=Fucsia = IA sin verificar', { timeout: 30000 });
-  await page.waitForTimeout(1500);
-  await page.locator('.grafo-caption').evaluate((el) => el.scrollIntoView({ block: 'end' }));
-  await page.waitForTimeout(400);
-  await shoot(page, '02-map-grafo.png');
+  await shootGrafo(page);
 
   await gotoAdmin(page, '#view=documents');
   await page.waitForSelector('table.docs-table', { timeout: 20000 });
@@ -246,18 +243,7 @@ async function adminShots(token) {
   await page.waitForSelector('table.docs-table', { timeout: 20000 });
   await page.waitForTimeout(600);
   await shoot(page, '22-history.png');
-  const histRow = page.locator('table.docs-table tbody tr').first();
-  if ((await histRow.count()) && (await histRow.locator('td').count()) > 1) {
-    await histRow.click();
-    await page.waitForSelector('text=Solo lectura', { timeout: 20000 });
-    const trace = page.locator('summary.trace-toggle').first();
-    if (await trace.count()) {
-      await trace.click();
-      await page.locator('.timeline-action').first().waitFor({ timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(300);
-    }
-    await shoot(page, '23-history-trace.png');
-  }
+  await shootHistoryTrace(page);
 
   await gotoAdmin(page, '#view=analytics');
   await page.waitForTimeout(1200);
@@ -272,12 +258,7 @@ async function adminShots(token) {
   await shoot(page, '32-calidad.png');
 
   await gotoAdmin(page, '#view=directory');
-  await page.waitForSelector('table.docs-table', { timeout: 20000 });
-  const search = page.getByLabel('Buscar empleados');
-  await search.fill('test');
-  await search.press('Enter');
-  await page.waitForTimeout(800);
-  await shoot(page, '40-directory.png');
+  await shootDirectory(page);
 
   await gotoAdmin(page, '#view=admins');
   await page.waitForTimeout(800);
@@ -294,52 +275,270 @@ async function adminShots(token) {
   await browser.close();
 }
 
-async function chatShots(token) {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({
-    viewport: VIEW,
-    colorScheme: 'light',
-    locale: 'es-ES',
+const FIXTURE_EMAIL = /@(example\.com|hr-staging\.internal)$/i;
+const NAVARRA = 'test-navarra@example.com';
+const VACACIONES = '¿Cuántos días de vacaciones me corresponden al año?';
+const ESCALATION_Q = 'Quiero hablar con una persona de Recursos Humanos';
+
+async function shootGrafo(page) {
+  await page.waitForSelector('text=Fucsia = IA sin verificar', { timeout: 30000 });
+  await page.waitForTimeout(1200);
+  await page.locator('.grafo-caption').evaluate((el) => el.scrollIntoView({ block: 'end', inline: 'nearest' }));
+  await page.waitForTimeout(400);
+  const box = await page.locator('.grafo-caption').boundingBox();
+  if (!box || box.y < 0 || box.y + 12 > VIEW.height) {
+    throw new Error('grafo legend is outside the frame');
+  }
+  await shoot(page, '02-map-grafo.png');
+}
+
+async function shootHistoryTrace(page) {
+  await page.getByLabel('Resultado').selectOption({ label: 'Solo respondidas' });
+  await page.waitForTimeout(800);
+  const rows = page.locator('table.docs-table tbody tr', { hasText: 'Respondida' });
+  const count = await rows.count();
+  if (!count) throw new Error('no answered conversation to open');
+  for (let i = 0; i < Math.min(count, 6); i++) {
+    await rows.nth(i).click();
+    await page.waitForSelector('text=Solo lectura', { timeout: 20000 });
+    const toggles = page.locator('summary.trace-toggle');
+    if (!(await toggles.count())) {
+      await page.getByRole('button', { name: 'Cerrar' }).click();
+      continue;
+    }
+    await page.locator('.detail-body').evaluate((body) => {
+      const node = body.querySelector('.trace');
+      if (node) body.scrollTop = node.offsetTop - 8;
+    });
+    const traceCount = await toggles.count();
+    for (let t = 0; t < traceCount; t++) {
+      await toggles.nth(t).click();
+      if (await page.locator('.timeline-action', { hasText: 'Ámbito resuelto' }).count()) break;
+    }
+    await page.locator('.timeline-action').first().waitFor({ timeout: 8000 });
+    await page.locator('.detail-body').evaluate((body) => {
+      const step = [...body.querySelectorAll('.timeline-action')].find((el) =>
+        (el.textContent ?? '').includes('Ámbito resuelto'),
+      );
+      const target = step ?? body.querySelector('.timeline-action');
+      if (!target) return;
+      const top = target.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop;
+      body.scrollTop = Math.max(0, top - 12);
+    });
+    await page.waitForTimeout(300);
+    const visible = await page.locator('.timeline-action').evaluateAll((nodes) =>
+      nodes
+        .filter((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top >= 0 && r.bottom <= window.innerHeight && r.height > 8;
+        })
+        .map((el) => (el.textContent ?? '').trim()),
+    );
+    if (!visible.some((label) => label.includes('Ámbito resuelto')) || visible.length < 3) {
+      await page.getByRole('button', { name: 'Cerrar' }).click();
+      continue;
+    }
+    await shoot(page, '23-history-trace.png');
+    console.log('trace steps in frame:', visible.join(' | '));
+    return;
+  }
+  throw new Error('no answered conversation with a legible trace');
+}
+
+async function shootDirectory(page) {
+  await page.waitForSelector('table.docs-table', { timeout: 20000 });
+  const search = page.getByLabel('Buscar empleados');
+  await search.fill('test');
+  await Promise.all([
+    page.waitForResponse((res) => res.url().includes('/admin/employees') && res.ok()),
+    search.press('Enter'),
+  ]);
+  await page.waitForTimeout(400);
+  const emails = (await page.locator('table.docs-table tbody tr td:nth-child(2)').allTextContents())
+    .map((s) => s.trim())
+    .filter((s) => s.includes('@'));
+  const foreign = emails.filter((email) => !FIXTURE_EMAIL.test(email));
+  if (!emails.length) throw new Error('directory search "test" returned no rows');
+  if (foreign.length) throw new Error(`non-fixture address in frame: ${foreign.join(', ')}`);
+  await shoot(page, '40-directory.png');
+  console.log('directory emails:', emails.join(', '));
+}
+
+function employeeContext(token) {
+  return chromium.launch({ headless: true }).then(async (browser) => {
+    const context = await browser.newContext({ viewport: VIEW, colorScheme: 'light', locale: 'es-ES' });
+    await context.addInitScript((tok) => {
+      localStorage.setItem('hr_token', tok);
+      localStorage.setItem('hr-locale', 'es');
+    }, token);
+    const page = await context.newPage();
+    return { browser, page };
   });
+}
+
+async function openChat(page) {
+  await page.goto(`${BASE}/app`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.chat-empty, textarea.chat-input', { timeout: 20000 });
+  await page.waitForTimeout(800);
+}
+
+async function shootWelcome(page) {
+  await openChat(page);
+  if (!(await page.locator('.chat-empty').count())) {
+    throw new Error('chat is not empty; welcome screen is not showing');
+  }
+  const prompts = [
+    VACACIONES,
+    '¿Cuántos días de permiso tengo por matrimonio?',
+    '¿Cuánto dura el periodo de prueba en mi convenio?',
+    '¿Cuál es mi jornada anual?',
+    ESCALATION_Q,
+  ];
+  for (const prompt of prompts) {
+    if (!(await page.getByRole('button', { name: prompt }).count())) {
+      throw new Error(`welcome is missing the prompt: ${prompt}`);
+    }
+  }
+  await shoot(page, '50-chat-welcome.png');
+}
+
+async function ask(page, question) {
+  const box = page.locator('textarea.chat-input');
+  await box.fill(question);
+  await page.getByRole('button', { name: 'Enviar', exact: true }).click();
+}
+
+async function shootAnswer(page) {
+  await openChat(page);
+  // Count source lines first. A later `.last()` matches an older turn immediately,
+  // and `text=Fuentes` also matches the word "fuentes" inside answer prose.
+  // The employee chat does not render the admin Fuentes list (Sprint 10a);
+  // the source line is "Basado en:".
+  const before = await page.locator('.answer-source-line').count();
+  await ask(page, VACACIONES);
+  const source = page.locator('.answer-source-line').nth(before);
+  await source.waitFor({ timeout: 120000 });
+  await page.getByRole('button', { name: 'Enviar', exact: true }).waitFor({ timeout: 20000 });
+  const question = page.locator('.chat-bubble--user', { hasText: VACACIONES }).last();
+  await source.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await page.waitForTimeout(250);
+  const qBox = await question.boundingBox();
+  const sBox = await source.boundingBox();
+  const composer = await page.locator('.chat-input-bar').boundingBox();
+  const limit = composer ? composer.y - 8 : VIEW.height - 80;
+  if (!qBox || qBox.y < 0 || !sBox || sBox.y < 0 || sBox.y + sBox.height > limit) {
+    throw new Error('vacation answer and Basado en are not together in the frame');
+  }
+  const basado = (await source.innerText()).includes('Basado en:');
+  if (!basado) throw new Error('source line is not Basado en');
+  await shoot(page, '51-chat-answer.png');
+}
+
+async function shootEscalation(page) {
+  await ask(page, ESCALATION_Q);
+  const badge = page.locator('.chat-bubble.escalation .badge', { hasText: 'Escalado a Recursos Humanos' }).last();
+  await badge.waitFor({ timeout: 120000 });
+  // Chat follows the list end with a smooth scroll, which is still moving
+  // when the badge first appears. Re-pin until that animation loses.
+  let box = null;
+  for (let i = 0; i < 8; i++) {
+    await badge.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+    await page.waitForTimeout(300);
+    box = await badge.boundingBox();
+    if (box && box.y >= 0 && box.y <= VIEW.height - 40) break;
+  }
+  if (!box || box.y < 0 || box.y > VIEW.height - 40) throw new Error('escalation badge is outside the frame');
+  await shoot(page, '52-chat-escalation.png');
+}
+
+async function apiGet(token, path) {
+  const res = await fetch(`${BASE}/api${path}`, {
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`${path} → ${res.status}`);
+  return res.json();
+}
+
+async function emptyFixtureEmail(adminToken) {
+  const employees = await apiGet(adminToken, '/admin/employees?q=test');
+  const rows = employees.data ?? [];
+  const names = new Set();
+  let page = 1;
+  for (;;) {
+    const hist = await apiGet(adminToken, `/admin/history/conversations?page=${page}`);
+    for (const row of hist.data ?? []) {
+      if (row.employee?.full_name) names.add(row.employee.full_name);
+    }
+    if (page >= (hist.last_page ?? 1)) break;
+    page += 1;
+  }
+  const candidate = rows.find(
+    (row) => FIXTURE_EMAIL.test(row.email) && row.email !== NAVARRA && !names.has(row.full_name),
+  );
+  if (!candidate) throw new Error('no empty fixture employee for the welcome screen');
+  return candidate.email;
+}
+
+async function gapShots() {
+  console.log(`admin login ${ADMIN}`);
+  const adminToken = await login(ADMIN);
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ viewport: VIEW, colorScheme: 'light', locale: 'es-ES' });
   await context.addInitScript((tok) => {
     localStorage.setItem('hr_token', tok);
     localStorage.setItem('hr-locale', 'es');
-  }, token);
+    localStorage.removeItem('hr-admin-sidebar-collapsed');
+  }, adminToken);
   const page = await context.newPage();
-  await page.goto(`${BASE}/app`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('textarea, .chat-empty, .chat-thread, form', { timeout: 20000 }).catch(() => {});
-  await page.waitForTimeout(1500);
+  await gotoAdmin(page, '#view=map&tab=grafo');
+  await shootGrafo(page);
+  await gotoAdmin(page, '#view=history');
+  await page.waitForSelector('table.docs-table', { timeout: 20000 });
+  await shootHistoryTrace(page);
+  await gotoAdmin(page, '#view=directory');
+  await shootDirectory(page);
+  const welcomeEmail = await emptyFixtureEmail(adminToken);
+  await browser.close();
 
-  const welcome = page.locator('.chat-empty');
-  if (await welcome.count()) {
-    await shoot(page, '50-chat-welcome.png');
-    await page.getByRole('button', { name: '¿Cuántos días de vacaciones me corresponden al año?' }).click();
-  } else {
-    await shoot(page, '50-chat-welcome.png');
-    console.log('note: employee session already has messages; 50 is the hydrated thread, not the empty welcome');
-    const box = page.locator('textarea, input[placeholder*="pregunta"]');
-    await box.first().fill('¿Cuántos días de vacaciones me corresponden al año?');
-    await page.getByRole('button', { name: 'Enviar' }).click();
+  console.log(`welcome login ${welcomeEmail}`);
+  const welcomeToken = await login(welcomeEmail);
+  const welcome = await employeeContext(welcomeToken);
+  try {
+    await shootWelcome(welcome.page);
+  } finally {
+    await welcome.browser.close();
   }
 
-  await page.waitForSelector('text=Pensando…', { timeout: 10000 }).catch(() => {});
-  await page.waitForSelector('text=Pensando…', { state: 'detached', timeout: 120000 }).catch(() => {});
-  await page.waitForTimeout(1000);
-  await shoot(page, '51-chat-answer.png');
-
-  const input = page.locator('textarea, input[placeholder*="pregunta"]').first();
-  await input.fill('Quiero hablar con una persona de Recursos Humanos');
-  await page.getByRole('button', { name: 'Enviar' }).click();
-  await page.waitForSelector('text=Escalado a Recursos Humanos', { timeout: 120000 }).catch(() => {});
-  await page.waitForTimeout(800);
-  await shoot(page, '52-chat-escalation.png');
-
-  await browser.close();
+  console.log(`answer login ${NAVARRA}`);
+  const navarraToken = await login(NAVARRA);
+  const chat = await employeeContext(navarraToken);
+  try {
+    await shootAnswer(chat.page);
+    await shootEscalation(chat.page);
+  } finally {
+    await chat.browser.close();
+  }
 }
 
 async function main() {
   await mkdir(OUT, { recursive: true });
   const only = process.env.CAPTURE;
+  if (only === 'gaps' || only === 'answer') {
+    if (only === 'answer') {
+      console.log(`answer login ${NAVARRA}`);
+      const navarraToken = await login(NAVARRA);
+      const chat = await employeeContext(navarraToken);
+      try {
+        await shootAnswer(chat.page);
+      } finally {
+        await chat.browser.close();
+      }
+    } else {
+      await gapShots();
+    }
+    console.log(`done → ${OUT}`);
+    return;
+  }
   if (only !== 'chat') {
     console.log(`admin login ${ADMIN}`);
     const adminToken = await login(ADMIN);
@@ -348,7 +547,15 @@ async function main() {
   if (only !== 'admin') {
     console.log(`employee login ${EMPLOYEE}`);
     const employeeToken = await login(EMPLOYEE);
-    await chatShots(employeeToken);
+    const chat = await employeeContext(employeeToken);
+    try {
+      await openChat(chat.page);
+      if (await chat.page.locator('.chat-empty').count()) await shootWelcome(chat.page);
+      await shootAnswer(chat.page);
+      await shootEscalation(chat.page);
+    } finally {
+      await chat.browser.close();
+    }
   }
   console.log(`done → ${OUT}`);
 }
