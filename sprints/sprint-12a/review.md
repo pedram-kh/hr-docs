@@ -1,5 +1,7 @@
 # Sprint 12a — review
 
+> Status: **CLOSED.** Browser review passed. `hr-frontend`, `hr-backend`, and `hr-docs` committed on `sprint-12a`, merged `--no-ff` into `main`, pushed. Close-out is below.
+
 Build is on branch `sprint-12a` in `hr-frontend`, `hr-backend`, and `hr-docs`.
 
 Pedram's wording was applied verbatim. Everything else follows the approved audit, with the corrections in the build prompt (importar, the two gap labels, the single read-only sentence, the zero-chunks sentence, MailHog dev-only).
@@ -135,6 +137,38 @@ Note on the restart: `docker compose restart` prints warnings about unset `AWS_R
 
 **Flag for Pedram — found, not touched:** `hr-backend`'s working tree also has uncommitted changes to `app/Http/Controllers/AuthController.php`, `app/Providers/AppServiceProvider.php`, and `tests/Feature/Sprint11aStagingOtpInvariantTest.php` (adds an `example.com` fixture domain and an OTP-request rate-limit exemption for the staging fixed-OTP allowlist). Nothing in this sprint's instructions touched that area, so none of those three files were part of the `docker cp` above — staging still runs the old `AuthController`/`AppServiceProvider` behavior. Surfacing this because it's sitting uncommitted in the same repo and wasn't something I introduced this sprint; worth confirming whose work it is and whether it should be committed, discarded, or picked up as its own task.
 
-## Stop
+## Close-out
 
-Browser review passed. Close-out — merge, deploy from the images, snapshot — follows this commit and is recorded once it has run.
+Browser review passed. The staging OTP-request rate-limit exemption (guide screenshot captures) was committed on `hr-backend` `main` on its own, before the sprint merge: `9df9ca173909c0358b38121d2da9612b9518045e`. Its tests passed first (`Sprint11aStagingOtpInvariantTest`, 13 passed, 32 assertions). The matching go-live checklist sentence is `hr-docs` `612a24d24fdafe60d22a987058a1cdf394ac4603`.
+
+| Repo | sprint-12a | main (`--no-ff`) |
+| --- | --- | --- |
+| hr-backend | `97de5bd716f0297bcfd11c288d1fbd9d28b0d20b` | `42b1fea609151936d0f80c99c87b0ecd0eacaaed` |
+| hr-frontend | `dc2afdaa9185d999767750fc52151a0d8bfe2439` | `bdb0753ab109e8e46fee6e24f125f23ae95a0d02` |
+| hr-docs | `1073c47c943bf56a94a0079c43e928125e02c1d6` | `00e50624647925239e4c2b6e62edfe6960a68110` |
+| hr-ai | unchanged | `d6b17b2cb429c4de02c864e3caf7c2de88e15ae1` |
+
+Staging checkouts reset (`git checkout -- . && git clean -fdx`; they were already clean). `deploy.sh` with those four SHAs: leak scan clean, `php artisan migrate --force` reported nothing to migrate, health checks green on attempt 3/90. `deploy-run.sh` force-recreated `hr-backend`, `hr-backend-worker`, `hr-ai`, and `caddy` with `vars.sh` exported. Artisan on the recreated container: Laravel 13.16.1, `APP_URL=http://52.211.251.235`, DB host `hr-staging-db.cpsukkwcomk6.eu-west-1.rds.amazonaws.com`. `EscalationExplainer.php` in the container matches the checkout byte-for-byte (md5 `feadb7f565968e1d718d463e4d37b44e`).
+
+Served from that image build, not the earlier injection. Live SHA-256 matches a local `VITE_API_BASE_URL=/api` build of `hr-frontend` `main`:
+
+| Asset | SHA-256 | Served as |
+| --- | --- | --- |
+| `index-BY7cgrpJ.js` | `4db1fc3b894f4409ab61f5e7e6cfeeb3feff9660dd530b62616fef275f3232de` | `text/javascript`, 592291 bytes |
+| `en-DPSS7sH3.js` | `52a07538403eb3ce055107e8ac9334c31a401e45aac839fd3c7e038b8ee45101` | `text/javascript`, 53646 bytes |
+| `index-v_eXonWT.css` | `26c36c2cb05582e268353ebea8a9990079187342ae7d726492fffc95df31de3a` | `text/css`, 42612 bytes |
+| `favicon.svg` | `0b64c2db0848e6e48df97403e921fccb96107b16865eb3ebe2b6a7be896557e6` | `image/svg+xml`, 372 bytes |
+| `logo-BWde3LIe.svg` | `a0b8fc582beeee901537e6e857e523f8481d54a06d6245af6e13b9f53efb950f` | `image/svg+xml`, 4239 bytes |
+
+The bundle contains `Brechas de cobertura`, `+ Insertar nuevo dato de referencia`, `Subir documento`, `Alcance`, `Territorio`, and `Añadir tema`. No `localhost:8000`. A throwaway `off_domain` card from the deployed explainer returned `Fuera de alcance` and `fuera de este alcance`; the card was deleted and the token revoked (401 afterward).
+
+`hr-staging-post-12a` is `available` (50 GB, 2026-09-27 23:43 UTC). No other manual snapshot was outside the keep list, so nothing was deleted.
+
+| Snapshot | Created | Role |
+| --- | --- | --- |
+| `hr-staging-post-ingest-20260906` | 2026-09-06 | deep anchor |
+| `hr-staging-post-10c` | 2026-09-14 | named keep |
+| `hr-staging-post-11a` | 2026-09-22 04:59 UTC | named keep |
+| `hr-staging-post-11c` | 2026-09-22 18:12 UTC | named keep |
+| `hr-staging-post-11b` | 2026-09-23 00:08 UTC | named keep |
+| `hr-staging-post-12a` | 2026-09-27 23:43 UTC | this close-out |
