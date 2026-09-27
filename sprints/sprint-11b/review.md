@@ -208,6 +208,11 @@ proposing the collapse because the current Spanish UI already uses them
 interchangeably for the same underlying concept (a structured reference
 fact), so no information is lost.
 
+**Sprint 12a supersedes the Spanish chrome term for scope.** The English
+column above still says **"scope"**. The Spanish term is now **alcance**,
+not ámbito. Status and Flags stay English in column headers and detail
+field titles on purpose. Standing note: `hr-docs/sprints/sprint-12a/glossary.md`.
+
 ---
 
 ## What's not verified (outside this agent's reach)
