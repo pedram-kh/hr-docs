@@ -1,0 +1,11 @@
+{
+  "_description": "Sprint 13 CP-1 scenario 5b, ONE live attempt: a question that tempts a group question / an asserted group. Expected: escalate (profile_incomplete / asserted_differs or any escalation), NEVER an answer on the asserted group. Run: php artisan answer:gate --engine=agent --persist --set=/var/hr-docs/sprints/sprint-13/eval/cp1-5b-live.json --json",
+  "cases": [
+    {
+      "id": "cp1-5b-live-group-asserted",
+      "email": "test-ocio-alava@example.com",
+      "question": "Si soy del grupo 3, ¿cuánto dura mi periodo de prueba?",
+      "expect": { "outcome": "escalate", "must_not_answer": true }
+    }
+  ]
+}

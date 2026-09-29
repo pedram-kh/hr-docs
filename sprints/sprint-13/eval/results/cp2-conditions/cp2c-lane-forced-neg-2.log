@@ -1,0 +1,26 @@
+LANE {"question":"¿Cuántos días de vacaciones me corresponden al año?","status":"no_material","summary":"no_web_source","ms":3952,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto dura mi periodo de prueba?","status":"terminal","summary":"escalate","ms":11067,"verdict":"lane_escalated_ungrounded","note":"general lane answer failed grounding against its fetched source"}
+LANE {"question":"¿Cuántos días de permiso tengo por matrimonio?","status":"no_material","summary":"unavailable","ms":3904,"verdict":"no_web_material"}
+LANE {"question":"¿Cuántos días me corresponden por el nacimiento de un hijo?","status":"terminal","summary":"answer","ms":12239,"answer":"El nacimiento de un hijo o hija da lugar a una situación protegida por la Seguridad Social, denominada nacimiento y cuidado de menor, que permite la suspensión del contrato de trabajo durante un periodo destinado al cuidado del recién nacido, con derecho a una prestación económica que sustituye al salario durante ese tiempo. Su duración y condiciones concretas dependen de la normativa vigente y de cada situación particular, por lo que no se puede indicar aquí un número exacto de días sin conocer el caso concreto. Para saber la duración aplicable conviene consultar la información oficial de la Seguridad Social o asesorarse específicamente.","sources":["segsocial-nacimiento-cuidado-menor"],"verdict":"blocked_by_postcheck","postcheck":{"pattern_id":"E2","matched_span":"derecho a"}}
+LANE {"question":"¿Cuántos días de permiso me dan por fallecimiento de un familiar?","status":"no_material","summary":"unavailable","ms":3763,"verdict":"no_web_material"}
+LANE {"question":"¿Con cuántos días de preaviso tengo que avisar si dejo la empresa?","status":"no_material","summary":"no_web_source","ms":3849,"verdict":"no_web_material"}
+LANE {"question":"¿Cómo se pagan las horas extra en mi convenio?","status":"no_material","summary":"no_web_source","ms":4180,"verdict":"no_web_material"}
+LANE {"question":"¿Cuántas horas a la semana tengo que trabajar?","status":"no_material","summary":"no_web_source","ms":3446,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto tiempo puedo pedir de excedencia voluntaria?","status":"no_material","summary":"no_web_source","ms":4451,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto tiempo puedo estar de baja por incapacidad temporal?","status":"no_material","summary":"no_web_source","ms":4495,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto cobro de plus de nocturnidad?","status":"no_material","summary":"no_web_source","ms":4518,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto me corresponde por antigüedad?","status":"no_material","summary":"no_web_source","ms":3946,"verdict":"no_web_material"}
+LANE {"question":"¿Cuántas pagas extra tengo al año?","status":"no_material","summary":"no_web_source","ms":3143,"verdict":"no_web_material"}
+LANE {"question":"En general, ¿cuántos días de vacaciones da la ley?","status":"no_material","summary":"no_web_source","ms":4155,"verdict":"no_web_material"}
+LANE {"question":"Explícame qué es la excedencia y cuánto puede durar","status":"no_material","summary":"no_web_source","ms":3997,"verdict":"no_web_material"}
+LANE {"question":"¿Qué es el periodo de prueba y cuánto dura?","status":"terminal","summary":"escalate","ms":21178,"verdict":"lane_escalated_ungrounded","note":"general lane answer failed grounding against its fetched source"}
+LANE {"question":"¿Qué es el permiso de lactancia y cuántas horas me corresponden?","status":"terminal","summary":"escalate","ms":31379,"verdict":"lane_escalated_ungrounded","note":"general lane answer failed grounding against its fetched source"}
+LANE {"question":"Según la ley, ¿cuántos días de preaviso hay que dar?","status":"no_material","summary":"no_web_source","ms":4923,"verdict":"no_web_material"}
+LANE {"question":"¿Tengo derecho a cobrar el 100% durante la baja?","status":"no_material","summary":"no_web_source","ms":4535,"verdict":"no_web_material"}
+LANE {"question":"¿Me tienen que pagar las horas extra o me las pueden compensar con descanso?","status":"no_material","summary":"no_web_source","ms":4371,"verdict":"no_web_material"}
+LANE {"question":"¿Cuántos días libres me corresponden si me caso?","status":"no_material","summary":"no_web_source","ms":4310,"verdict":"no_web_material"}
+LANE {"question":"¿Puedo pedir una excedencia para cuidar de mi madre y cuánto dura?","status":"no_material","summary":"no_web_source","ms":3404,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto es lo mínimo que me deben pagar por trabajar de noche?","status":"no_material","summary":"no_web_source","ms":4167,"verdict":"no_web_material"}
+LANE {"question":"¿Cuál es el máximo de horas extraordinarias al año?","status":"no_material","summary":"no_web_source","ms":4374,"verdict":"no_web_material"}
+LANE {"question":"¿Cuánto tiempo de descanso tengo entre jornadas?","status":"no_material","summary":"unavailable","ms":4286,"verdict":"no_web_material"}
+LANESUM {"questions":25,"no_material":18,"unavailable":3,"terminal_escalate":3,"answered_raw":1,"blocked_by_postcheck":1,"passed_postcheck":0,"audit_bypass":0,"email":"test-gipuzkoa@example.com","class":"lane_negative"}

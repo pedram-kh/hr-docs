@@ -1,0 +1,9 @@
+{
+  "_description": "Sprint 13 step 10 — exploratory candidates for CP-1 scenario 3 (prose permisos on a convenio with chunks and no verified permisos fact).",
+  "cases": [
+    { "id": "x-3-deporte-estatal-matrimonio", "email": "test-deporte-estatal@example.com", "question": "¿Cuántos días de permiso tengo por matrimonio?", "expect": {} },
+    { "id": "x-3-deporte-estatal-mudanza", "email": "test-deporte-estatal@example.com", "question": "¿Tengo permiso retribuido por traslado de mi domicilio?", "expect": {} },
+    { "id": "x-3-hosteleria-matrimonio", "email": "test-hosteleria-navarra@example.com", "question": "¿Cuántos días de permiso tengo por matrimonio?", "expect": {} },
+    { "id": "x-3-andalucia-matrimonio", "email": "test-andalucia@example.com", "question": "¿Cuántos días de permiso tengo por matrimonio?", "expect": {} }
+  ]
+}

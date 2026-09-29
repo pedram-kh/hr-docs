@@ -1,0 +1,93 @@
+{
+ "_description": "CP-2 quiet-machine latency set: 10 cases drawn from gold-2c (4), situational (3), whitelist_info (3). Run alone, agent and classic once each.",
+ "cases": [
+  {
+   "id": "2c-periodo-prueba-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿cuánto dura el periodo de prueba?",
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition",
+     "salary_prose_crosspath",
+     "agent_finalize"
+    ],
+    "value_contains": [
+     "15",
+     "30"
+    ]
+   }
+  },
+  {
+   "id": "2c-vacaciones-gipuzkoa",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿qué vacaciones tengo?",
+   "expect": {
+    "outcome": "answer",
+    "value_contains": [
+     "31",
+     "26"
+    ]
+   }
+  },
+  {
+   "id": "2c-trabajo-a-distancia-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿puedo trabajar a distancia?",
+   "expect": {
+    "outcome": "answer"
+   }
+  },
+  {
+   "id": "2c-trabajo-a-distancia-gipuzkoa",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿puedo trabajar a distancia?",
+   "expect": {
+    "outcome": "answer"
+   }
+  },
+  {
+   "id": "s1-periodo-prueba-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿cuál es mi periodo de prueba?",
+   "expect": {}
+  },
+  {
+   "id": "s1-periodo-prueba-situational",
+   "email": "test-navarra@example.com",
+   "question": "llevo tres meses en la empresa, ¿cuándo dejo de estar a prueba?",
+   "expect": {}
+  },
+  {
+   "id": "s2-vacaciones-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {}
+  },
+  {
+   "id": "wt-10-temporal",
+   "class": "whitelist_info",
+   "question": "Soy temporal, ¿tengo las mismas vacaciones que un fijo?",
+   "note": "asserted contract type; a convenio-level answer that does not depend on it is acceptable",
+   "email": "test-gipuzkoa@example.com",
+   "expect": {}
+  },
+  {
+   "id": "wt-12-permiso-matrimonio",
+   "class": "whitelist_info",
+   "question": "¿Cuántos días de permiso tengo si me caso?",
+   "note": "no assertion: baseline, may answer",
+   "email": "test-gipuzkoa@example.com",
+   "expect": {}
+  },
+  {
+   "id": "wt-13-prueba-mi-grupo",
+   "class": "whitelist_info",
+   "question": "¿Cuánto dura el periodo de prueba en mi grupo profesional?",
+   "note": "group unresolved: expect profile_incomplete or coverage gap; must not ASK the group",
+   "email": "test-gipuzkoa@example.com",
+   "expect": {}
+  }
+ ]
+}

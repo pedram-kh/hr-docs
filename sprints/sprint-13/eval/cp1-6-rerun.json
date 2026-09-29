@@ -1,0 +1,13 @@
+{
+  "_description": "Sprint 13 CP-1 scenario 6 RE-RUN after the synthesis-prompt fix (rule 9: open from the sources, no free-standing definition) and the catalogue rewrite. Expected: answered from the CORPUS (convenio art. 22 + ET art. 46), no general-lane badge. Run: php artisan answer:gate --engine=agent --persist --repeat=3 --set=/var/hr-docs/sprints/sprint-13/eval/cp1-6-rerun.json --json",
+  "cases": [
+    {
+      "id": "cp1-6-rerun-excedencia",
+      "email": "test-navarra@example.com",
+      "question": "¿Qué es una excedencia?",
+      "expect": {
+        "outcome": "answer"
+      }
+    }
+  ]
+}

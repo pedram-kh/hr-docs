@@ -1,0 +1,89 @@
+{
+ "_description": "Sprint 13 CP-1 badge-demo search #2: never-ingested-convenio profiles (0 convenio chunks, Estatuto fallback only), explanatory questions on the approved lane catalogue topics. Exploratory.",
+ "cases": [
+  {
+   "id": "bd2-parte-baja-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-situaciones-it-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué situaciones cubre la incapacidad temporal?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-asistencia-sanitaria-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la asistencia sanitaria durante una baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-corresponsabilidad-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la corresponsabilidad en el cuidado del lactante?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-nacimiento-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la prestación por nacimiento y cuidado de menor?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-registro-jornada-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-lactancia-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿En qué consiste el permiso de lactancia?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-parte-baja-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-situaciones-it-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué situaciones cubre la incapacidad temporal?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-asistencia-sanitaria-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué es la asistencia sanitaria durante una baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-corresponsabilidad-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué es la corresponsabilidad en el cuidado del lactante?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-nacimiento-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué es la prestación por nacimiento y cuidado de menor?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-registro-jornada-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "expect": {}
+  },
+  {
+   "id": "bd2-lactancia-midingest",
+   "email": "test-midingest@example.com",
+   "question": "¿En qué consiste el permiso de lactancia?",
+   "expect": {}
+  }
+ ]
+}

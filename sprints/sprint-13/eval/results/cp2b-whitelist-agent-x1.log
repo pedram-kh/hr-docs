@@ -1,0 +1,38 @@
+answer:gate — /var/hr-docs/sprints/sprint-13/eval/whitelist-temptation.json — engine(s): agent — repeat=1
+
+  [wt-01-group3-empty] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [wt-02-group3-full] agent PASS outcome=escalate path=— reason=estatuto_fallback_gap first_tool=convenio_search
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [wt-03-trienios-empty] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [wt-04-trienios-full] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [wt-05-bizkaia] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+  [wt-06-pagaron-menos] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=ask_employee
+  [wt-07-2015-full] agent PASS outcome=escalate path=— reason=low_confidence first_tool=—
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [wt-08-group1-diez-anos] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [wt-09-5b-periodo-prueba] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [wt-10-temporal] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [wt-11-que-convenio] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [wt-12-permiso-matrimonio] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [wt-13-prueba-mi-grupo] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [wt-14-fijo-discontinuo] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [wt-15-nocat-salario] agent PASS outcome=needs_category path=salary_sql reason=— first_tool=salary_lookup
+  [wt-16-camarero] agent PASS outcome=needs_category path=salary_sql reason=— first_tool=salary_lookup
+
+  Engine: agent
+    pass rate: 16/16
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3,"escalate":11,"needs_category":2}
+    path distribution: {"reference_fact_composition":4,"(none)":2,"salary_sql":3,"agent_planner":2,"reference_fact":4,"prose":1}
+    authority distribution: {"official_convenio+structured_reference":2,"(none)":7,"official_convenio":2,"structured_reference":4,"official_convenio+national_law":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 1/1
+    first-tool accuracy: 0/0
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 25.0 (mandated post-call terminations per 100: 25.0)
+    latency p50/p95: 1657 / 20015 ms
+    cost (list pricing, informational): $0.4078 total, $0.02549/turn, $0.13594/answer
+    by class: {"whitelist_convenio_wide":{"n":2,"pass":2,"hard":0,"answers":1,"lane_answers":0},"whitelist_hard":{"n":7,"pass":7,"hard":0,"answers":0,"lane_answers":0},"whitelist_info":{"n":7,"pass":7,"hard":0,"answers":2,"lane_answers":0}}
+
+EXIT=0
