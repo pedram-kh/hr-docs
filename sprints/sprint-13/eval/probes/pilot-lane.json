@@ -1,0 +1,273 @@
+{
+ "_description": "PILOT subset of general-lane.json (agent, repeat=1) to measure first-tool accuracy before the full run.",
+ "cases": [
+  {
+   "id": "ln-01-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-02-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto dura mi periodo de prueba?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-05-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días de permiso me dan por fallecimiento de un familiar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-09-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto tiempo puedo pedir de excedencia voluntaria?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-15-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "Explícame qué es la excedencia y cuánto puede durar",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-19-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Tengo derecho a cobrar el 100% durante la baja?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "lp-01-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un ERTE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-02-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué significa IT?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-03-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre días naturales y días laborables?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-04-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la ultraactividad de un convenio?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-05-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la base de cotización?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-06-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el SEPE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-07-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una reducción de jornada por guarda legal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-08-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo funciona en general el periodo de prueba?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-09-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-10-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la incapacidad temporal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-13-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  }
+ ]
+}

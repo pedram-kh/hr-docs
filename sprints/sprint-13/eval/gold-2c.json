@@ -1,0 +1,40 @@
+{
+  "_description": "Sprint 13, build step 7 (plan.md §E.14's own table row: '2c gold — No, calls ChatService directly. Convert to JSON fixture + the new command.'). Converted VERBATIM from `hr-docs/sprints/sprint-10a/eval/gold-answer-run.php`'s 4 cases (the answer-level national-law gold run, Sprint 10a CP-2) — same test accounts, same questions, same claims about what each answer's authority/path must be. Run with `php artisan answer:gate --engine=classic --set=hr-docs/sprints/sprint-13/eval/gold-2c.json` (or `--engine=agent`/`--engine=both`). `value_contains` was not part of the original script (which printed the answer for a human to read, not asserted a substring) — the 15/30 and 31/26 figures are added here because they are literally what the original comment already claimed, not a new claim.",
+  "cases": [
+    {
+      "id": "2c-periodo-prueba-navarra",
+      "email": "test-navarra@example.com",
+      "question": "¿cuánto dura el periodo de prueba?",
+      "expect": {
+        "outcome": "answer",
+        "path": ["reference_fact", "reference_fact_composition", "salary_prose_crosspath", "agent_finalize"],
+        "value_contains": ["15", "30"]
+      }
+    },
+    {
+      "id": "2c-vacaciones-gipuzkoa",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿qué vacaciones tengo?",
+      "expect": {
+        "outcome": "answer",
+        "value_contains": ["31", "26"]
+      }
+    },
+    {
+      "id": "2c-trabajo-a-distancia-navarra",
+      "email": "test-navarra@example.com",
+      "question": "¿puedo trabajar a distancia?",
+      "expect": {
+        "outcome": "answer"
+      }
+    },
+    {
+      "id": "2c-trabajo-a-distancia-gipuzkoa",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿puedo trabajar a distancia?",
+      "expect": {
+        "outcome": "answer"
+      }
+    }
+  ]
+}

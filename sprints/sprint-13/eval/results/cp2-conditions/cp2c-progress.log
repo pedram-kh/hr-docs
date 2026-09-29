@@ -1,0 +1,21 @@
+START estatuto-positive-classic 2026-09-29T20:27:40Z
+END estatuto-positive-classic exit=0 2026-09-29T20:30:34Z
+START estatuto-positive-agent 2026-09-29T20:30:34Z
+END estatuto-positive-agent exit=0 2026-09-29T20:33:00Z
+START estatuto-negative-classic 2026-09-29T20:33:00Z
+END estatuto-negative-classic exit=0 2026-09-29T20:33:13Z
+START estatuto-negative-agent 2026-09-29T20:33:13Z
+END estatuto-negative-agent exit=0 2026-09-29T20:33:37Z
+START estatuto-second-negative-classic 2026-09-29T20:33:37Z
+END estatuto-second-negative-classic exit=0 2026-09-29T20:33:51Z
+START estatuto-second-negative-agent 2026-09-29T20:33:51Z
+END estatuto-second-negative-agent exit=0 2026-09-29T20:34:25Z
+START lane-forced-neg-1 2026-09-29T20:34:25Z
+END lane-forced-neg-1 2026-09-29T20:36:59Z
+START lane-forced-neg-2 2026-09-29T20:36:59Z
+END lane-forced-neg-2 2026-09-29T20:39:41Z
+START lane-forced-neg-3 2026-09-29T20:39:41Z
+END lane-forced-neg-3 2026-09-29T20:42:09Z
+START lane-forced-pos-1 2026-09-29T20:42:09Z
+END lane-forced-pos-1 2026-09-29T20:44:23Z
+CP2C DONE 2026-09-29T20:44:23Z

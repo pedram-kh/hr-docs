@@ -1,0 +1,12 @@
+{
+  "_description": "Sprint 13 CP-1 badge-demo search: explanatory questions on topics the approved lane catalogue covers, run against test employees to find one the corpus cannot answer but the catalogue can. Exploratory (expectations empty); persisted so the traces can be read in Historial.",
+  "cases": [
+    { "id": "bd-1-parte-baja", "email": "test-navarra@example.com", "question": "¿Qué es el parte de baja médica?", "expect": {} },
+    { "id": "bd-2-it", "email": "test-navarra@example.com", "question": "¿Qué es la incapacidad temporal?", "expect": {} },
+    { "id": "bd-3-registro-jornada", "email": "test-navarra@example.com", "question": "¿Qué es el registro de jornada?", "expect": {} },
+    { "id": "bd-4-corresponsabilidad", "email": "test-navarra@example.com", "question": "¿Qué es la corresponsabilidad en el cuidado del lactante?", "expect": {} },
+    { "id": "bd-5-periodo-prueba", "email": "test-ocio-alava@example.com", "question": "¿Qué es el periodo de prueba?", "expect": {} },
+    { "id": "bd-6-prestacion-nacimiento", "email": "test-navarra@example.com", "question": "¿Qué es la prestación por nacimiento y cuidado de menor?", "expect": {} },
+    { "id": "bd-7-situaciones-it", "email": "test-deporte-estatal@example.com", "question": "¿Qué situaciones se consideran incapacidad temporal?", "expect": {} }
+  ]
+}

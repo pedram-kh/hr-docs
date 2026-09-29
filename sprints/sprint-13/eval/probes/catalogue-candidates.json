@@ -1,0 +1,290 @@
+[
+ {
+  "id": "sepe-caracteristicas-contrato",
+  "url": "https://www.sepe.es/HomeSepe/empresas/Contratos-de-trabajo/caracteristicas-contrato.html",
+  "topics": [
+   "periodo de prueba",
+   "período de prueba",
+   "jornada",
+   "jornada completa",
+   "contrato indefinido"
+  ],
+  "probe": "¿Qué es el periodo de prueba?",
+  "expect": [
+   "sin alegar causa alguna",
+   "dos meses"
+  ]
+ },
+ {
+  "id": "CONTROL-sepe-excedencias-current",
+  "url": "https://www.sepe.es/HomeSepe/Personas/distributivas-programa/excedencias.html",
+  "topics": [
+   "excedencia",
+   "excedencias",
+   "excedencia voluntaria",
+   "reserva de puesto"
+  ],
+  "probe": "¿Qué es una excedencia?"
+ },
+ {
+  "id": "sepe-prestacion-contributiva",
+  "url": "https://www.sepe.es/HomeSepe/prestaciones-desempleo/prestacion-contributiva.html",
+  "topics": [
+   "situación legal de desempleo",
+   "despido",
+   "finiquito",
+   "excedencia",
+   "fin de contrato"
+  ],
+  "probe": "¿Qué es el finiquito?"
+ },
+ {
+  "id": "sepe-faqs-desempleo",
+  "url": "https://www.sepe.es/HomeSepe/prestaciones-desempleo/FAQS.html",
+  "topics": [
+   "excedencia",
+   "finiquito",
+   "despido",
+   "situación legal de desempleo"
+  ],
+  "probe": "¿Qué es una excedencia?"
+ },
+ {
+  "id": "segsocial-it-gestion",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/10952",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica",
+   "baja laboral",
+   "parte de baja"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?"
+ },
+ {
+  "id": "segsocial-it-regimen-general",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/10952/28362",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica",
+   "baja laboral",
+   "parte de baja"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?"
+ },
+ {
+  "id": "CONTROL-segsocial-current-10963",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/10963",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica",
+   "baja laboral",
+   "it"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?"
+ },
+ {
+  "id": "segsocial-corresponsabilidad-lactante",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/61f8b540-c867-43cf-926d-77476b975f36",
+  "topics": [
+   "lactancia",
+   "lactante",
+   "permiso",
+   "conciliación",
+   "corresponsabilidad"
+  ],
+  "probe": "¿Qué es el permiso de lactancia?"
+ },
+ {
+  "id": "segsocial-nacimiento-cuidado-menor",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/6b96a085-4dc0-47af-b2cb-97e00716791e",
+  "topics": [
+   "permiso",
+   "nacimiento",
+   "cuidado de menor",
+   "conciliación",
+   "suspensión"
+  ],
+  "probe": "¿Qué es el permiso por nacimiento?"
+ },
+ {
+  "id": "segsocial-cuidado-menores-enfermedad-grave",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/1941",
+  "topics": [
+   "reducción de jornada",
+   "cuidado de menores",
+   "conciliación",
+   "permiso"
+  ],
+  "probe": "¿Qué es la reducción de jornada por cuidado de hijos?"
+ },
+ {
+  "id": "CONTROL-mites-portada-current",
+  "url": "https://www.mites.gob.es/es/portada/index.htm",
+  "topics": [
+   "permiso",
+   "permisos",
+   "conciliacion",
+   "lactancia",
+   "cuidado de hijos"
+  ],
+  "probe": "¿Qué son los permisos retribuidos?"
+ },
+ {
+  "id": "mites-guia-home",
+  "url": "https://www.mites.gob.es/es/Guia/",
+  "topics": [
+   "excedencia",
+   "permisos retribuidos",
+   "jornada laboral",
+   "incapacidad temporal",
+   "período de prueba",
+   "finiquito"
+  ],
+  "probe": "¿Qué es una excedencia?"
+ },
+ {
+  "id": "mites-guia-t6-jornada-permisos-index",
+  "url": "https://www.mites.gob.es/es/Guia/texto/guia_6/index.htm",
+  "topics": [
+   "jornada laboral",
+   "permisos retribuidos",
+   "horas extraordinarias",
+   "vacaciones"
+  ],
+  "probe": "¿Qué son los permisos retribuidos?"
+ },
+ {
+  "id": "mites-guia-t7-suspension-index",
+  "url": "https://www.mites.gob.es/es/Guia/texto/guia_7/index.htm",
+  "topics": [
+   "excedencia",
+   "excedencias",
+   "finiquito",
+   "extinción del contrato"
+  ],
+  "probe": "¿Qué es una excedencia?"
+ },
+ {
+  "id": "mites-guia-t6-14-1",
+  "url": "https://www.mites.gob.es/es/Guia/texto/guia_6/contenidos/guia_6_14_1.htm",
+  "topics": [
+   "jornada laboral",
+   "jornada",
+   "horas extraordinarias"
+  ],
+  "probe": "¿Qué es la jornada laboral?"
+ },
+ {
+  "id": "mites-guia-t6-14-4",
+  "url": "https://www.mites.gob.es/es/Guia/texto/guia_6/contenidos/guia_6_14_4.htm",
+  "topics": [
+   "permisos retribuidos",
+   "permiso",
+   "permisos",
+   "lactancia"
+  ],
+  "probe": "¿Qué son los permisos retribuidos?"
+ },
+ {
+  "id": "boe-lgss-2015",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?",
+  "expect": [
+   "Artículo 169",
+   "Artículo 170"
+  ]
+ },
+ {
+  "id": "boe-ley-39-1999-conciliacion",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-1999-21568",
+  "topics": [
+   "conciliación",
+   "cuidado de hijos",
+   "excedencia"
+  ],
+  "probe": "¿Qué es la conciliación laboral?"
+ },
+ {
+  "id": "CONTROL-boe-estatuto",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+  "topics": [
+   "excedencia",
+   "excedencias",
+   "periodo de prueba"
+  ],
+  "probe": "¿Qué es una excedencia?"
+ },
+ {
+  "id": "segsocial-it-situaciones-protegidas",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/10952/28362/28363",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica",
+   "baja laboral"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?",
+  "expect": [
+   "situaciones determinantes de incapacidad temporal",
+   "enfermedad común",
+   "asistencia sanitaria"
+  ]
+ },
+ {
+  "id": "segsocial-it-duracion",
+  "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/PrestacionesPensionesTrabajadores/10952/28362/28368",
+  "topics": [
+   "incapacidad temporal",
+   "baja médica",
+   "baja laboral"
+  ],
+  "probe": "¿Qué es la incapacidad temporal?",
+  "expect": [
+   "365 días",
+   "prórroga"
+  ]
+ },
+ {
+  "id": "sepe-contratos-trabajo",
+  "url": "https://www.sepe.es/HomeSepe/empresas/Contratos-de-trabajo.html",
+  "topics": [
+   "periodo de prueba",
+   "período de prueba",
+   "jornada",
+   "contrato indefinido"
+  ],
+  "probe": "¿Qué es el periodo de prueba?"
+ },
+ {
+  "id": "boe-rdl-5-2023-permisos",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2023-14975",
+  "topics": [
+   "permiso",
+   "permisos",
+   "conciliación",
+   "excedencia",
+   "lactancia"
+  ],
+  "probe": "¿Qué son los permisos retribuidos?",
+  "expect": [
+   "fuerza mayor",
+   "permiso"
+  ]
+ },
+ {
+  "id": "boe-rdl-8-2019-registro-jornada",
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2019-3481",
+  "topics": [
+   "registro de jornada",
+   "registro diario de jornada",
+   "jornada"
+  ],
+  "probe": "¿Qué es el registro de jornada?",
+  "expect": [
+   "registro"
+  ]
+ }
+]

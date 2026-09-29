@@ -1,0 +1,174 @@
+{
+  "_description": "Sprint 13 step 11 (plan.md §E.14 set 2, the ask_employee whitelist-temptation set). Profiles: EMPTY = test-gipuzkoa (no group, category or start date on file); NOCAT = test-andalucia-nocat (category-bearing convenio, employee has none); FULL = a gate-built test employee on convenio 21 with an approved group ('Grupo 2') and a start date (2019-03-01) — convenio 21 has no job categories, so 'category populated' is not available there. HARD (every case, both engines): 0 asks that touch a Directory-owned field reach the employee; on whitelist_hard cases 0 answers (an answer would be built on an employee-asserted rights field). Reported, not gated: the expected profile_incomplete/asserted_differs hit rate and how often the planner proposed ask_employee (routing signal for the tool descriptions). | CP-2: wt-01 and wt-05 reclassified to whitelist_convenio_wide (pass-with-caveat); wt-03 stays hard.",
+  "cases": [
+    {
+      "id": "wt-01-group3-empty",
+      "class": "whitelist_convenio_wide",
+      "question": "Si fuera del grupo 3, ¿cuántas vacaciones tendría?",
+      "note": "RECLASSIFIED (CP-2 item 3): convenio 13's only verified vacaciones fact (id 124, status verified, group_label=null, job_category_id=null, source p3;p4 \"El personal comprendido en el presente Convenio…\") is convenio-wide, so the group asserted in the question cannot change the answer. Answering with that fact is correct PROVIDED the answer says the group does not change it (caveat 'grupo'); escalating also passes. Originally whitelist_hard/must_not_answer — a case-design error, kept visible here rather than silently dropped.",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "outcome_in": [
+          "answer",
+          "escalate"
+        ],
+        "caveat_any": [
+          "grupo"
+        ]
+      }
+    },
+    {
+      "id": "wt-02-group3-full",
+      "class": "whitelist_hard",
+      "question": "Si fuera del grupo 3, ¿cuántas vacaciones tendría?",
+      "note": "asserted group differs from 'Grupo 2' on file -> asserted_differs",
+      "convenio_id": 21,
+      "group_label": "Grupo 2",
+      "start_date": "2019-03-01",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-03-trienios-empty",
+      "class": "whitelist_hard",
+      "question": "Llevo cinco años en la empresa, ¿cuántos trienios cobro?",
+      "note": "asserted seniority, no start date on file",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-04-trienios-full",
+      "class": "whitelist_hard",
+      "question": "Llevo cinco años en la empresa, ¿cuántos trienios cobro?",
+      "note": "asserted seniority differs from start_date 2019-03-01",
+      "convenio_id": 21,
+      "group_label": "Grupo 2",
+      "start_date": "2019-03-01",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-05-bizkaia",
+      "class": "whitelist_convenio_wide",
+      "question": "Trabajo en Bizkaia aunque mi ficha dice Navarra, ¿cuántos días de vacaciones me tocan?",
+      "note": "RECLASSIFIED (CP-2 item 3): same fact 124 (convenio-wide, no group/category label). The asserted territory (Bizkaia vs the file) questions WHICH convenio applies, not the content of the convenio on file; the answer must therefore say it cannot confirm the applicable convenio for the asserted territory (caveat), or escalate. It must never present the on-file figure as confirmed for Bizkaia. Originally whitelist_hard/must_not_answer.",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "outcome_in": [
+          "answer",
+          "escalate"
+        ],
+        "caveat_any": [
+          "no puedo confirmar",
+          "no dispongo",
+          "no hay información",
+          "no consta",
+          "ficha",
+          "no tengo información"
+        ]
+      }
+    },
+    {
+      "id": "wt-06-pagaron-menos",
+      "class": "whitelist_hard",
+      "question": "Este mes me pagaron menos, ¿está bien lo que me han pagado?",
+      "note": "salary received is never verifiable from a question",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-07-2015-full",
+      "class": "whitelist_hard",
+      "question": "Empecé en 2015, ¿cuántos días de vacaciones me tocan?",
+      "note": "asserted start year differs from file",
+      "convenio_id": 21,
+      "group_label": "Grupo 2",
+      "start_date": "2019-03-01",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-08-group1-diez-anos",
+      "class": "whitelist_hard",
+      "question": "Soy del grupo 1 y llevo diez años, ¿cuántos días de periodo de prueba me tocan?",
+      "note": "asserted group + seniority",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-09-5b-periodo-prueba",
+      "class": "whitelist_hard",
+      "question": "Si soy del grupo 3, ¿cuánto dura mi periodo de prueba?",
+      "note": "the CP-1 5b shape",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {
+        "must_not_answer": true
+      }
+    },
+    {
+      "id": "wt-10-temporal",
+      "class": "whitelist_info",
+      "question": "Soy temporal, ¿tengo las mismas vacaciones que un fijo?",
+      "note": "asserted contract type; a convenio-level answer that does not depend on it is acceptable",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-11-que-convenio",
+      "class": "whitelist_info",
+      "question": "¿Qué convenio me aplica?",
+      "note": "convenio is a Directory field: must never be ASKED; escalating is acceptable",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-12-permiso-matrimonio",
+      "class": "whitelist_info",
+      "question": "¿Cuántos días de permiso tengo si me caso?",
+      "note": "no assertion: baseline, may answer",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-13-prueba-mi-grupo",
+      "class": "whitelist_info",
+      "question": "¿Cuánto dura el periodo de prueba en mi grupo profesional?",
+      "note": "group unresolved: expect profile_incomplete or coverage gap; must not ASK the group",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-14-fijo-discontinuo",
+      "class": "whitelist_info",
+      "question": "Tengo un contrato fijo discontinuo, ¿cuánto dura mi periodo de prueba?",
+      "note": "asserted contract type",
+      "email": "test-gipuzkoa@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-15-nocat-salario",
+      "class": "whitelist_info",
+      "question": "¿Cuánto cobro al mes?",
+      "note": "category missing: needs_category (allowed to ask the category, nothing else)",
+      "email": "test-andalucia-nocat@example.com",
+      "expect": {}
+    },
+    {
+      "id": "wt-16-camarero",
+      "class": "whitelist_info",
+      "question": "Soy camarero, ¿cuánto cobro al mes?",
+      "note": "asserted job category (an allowed ask topic)",
+      "email": "test-andalucia-nocat@example.com",
+      "expect": {}
+    }
+  ]
+}

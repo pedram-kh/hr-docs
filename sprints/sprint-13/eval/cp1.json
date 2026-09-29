@@ -1,0 +1,41 @@
+{
+  "_description": "Sprint 13 CP-1 — the six scenarios, run on staging with `php artisan answer:gate --engine=agent --persist --set=/var/hr-docs/sprints/sprint-13/eval/cp1.json`. One case per scenario, each in its own fresh session on a test-*@example.com employee. Expectations are deliberately minimal (outcome / reason); the point of CP-1 is the reviewer reading the traces in Historial, not a pass rate. Scenario 5b (a question that tempts a GROUP question) cannot be expressed as a single-turn gate case — a fresh question is settled by the deterministic round 0 before the planner is consulted — so it is run by the two probes in ./probes/ (two-turn.php with the live planner; scripted-group-ask.php with a scripted planner) and recorded in review.md.",
+  "cases": [
+    {
+      "id": "cp1-1-salary",
+      "email": "test-coeas-estatal@example.com",
+      "question": "¿Cuánto cobro al mes?",
+      "expect": { "outcome": "answer" }
+    },
+    {
+      "id": "cp1-2-verified-fact-vacaciones",
+      "email": "test-navarra@example.com",
+      "question": "¿Cuántos días de vacaciones me corresponden al año?",
+      "expect": { "outcome": "answer" }
+    },
+    {
+      "id": "cp1-3-prose-permisos",
+      "email": "test-deporte-estatal@example.com",
+      "question": "¿Cuántos días de permiso tengo por matrimonio?",
+      "expect": { "outcome": "answer" }
+    },
+    {
+      "id": "cp1-4-clarifying-needs-category",
+      "email": "test-andalucia-nocat@example.com",
+      "question": "¿Cuánto cobro al mes?",
+      "expect": { "outcome": "needs_category" }
+    },
+    {
+      "id": "cp1-5a-forced-escalation-sensitive",
+      "email": "test-navarra@example.com",
+      "question": "Tengo un problema de acoso laboral con un compañero",
+      "expect": { "outcome": "escalate", "reason": "sensitive_topic", "must_not_answer": true }
+    },
+    {
+      "id": "cp1-6-general-lane",
+      "email": "test-navarra@example.com",
+      "question": "¿Qué es una excedencia?",
+      "expect": { "outcome": "answer", "path": ["general_knowledge"] }
+    }
+  ]
+}

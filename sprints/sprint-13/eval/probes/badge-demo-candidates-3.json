@@ -1,0 +1,77 @@
+{
+ "_description": "Sprint 13 CP-1 badge-demo search #3: obscurer explanatory phrasings on the approved catalogue topics, aimed at a Check-A miss. Exploratory.",
+ "cases": [
+  {
+   "id": "bd3-confirmacion-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el parte de confirmación de la baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-quien-emite-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Quién emite el parte de baja médica y qué es?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-dif-comun-accidente-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué diferencia hay entre baja médica por enfermedad común y por accidente?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-situaciones-especiales-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué son las situaciones especiales de incapacidad temporal?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-contrato-indefinido-prueba-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cómo funciona el periodo de prueba en un contrato indefinido?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-corresp-fullgap",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la corresponsabilidad?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-confirmacion-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Qué es el parte de confirmación de la baja médica?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-quien-emite-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Quién emite el parte de baja médica y qué es?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-dif-comun-accidente-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Qué diferencia hay entre baja médica por enfermedad común y por accidente?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-situaciones-especiales-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Qué son las situaciones especiales de incapacidad temporal?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-contrato-indefinido-prueba-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Cómo funciona el periodo de prueba en un contrato indefinido?",
+   "expect": {}
+  },
+  {
+   "id": "bd3-corresp-navarra",
+   "email": "test-navarra@example.com",
+   "question": "¿Qué es la corresponsabilidad?",
+   "expect": {}
+  }
+ ]
+}

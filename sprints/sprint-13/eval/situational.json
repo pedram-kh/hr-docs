@@ -1,0 +1,82 @@
+{
+ "_description": "Sprint 13, build step 7 (plan.md §E.15 step 7: 'commit the 10b situational driver as a set in answer:gate'). The 10b situational-decomposition pairs (`hr-docs/sprints/sprint-10b/eval/situational-decomposition-gold.json`, s1–s5 + the c1/c2 citation-neutrality controls) were previously only run through a throwaway, never-committed `/tmp` script (10b review §3.4). Converted here to a real `answer:gate` fixture — each pair becomes two cases (canonical + situational), run through whichever engine you pass.\n\n  Employee: every case uses `test-navarra@example.com`, the same account 10b's own driver effectively exercised — the original situational-decomposition-gold.json pairs carry no employee/scope field at all, and the 10b review's own environment caveat (§3.4: 'staging currently has zero ingested convenio-scoped chunks for every test employee ... this driver therefore exercises the mechanism entirely within the Estatuto/national_law chunk space') already established that which employee ran these pairs did not change what was being measured. If convenio-scoped chunks exist for `test-navarra@example.com` by the time this runs, the path/authority distribution below simply reports that reality — no case here hard-asserts `authority_used`.\n\n  Deliberately NOT hard-gated on `outcome`: 10b's own finding (review §3.2, id 2 / periodo_prueba's per-claim grounding gate) is that a genuinely correct, on-topic answer can still legitimately escalate `low_confidence` some fraction of the time — that is the per-claim entailment gate working as designed, not a routing miss this fixture should fail on. What IS reported per case: outcome, path, authority_used, and (informationally) whether the answer contains legal-figure vocabulary — the citation-NEUTRALITY claim itself (same chunk-ids/documents with vs. without decomposition) is `Sprint10bInvariantTest`'s own reflection-based proof, already committed and already run every full suite; this fixture proves the pairs are still routable and answerable through the REAL AnswerEngineDispatcher path today (§B.4.4's window/decomposition are on the live production path, not a toggle this fixture flips), not a second copy of 10b's own invariant.\n\n  Run: php artisan answer:gate --engine=classic --set=hr-docs/sprints/sprint-13/eval/situational.json (or --engine=agent/--engine=both). Needs `test-navarra@example.com` seeded (staging:seed-test-users --chat-profiles, or the local equivalent) — an unseeded run reports every case SKIPPED, honestly, rather than fabricating the account.",
+ "cases": [
+  {
+   "id": "s1-periodo-prueba-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿cuál es mi periodo de prueba?",
+   "expect": {}
+  },
+  {
+   "id": "s1-periodo-prueba-situational",
+   "email": "test-navarra@example.com",
+   "question": "llevo tres meses en la empresa, ¿cuándo dejo de estar a prueba?",
+   "expect": {}
+  },
+  {
+   "id": "s2-vacaciones-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {}
+  },
+  {
+   "id": "s2-vacaciones-situational",
+   "email": "test-navarra@example.com",
+   "question": "mi jefe me ha denegado las vacaciones, ¿puede hacerlo?",
+   "expect": {}
+  },
+  {
+   "id": "s3-preaviso-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿cuánto preaviso tengo que dar si me voy?",
+   "expect": {}
+  },
+  {
+   "id": "s3-preaviso-situational",
+   "email": "test-navarra@example.com",
+   "question": "quiero dejar la empresa el mes que viene, ¿con cuánto tiempo tengo que avisar?",
+   "expect": {}
+  },
+  {
+   "id": "s4-festivos-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿qué días festivos me corresponden?",
+   "expect": {}
+  },
+  {
+   "id": "s4-festivos-situational",
+   "email": "test-navarra@example.com",
+   "question": "el próximo lunes es fiesta en mi pueblo pero no en la empresa, ¿tengo que ir a trabajar?",
+   "expect": {}
+  },
+  {
+   "id": "s5-horas-extra-canonical",
+   "email": "test-navarra@example.com",
+   "question": "¿cómo se pagan las horas extraordinarias?",
+   "expect": {}
+  },
+  {
+   "id": "s5-horas-extra-situational",
+   "email": "test-navarra@example.com",
+   "question": "me han hecho quedarme dos horas más ayer, ¿me tienen que pagar algo por eso?",
+   "expect": {}
+  },
+  {
+   "id": "c1-permisos-asuntos-propios",
+   "email": "test-navarra@example.com",
+   "question": "¿cuántos días de asuntos propios tengo?",
+   "expect": {}
+  },
+  {
+   "id": "c2-permisos-matrimonio",
+   "email": "test-navarra@example.com",
+   "question": "¿Cuántos días de permiso por matrimonio?",
+   "note": "FIXTURE CORRECTED (CP-2 condition 2): was value_contains '15' (the Estatuto art. 37.1.a statutory figure). test-navarra is on convenio 22 (Limpieza Navarra 2024-2027, doc 36 art. 1 Licencias Retribuidas, p9-11: 'a) Matrimonio: 18 días naturales', verified fact #105); the convenio improves the statutory 15, so 18 is right and 15 was wrong.",
+   "expect": {
+    "value_contains": [
+     "18"
+    ]
+   }
+  }
+ ]
+}

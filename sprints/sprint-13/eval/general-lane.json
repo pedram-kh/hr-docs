@@ -1,0 +1,1822 @@
+{
+ "_description": "Sprint 13 step 11 (plan.md §E.14 set 1). lane_negative: 25 second-person entitlement / figure questions x 3 profiles (covered = test-gipuzkoa; never_ingested = test-fullgap, Estatuto fallback only; corpus-miss = test-deporte-estatal, a thin corpus that pushes the planner towards the lane). HARD: 0 lane answers (forbid_paths general_knowledge), and 0 false answers of any kind is not required here — the corpus may legitimately answer these. lane_positive: 14 explanatory questions x 2 profiles — informational answer rate; every lane answer must be web-sourced and digit-free (checked on every case). expected_tools.first lists the tools that are a CORRECT first choice: general_knowledge as the planner's first proposal counts as a routing miss (the lane is last by rule). The lane-forced harness (probes/lane-forced.php) sends the same lane_negative questions straight to the lane, bypassing the planner.",
+ "cases": [
+  {
+   "id": "ln-01-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-01-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-01-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días de vacaciones me corresponden al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-02-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto dura mi periodo de prueba?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-02-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto dura mi periodo de prueba?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-02-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto dura mi periodo de prueba?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-03-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días de permiso tengo por matrimonio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-03-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántos días de permiso tengo por matrimonio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-03-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días de permiso tengo por matrimonio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-04-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días me corresponden por el nacimiento de un hijo?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-04-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántos días me corresponden por el nacimiento de un hijo?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-04-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días me corresponden por el nacimiento de un hijo?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-05-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días de permiso me dan por fallecimiento de un familiar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-05-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántos días de permiso me dan por fallecimiento de un familiar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-05-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días de permiso me dan por fallecimiento de un familiar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-06-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Con cuántos días de preaviso tengo que avisar si dejo la empresa?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-06-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Con cuántos días de preaviso tengo que avisar si dejo la empresa?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-06-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Con cuántos días de preaviso tengo que avisar si dejo la empresa?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-07-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo se pagan las horas extra en mi convenio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-07-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cómo se pagan las horas extra en mi convenio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-07-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cómo se pagan las horas extra en mi convenio?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-08-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántas horas a la semana tengo que trabajar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-08-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántas horas a la semana tengo que trabajar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-08-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántas horas a la semana tengo que trabajar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-09-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto tiempo puedo pedir de excedencia voluntaria?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-09-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto tiempo puedo pedir de excedencia voluntaria?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-09-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto tiempo puedo pedir de excedencia voluntaria?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-10-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto tiempo puedo estar de baja por incapacidad temporal?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-10-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto tiempo puedo estar de baja por incapacidad temporal?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-10-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto tiempo puedo estar de baja por incapacidad temporal?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-11-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto cobro de plus de nocturnidad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-11-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto cobro de plus de nocturnidad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-11-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto cobro de plus de nocturnidad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-12-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto me corresponde por antigüedad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-12-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto me corresponde por antigüedad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-12-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto me corresponde por antigüedad?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-13-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántas pagas extra tengo al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-13-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántas pagas extra tengo al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-13-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántas pagas extra tengo al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-14-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "En general, ¿cuántos días de vacaciones da la ley?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-14-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "En general, ¿cuántos días de vacaciones da la ley?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-14-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "En general, ¿cuántos días de vacaciones da la ley?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-15-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "Explícame qué es la excedencia y cuánto puede durar",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-15-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "Explícame qué es la excedencia y cuánto puede durar",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-15-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "Explícame qué es la excedencia y cuánto puede durar",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-16-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el periodo de prueba y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-16-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el periodo de prueba y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-16-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Qué es el periodo de prueba y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-17-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el permiso de lactancia y cuántas horas me corresponden?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-17-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el permiso de lactancia y cuántas horas me corresponden?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-17-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Qué es el permiso de lactancia y cuántas horas me corresponden?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-18-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "Según la ley, ¿cuántos días de preaviso hay que dar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-18-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "Según la ley, ¿cuántos días de preaviso hay que dar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-18-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "Según la ley, ¿cuántos días de preaviso hay que dar?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-19-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Tengo derecho a cobrar el 100% durante la baja?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-19-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Tengo derecho a cobrar el 100% durante la baja?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-19-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Tengo derecho a cobrar el 100% durante la baja?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-20-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Me tienen que pagar las horas extra o me las pueden compensar con descanso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-20-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Me tienen que pagar las horas extra o me las pueden compensar con descanso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-20-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Me tienen que pagar las horas extra o me las pueden compensar con descanso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-21-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuántos días libres me corresponden si me caso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-21-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuántos días libres me corresponden si me caso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-21-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuántos días libres me corresponden si me caso?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-22-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Puedo pedir una excedencia para cuidar de mi madre y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-22-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Puedo pedir una excedencia para cuidar de mi madre y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-22-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Puedo pedir una excedencia para cuidar de mi madre y cuánto dura?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-23-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto es lo mínimo que me deben pagar por trabajar de noche?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-23-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto es lo mínimo que me deben pagar por trabajar de noche?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-23-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto es lo mínimo que me deben pagar por trabajar de noche?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-24-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuál es el máximo de horas extraordinarias al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-24-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuál es el máximo de horas extraordinarias al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-24-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuál es el máximo de horas extraordinarias al año?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-25-cov",
+   "class": "lane_negative",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cuánto tiempo de descanso tengo entre jornadas?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-25-ni",
+   "class": "lane_negative",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cuánto tiempo de descanso tengo entre jornadas?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "ln-25-miss",
+   "class": "lane_negative",
+   "email": "test-deporte-estatal@example.com",
+   "question": "¿Cuánto tiempo de descanso tengo entre jornadas?",
+   "expect": {
+    "forbid_paths": [
+     "general_knowledge"
+    ]
+   },
+   "expected_tools": {
+    "first": [
+     "reference_fact",
+     "convenio_search",
+     "national_law",
+     "salary_lookup"
+    ]
+   }
+  },
+  {
+   "id": "lp-01-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un ERTE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-01-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es un ERTE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-02-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué significa IT?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-02-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué significa IT?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-03-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre días naturales y días laborables?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-03-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué diferencia hay entre días naturales y días laborables?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-04-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la ultraactividad de un convenio?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-04-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la ultraactividad de un convenio?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-05-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la base de cotización?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-05-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la base de cotización?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-06-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el SEPE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-06-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el SEPE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-07-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una reducción de jornada por guarda legal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-07-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es una reducción de jornada por guarda legal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-08-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo funciona en general el periodo de prueba?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-08-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Cómo funciona en general el periodo de prueba?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-09-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-09-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-10-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la incapacidad temporal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-10-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la incapacidad temporal?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-11-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el permiso de lactancia?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-11-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el permiso de lactancia?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-12-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato indefinido?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-12-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es un contrato indefinido?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-13-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-13-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-14-cov",
+   "class": "lane_positive",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la corresponsabilidad en el cuidado del lactante?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "lp-14-ni",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es la corresponsabilidad en el cuidado del lactante?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  }
+ ]
+}
