@@ -113,10 +113,10 @@ services:
       # default so a fresh deploy never has it on by accident.
       STAGING_FIXED_OTP_CODE: ""
       # Sprint 13 (plan §B.6.6): the env baseline for the `general_knowledge`
-      # lane. Default in config/hr.php is OFF; staging turns it on for
-      # CP-1 review (2026-09-29). The Guardarraíles toggle can only narrow
-      # this further (restrict-only AND) — it can never turn the lane on when
-      # this is off. Remove this line (or set "false") to take the lane off.
+      # lane. Default in config/hr.php is OFF, and staging is OFF since CP-2
+      # (2026-09-30; it was on only for CP-1 review). The Guardarraíles toggle can
+      # only narrow this further (restrict-only AND) — it can never turn the lane on
+      # when this is off. Set "true" only for a deliberate lane review.
       HR_GENERAL_LANE_ENABLED: "false"
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro

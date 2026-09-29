@@ -1072,4 +1072,48 @@ Agent routing metrics (n = 391 re-run turns): first-tool accuracy **97.2 %** (31
 
 ### Merge, deploy and verification
 
-Recorded below after the close-out run (SHAs, snapshots, the verification table).
+**Committed on `sprint-13` and merged to `main` with `--no-ff`; `main` and `sprint-13` pushed in all four repos.** Untracked files that were not this sprint's (`hr-frontend/count-strings*` from the Sprint 11b measurement, `hr-docs/sedena/` brand assets) were left out of the commits.
+
+| Repo | Sprint-13 commit | Merge commit on `main` (deployed) | Previous `main` |
+|---|---|---|---|
+| hr-backend | `8a58c62` | **`0ddaef2`** | `42b1fea` |
+| hr-ai | `e6b5ce7` | **`476eb1b`** | `d6b17b2` |
+| hr-frontend | `fa835b8` | **`8d35afe`** | `bdb0753` |
+| hr-docs | `f779d0c` | **`e33710a`** | `cbbc0d6` |
+
+(Full SHAs deployed: `0ddaef20628c03df29a25160d52fd078188e7597`, `476eb1bf67597e9431fcb984034a918eb8fbce5d`, `8d35afe039eea202b5e2df82148e9f2cafa4dc18`, `e33710a97e9edc8c7576b69786b8517520bda0ac`. This record is a later docs-only commit on `main`; it is not part of the deployed hr-docs checkout.)
+
+**Staging, in order.**
+1. Reset the four on-box checkouts (`git reset --hard` + `git clean -fd`, no `-x`; the dry run listed only this sprint's injected files; every earlier rsync had `--exclude='.git'`). All four clean at their old base SHAs, ready for `deploy.sh`.
+2. RDS snapshot `hr-staging-pre-13-merge`, available before anything else ran.
+3. `deploy.sh 0ddaef2… 476eb1b… 8d35afe… e33710a…` from the box: leak scan, build, **migrate: "Nothing to migrate"** (both sprint migrations ran at step 10), up, health loop green on attempt 2, `.last-good-shas` recorded (the previous set was `42b1fea… d6b17b2… bdb0753… 00e5062…` — the rollback target).
+4. Recreate with the `vars.sh` exports (`hr-backend`, worker, scheduler). `deploy.sh` had overwritten the flat compose from the repo copy, dropping the box-only `STAGING_FIXED_OTP_CODE: "135790"` (the one known drift); I re-applied it so the test logins keep working, then recreated. `HR_GENERAL_LANE_ENABLED` is `"false"` in both files, so nothing else differed.
+5. `artisan` health: `--version` (Laravel 13.16.1, PHP 8.4.26), `migrate:status --pending` "No pending migrations", `about` (environment staging, debug off, maintenance off).
+
+**Verification table** (all from the deployed build / box, after the recreate):
+
+| Check | Result |
+|---|---|
+| `HR_ANSWER_ENGINE` config default (image `config/hr.php`) | `env('HR_ANSWER_ENGINE', 'classic')`; container env unset; `config('hr.answer_engine')` = **classic** |
+| DB engine override on staging | **agent** (`answer_engine_settings.engine`) |
+| `HR_GENERAL_LANE_ENABLED`, repo compose at deployed hr-docs SHA | `"false"` |
+| `HR_GENERAL_LANE_ENABLED`, box compose `/opt/hr-staging/docker-compose.staging.yml` | `"false"` |
+| `HR_GENERAL_LANE_ENABLED`, container env / effective `config('hr.general_lane.enabled')` | `false` / `false` (image default `env(…, false)`) |
+| 22 golden traces on the deployed commit `0ddaef2` | **22 passed, 122 assertions** (`ops/golden-verify.sh`: deployed commit, deployed image runtime, throwaway Postgres and `APP_KEY`, never the staging database). A first run showed 22 warnings caused only by a missing `.env` in the export; a second run with one is clean |
+| Agent smoke — `test-navarra`, `¿Cuántos días de vacaciones tengo?`, real HTTP path through Caddy | outcome **answer** (msg 5839), 3 citations, `trace.engine=agent`, path `reference_fact_composition`, steps `round0:reference_fact` → planner round → rule verdict (this session already had a turn, so the reference-fact follow-up gate sent it to the planner; a rule verdict then forced the finish). **Review button:** the deployed bundle contains "¿Quieres que lo revise RR. HH.?" and the trace step label "sin objeciones"; the button renders for every `answer` outcome, and this response is one, with a `message_id`. I did not press it: that would create an escalation card for a test account |
+| Classic smoke — override flipped to `classic` (`answer-engine:set classic --admin=admin@hr-staging.internal`), same question | outcome **answer** (msg 5841), `trace.engine` absent, no agent block, 3 citations, path `reference_fact_composition` — the same route and outcome shape as the agent turn |
+| Flip back | `answer-engine:set agent …`, read back from the DB: **agent** |
+
+Not run on the deployed box: the full backend suite (1117/1117 was run locally on the merged tree before the push) and the frontend suite (113/113).
+
+**Snapshots.** Taken `hr-staging-pre-13-merge` (before the deploy) and `hr-staging-post-13` (after verification, available 2026-09-29 23:56 UTC). Then, per the keep list, deleted `hr-staging-post-10c`, `hr-staging-post-11a`, `hr-staging-post-11c` and `hr-staging-pre-13-merge` (the pre-merge rollback point, no longer needed once the deploy was green and verified). Manual snapshots remaining:
+
+| Snapshot | Created (UTC) |
+|---|---|
+| `hr-staging-post-ingest-20260906` | 2026-09-06 |
+| `hr-staging-post-11b` | 2026-09-23 |
+| `hr-staging-post-12a` | 2026-09-27 |
+| `hr-staging-post-13-cp1` | 2026-09-29 03:24 |
+| `hr-staging-post-13` | 2026-09-29 23:56 |
+
+Staging is left on the **agent** engine (DB override) with the **lane off**; `main` defaults to classic.
