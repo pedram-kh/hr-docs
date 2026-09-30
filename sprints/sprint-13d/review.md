@@ -83,4 +83,19 @@ Both engines gave one coherent answer on the overview (all four aspects: annual 
 
 ## Close-out
 
-See the merge and deploy section appended below at merge time.
+Merged to `main` with `--no-ff`, WIP commits squashed to one commit per repo (the branch was force-pushed once, with lease, before the merge):
+
+| Repo | Squashed branch commit | `main` merge commit (deployed) |
+|---|---|---|
+| hr-backend | `f451fb7` | `2004e38ed6c63d96563e63d136d9335ab1571d1b` |
+| hr-ai | `cb2a1b4` | `e9a1e31cf792739e80ec0e215aa9a8eb09ba7eb5` |
+| hr-frontend | `09ea243` | `8aa460328c123f6c27c35bcee2ecd2580f3b60aa` |
+| hr-docs | `7dbdcc3` | `56aae3b40c63366d454b2a4455a009bf664c5cb5` |
+
+**Deploy.** No migrations, so no pre-merge snapshot (the rule is for migrations; the merge trees equal the WIP trees already running). On-box checkouts were clean; `deploy.sh` with the four merge SHAs (health green) → fixed OTP re-applied in the flat compose file → `hr-backend`, worker and scheduler recreated with the `vars.sh` exports. `migrate:status --pending`: none; Laravel 13.16.1, environment staging, debug off.
+
+**Verification from the deployed image:** 25 golden traces on `2004e38` (`ops/golden-verify.sh`): **25 passed, 152 assertions**.
+
+**Snapshots** (`hr-staging-db`, manual): `post-ingest-20260906`, `post-11b`, `post-12a`, `post-13`, `post-13b`, **`post-13d`** (available). `post-13-cp1` was already gone.
+
+**Staging state.** Engine override left as 13b left it (agent); 4 persisted CP-1 turns and 2 persisted diagnostics remain under `test-deporte-navarra@example.com` (msgs 7637–7643 and the diagnostic session). Seeded S2 data was never committed (`ROLLBACK CHECK: OK` ×5).
