@@ -1,0 +1,32 @@
+  projected spend: 6 turns × $0.060 = $0.36 (cap $1.00)
+answer:gate — /tmp/eval13b/fact-routing-existing-colloquial-anchored.json — engine(s): agent — repeat=3
+
+  [fr-c8-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c8-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c8-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c15-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c15-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c15-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+
+  Engine: agent
+    pass rate: 6/6
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":6}
+    path distribution: {"reference_fact_composition":6}
+    authority distribution: {"official_convenio+structured_reference":6}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 6/6
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 10823 / 11993 ms
+    cost (list pricing, informational): $0.3655 total, $0.06092/turn, $0.06092/answer
+    by class: {"fact_convenio_wide":{"n":6,"pass":6,"hard":0,"answers":6,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|anchored":{"n":6,"pass":6}}
+

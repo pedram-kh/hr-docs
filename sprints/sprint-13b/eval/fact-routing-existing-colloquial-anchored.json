@@ -1,0 +1,425 @@
+{
+    "_description": "Sprint 13b S4 slice 'colloquial-anchored' of sprint-13\/eval\/fact-routing.json (ids\/expectations unchanged; labels outcome-independent).",
+    "_lexicon_sha": "0dbc342b67f722d16f01d0999299667a25fb76e328c313dd8a80474ef4680851",
+    "cases": [
+        {
+            "id": "fr-c2-festivos-493db",
+            "class": "fact_convenio_wide",
+            "topic": "festivos",
+            "fact_ids": [
+                165
+            ],
+            "convenio": "ACTIVIDADES DEPORTIVAS",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 2,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Qué días festivos hay en mi convenio?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c2-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                119
+            ],
+            "convenio": "ACTIVIDADES DEPORTIVAS",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 2,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c3-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                118
+            ],
+            "convenio": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 3,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c6-festivos-493db",
+            "class": "fact_convenio_wide",
+            "topic": "festivos",
+            "fact_ids": [
+                167
+            ],
+            "convenio": "DEPORTE CANTABRIA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 6,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Qué días festivos hay en mi convenio?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c6-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                129
+            ],
+            "convenio": "DEPORTE CANTABRIA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 6,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c8-vacaciones-23cb6",
+            "class": "fact_group_labelled_unbound",
+            "topic": "vacaciones",
+            "fact_ids": [
+                130
+            ],
+            "convenio": "ENSEÑANZA Y FORMACION NO REGLADA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 8,
+            "group_label": "Grupo I",
+            "expect": {
+                "any_of": [
+                    {
+                        "path": [
+                            "reference_fact",
+                            "reference_fact_composition"
+                        ]
+                    },
+                    {
+                        "reason": "reference_fact_coverage_gap"
+                    }
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c8-vacaciones-1c878",
+            "class": "fact_group_labelled_unbound",
+            "topic": "vacaciones",
+            "fact_ids": [
+                131
+            ],
+            "convenio": "ENSEÑANZA Y FORMACION NO REGLADA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 8,
+            "group_label": "Grupos II, III y IV",
+            "expect": {
+                "any_of": [
+                    {
+                        "path": [
+                            "reference_fact",
+                            "reference_fact_composition"
+                        ]
+                    },
+                    {
+                        "reason": "reference_fact_coverage_gap"
+                    }
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c8-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                169
+            ],
+            "convenio": "ENSEÑANZA Y FORMACION NO REGLADA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 8,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c11-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                132
+            ],
+            "convenio": "OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 11,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c12-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                126
+            ],
+            "convenio": "ALOJAMIENTOS",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 12,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c13-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                124
+            ],
+            "convenio": "LIMPIEZA EDIFICIOS Y LOCALES",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 13,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c15-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                125
+            ],
+            "convenio": "INFORMACIÓN Y DOCUMENTACIÓN",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 15,
+            "expect": {
+                "outcome": "answer",
+                "any_of": [
+                    {
+                        "path": [
+                            "reference_fact",
+                            "reference_fact_composition"
+                        ],
+                        "value_contains": [
+                            "33 días"
+                        ]
+                    }
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c17-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                133
+            ],
+            "convenio": "OCIO EDUCATIVO Y ANIMACIÓN MADRID",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 17,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c19-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                127
+            ],
+            "convenio": "COEAS NAVARRA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 19,
+            "expect": {
+                "outcome": "answer",
+                "any_of": [
+                    {
+                        "path": [
+                            "reference_fact",
+                            "reference_fact_composition"
+                        ],
+                        "value_contains": [
+                            "32 días"
+                        ]
+                    }
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c20-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                120
+            ],
+            "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 20,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c22-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                128
+            ],
+            "convenio": "LIMPIEZA DE EDIFICIOS Y LOCALES",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 22,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        },
+        {
+            "id": "fr-c25-vacaciones-493db",
+            "class": "fact_convenio_wide",
+            "topic": "vacaciones",
+            "fact_ids": [
+                122
+            ],
+            "convenio": "OFICINAS Y DESPACHOS VALENCIA",
+            "expected_tools": {
+                "first": "reference_fact"
+            },
+            "convenio_id": 25,
+            "expect": {
+                "outcome": "answer",
+                "path": [
+                    "reference_fact",
+                    "reference_fact_composition"
+                ]
+            },
+            "colloquial_question": "¿Cuántas vacaciones tengo?",
+            "authored": "colloquial",
+            "anchored": true
+        }
+    ]
+}

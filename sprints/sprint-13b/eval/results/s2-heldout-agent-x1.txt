@@ -1,0 +1,127 @@
+  projected spend: 40 turns × $0.060 = $2.40 (cap $4.00)
+answer:gate — /tmp/eval13b/fact-routing-colloquial.json — engine(s): agent — repeat=1
+
+  [ho-vac-01.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-vac-02.colloquial] agent FAIL outcome=answer path=— reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-vac-03.colloquial] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II, III y IV' not found (approved) on this convenio
+  [ho-vac-04.colloquial] agent FAIL outcome=answer path=— reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-vac-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+  [ho-vac-06.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-vac-07.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-vac-s01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-jor-01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II, III' not found (approved) on this convenio
+  [ho-jor-02.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Personal de servicios con pernocta de los usuarios (campamentos, casas de colonias, albergues y equipamientos similares)' not found (approved) on this convenio
+  [ho-jor-03.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-jor-04.colloquial] agent FAIL outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-jor-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos profesionales 3 y 4' not found (approved) on this convenio
+  [ho-jor-06.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos profesionales 1 y 2' not found (approved) on this convenio
+  [ho-jor-07.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+  [ho-jor-s01.colloquial] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'camareras de pisos' not found (approved) on this convenio
+  [ho-per-01.colloquial] agent FAIL outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-02.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-03.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-04.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-05.colloquial] agent FAIL outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-06.colloquial] agent FAIL outcome=escalate path=agent_budget reason=tool_budget_exhausted first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-07.colloquial] agent FAIL outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-per-s01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-pru-01.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Oficiales (nivel 3)' not found (approved) on this convenio
+  [ho-pru-02.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos Profesionales 3, 4 y 5' not found (approved) on this convenio
+  [ho-pru-03.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos 3, 4, 5 y 6' not found (approved) on this convenio
+  [ho-pru-04.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de grado medio y administrativos cualificados' not found (approved) on this convenio
+  [ho-pru-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-pru-06.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II y III (Administrativos y Mandos)' not found (approved) on this convenio
+  [ho-pru-07.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo III' not found (approved) on this convenio
+  [ho-pru-s01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos VII y VIII' not found (approved) on this convenio
+  [ho-fes-01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-02.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-03.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-04.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-06.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-07.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [ho-fes-08.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+
+  Engine: agent
+    pass rate: 32/40
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"escalate":12,"answer":28}
+    path distribution: {"reference_fact_composition":24,"prose":3,"reference_fact":9,"agent_planner":3,"agent_budget":1}
+    authority distribution: {"(none)":5,"official_convenio":8,"official_convenio+national_law":4,"official_convenio+structured_reference":9,"official_convenio+structured_reference+national_law":4,"structured_reference":9,"national_law":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 36/36
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 22.5 (mandated post-call terminations per 100: 90.0)
+    latency p50/p95: 12883 / 25174 ms
+    cost (list pricing, informational): $2.7998 total, $0.07000/turn, $0.09999/answer
+    by class: {"fact_convenio_wide":{"n":23,"pass":15,"hard":0,"answers":17,"lane_answers":0},"fact_group_labelled_unbound":{"n":13,"pass":13,"hard":0,"answers":7,"lane_answers":0},"colloquial_situational":{"n":4,"pass":4,"hard":0,"answers":4,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|unanchored":{"n":36,"pass":28},"colloquial|unanchored|situational":{"n":4,"pass":4}}
+    colloquial-unanchored (G1): overall 28/36 = 78% | convenio-wide 15/23 = 65% | group-unbound 13/13 = 100% | situational (informational) 4/4 = 100%
+    normalization: {"turns_with_block":40,"verdicts":{"accepted":33,"rejected":7},"rejected_by":{"pay_intent_added":3,"shape":1,"scan:E3":1,"scan:E2":2},"topic_dropped":0,"round1a_ran":32,"check_a_rescues":0,"rescued_answers":25}
+      rescue: [ho-vac-05.colloquial] «¿Cuántos días de vacas me tocan al año?» → «días de vacaciones anuales»
+      rescue: [ho-vac-06.colloquial] «¿Me dan más de tres semanas al año para no ir a trabajar cobrando?» → «duración de las vacaciones anuales retribuidas»
+      rescue: [ho-vac-07.colloquial] «Cuando llevo un año entero currando, ¿cuánto tiempo libre pagado me dan?» → «vacaciones anuales retribuidas tras un año completo trabajado»
+      rescue: [ho-vac-s01.colloquial] «Me han dicho que tengo que gastar mis días pagados de descanso antes de marzo o los pierdo, ¿es verdad?» → «caducidad o plazo para disfrutar los días de vacaciones»
+      rescue: [ho-jor-01.colloquial] «¿Cuántas horas me toca echar cada año?» → «jornada anual de trabajo: número de horas»
+      rescue: [ho-jor-02.colloquial] «Según mi convenio, ¿cuántas horas de curro hay en un año?» → «jornada anual: número de horas de trabajo al año»
+      rescue: [ho-jor-03.colloquial] «¿Cuántas horas al año me pueden hacer currar como mucho?» → «jornada máxima anual de trabajo»
+      rescue: [ho-jor-05.colloquial] «¿Cuántas horas semanales de media me marca el convenio?» → «jornada semanal de trabajo: horas semanales de media»
+      rescue: [ho-jor-06.colloquial] «¿Qué cantidad de horas tengo que cumplir durante todo el año?» → «jornada anual: número de horas de trabajo al año»
+      rescue: [ho-jor-07.colloquial] «Mi empresa dice que hago menos horas de las que toca, ¿cuántas me tocan en realidad al año?» → «jornada anual: número de horas de trabajo al año»
+      rescue: [ho-per-02.colloquial] «Me han citado como testigo en un tribunal, ¿me cuentan ese día como trabajado?» → «permiso retribuido por deber inexcusable de carácter público: comparecencia como testigo en juicio»
+      rescue: [ho-per-03.colloquial] «¿Me pagan las horas que pierdo si tengo que ir a un examen oficial?» → «permiso retribuido para concurrir a exámenes oficiales»
+      rescue: [ho-per-04.colloquial] «Si mi hijo se pone malo, ¿puedo quedarme con él sin que me descuenten el día?» → «permiso retribuido por enfermedad de hijo a cargo»
+      rescue: [ho-per-s01.colloquial] «Mi jefe me ha puesto falta por ir al médico con mi madre, ¿tiene razón?» → «permiso retribuido por acompañamiento médico de familiar»
+      rescue: [ho-pru-05.colloquial] «Soy nuevo aquí, ¿cuánto tiempo tengo de prueba?» → «duración del periodo de prueba»
+      rescue: [ho-pru-07.colloquial] «¿Cuánto dura la fase en la que todavía no me han confirmado en el puesto?» → «duración del periodo de prueba»
+      rescue: [ho-pru-s01.colloquial] «Me han dicho que como estoy en fase de prueba no tengo ningún derecho, ¿es cierto?» → «derechos y obligaciones durante el periodo de prueba»
+      rescue: [ho-fes-01.colloquial] «¿Cuántas fiestas oficiales me tocan en el año?» → «número de días festivos oficiales al año»
+      rescue: [ho-fes-02.colloquial] «¿Qué días son de fiesta oficial según mi convenio?» → «calendario de días festivos oficiales»
+      rescue: [ho-fes-03.colloquial] «¿Cuántos días señalados en rojo del calendario hay al año?» → «número de días festivos al año»
+      rescue: [ho-fes-04.colloquial] «¿Qué días del calendario se consideran no laborables?» → «días festivos del calendario laboral»
+      rescue: [ho-fes-05.colloquial] «¿En qué días señalados no me toca ir a trabajar?» → «calendario de días festivos: días no laborables»
+      rescue: [ho-fes-06.colloquial] «¿Cuántos días de fiesta hay para mi convenio?» → «número de días festivos»
+      rescue: [ho-fes-07.colloquial] «¿Cuáles son los días en los que la empresa cierra por fiesta?» → «calendario de días festivos de cierre de la empresa»
+      rescue: [ho-fes-08.colloquial] «¿Cuántos días de fiesta local o nacional tengo?» → «número de días festivos locales y nacionales»
+

@@ -1,0 +1,85 @@
+{
+ "_description": "CP-1 run wrapper: the FROZEN cp1-colloquial.json questions unchanged (verbatim), each bound to test-deportivas-alava (convenio 2 ACTIVIDADES DEPORTIVAS, verified convenio-wide facts on all five topics). Not in MANIFEST: it adds only the employee binding.",
+ "cases": [
+  {
+   "id": "cp1-01",
+   "question": "Entré este mes, ¿cuánto tiempo estoy en fase de prueba?",
+   "expected_topic": "periodo de prueba",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-02",
+   "question": "¿Cuál es el tope de horas que puedo trabajar en un año?",
+   "expected_topic": "jornada",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-03",
+   "question": "Me caso en octubre, ¿me dan días libres?",
+   "expected_topic": "permisos retribuidos",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-04",
+   "question": "Si se muere un familiar cercano, ¿me dejan faltar al trabajo?",
+   "expected_topic": "permisos retribuidos",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-05",
+   "question": "Mi pareja va a dar a luz, ¿cuántos días libres me tocan?",
+   "expected_topic": "permisos retribuidos",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-06",
+   "question": "¿Cuántos días puedo cogerme para irme de viaje en verano?",
+   "expected_topic": "vacaciones",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-07",
+   "question": "¿Qué días del año son fiesta y no se trabaja?",
+   "expected_topic": "festivos",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-08",
+   "question": "Me mudo de casa la semana que viene, ¿tengo algún día libre por eso?",
+   "expected_topic": "permisos retribuidos",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-09",
+   "question": "Mi jefa me ha dicho que en agosto no puedo cogerme días, ¿puede hacer eso?",
+   "expected_topic": "vacaciones|null",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  },
+  {
+   "id": "cp1-10",
+   "question": "¿La empresa me da seguro médico?",
+   "expected_topic": "null",
+   "email": "test-deportivas-alava@example.com",
+   "authored": "colloquial",
+   "expect": {}
+  }
+ ]
+}

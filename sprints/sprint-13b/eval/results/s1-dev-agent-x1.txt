@@ -1,0 +1,68 @@
+  projected spend: 20 turns × $0.060 = $1.20 (cap $3.00)
+answer:gate — /tmp/eval13b/fact-routing-colloquial-dev.json — engine(s): agent — repeat=1
+
+  [dv-vac-01.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-vac-02.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-vac-03.colloquial] agent FAIL outcome=answer path=— reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-vac-04.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-vac-05.colloquial] agent FAIL outcome=ask path=agent_ask_employee reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-jor-01.colloquial] agent FAIL outcome=answer path=— reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-jor-02.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de Sala' not found (approved) on this convenio
+  [dv-jor-03.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Personal en régimen de guardia o expectativa' not found (approved) on this convenio
+  [dv-jor-04.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-jor-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-per-01.colloquial] agent FAIL outcome=escalate path=agent_planner reason=planner_escalated first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-per-02.colloquial] agent FAIL outcome=escalate path=agent_budget reason=tool_budget_exhausted first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-per-03.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-per-04.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-per-05.colloquial] agent FAIL outcome=escalate path=agent_planner reason=planner_escalated first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [dv-pru-01.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo 2' not found (approved) on this convenio
+  [dv-pru-02.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Contrato formativo (práctica profesional)' not found (approved) on this convenio
+  [dv-pru-03.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo 6' not found (approved) on this convenio
+  [dv-pru-04.colloquial] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos V y VI' not found (approved) on this convenio
+  [dv-pru-05.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=normalize_question
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+
+  Engine: agent
+    pass rate: 13/20
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":9,"escalate":10,"ask":1}
+    path distribution: {"reference_fact_composition":8,"prose":2,"reference_fact":6,"agent_ask_employee":1,"agent_planner":2,"agent_budget":1}
+    authority distribution: {"official_convenio":5,"official_convenio+structured_reference":3,"national_law":1,"structured_reference":6,"(none)":5}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 1/0
+    first-tool accuracy: 0/20
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 35.0 (mandated post-call terminations per 100: 85.0)
+    latency p50/p95: 10150 / 20901 ms
+    cost (list pricing, informational): $1.1464 total, $0.05732/turn, $0.12737/answer
+    by class: {"fact_convenio_wide":{"n":13,"pass":6,"hard":0,"answers":8,"lane_answers":0},"fact_group_labelled_unbound":{"n":7,"pass":7,"hard":0,"answers":1,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|unanchored":{"n":20,"pass":13}}
+    normalization: {"turns_with_block":20,"verdicts":{"accepted":15,"rejected":5},"rejected_by":{"scan:E2":2,"scan:D1":1,"pay_intent_added":3},"topic_dropped":1,"round1a_ran":14,"check_a_rescues":0,"rescued_answers":7}
+      rescue: [dv-vac-01.colloquial] «¿Cuántos días libres al año puedo coger para descansar?» → «vacaciones anuales: días de descanso»
+      rescue: [dv-vac-04.colloquial] «¿Cuántos días al año me puedo ir de vacas sin que me descuenten?» → «duración de las vacaciones anuales retribuidas»
+      rescue: [dv-jor-04.colloquial] «¿Cuántas horas de trabajo real me piden en un año completo?» → «jornada anual de trabajo efectivo»
+      rescue: [dv-jor-05.colloquial] «¿Cuánto tengo que trabajar al año según el convenio?» → «jornada anual de trabajo»
+      rescue: [dv-per-03.colloquial] «Si un familiar está ingresado en el hospital, ¿puedo ausentarme cobrando?» → «permiso retribuido por hospitalización de familiar»
+      rescue: [dv-per-04.colloquial] «¿Me dan tiempo libre pagado para ir al médico?» → «permiso retribuido para asistencia médica»
+      rescue: [dv-pru-05.colloquial] «¿Cuántos meses de prueba tiene un contrato nuevo como el mío?» → «duración del periodo de prueba en contrato nuevo»
+

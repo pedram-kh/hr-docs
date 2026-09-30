@@ -1,0 +1,42 @@
+Estatuto fallback gold eval — second-negative profile (test-midingest@example.com) — engine=agent
+
+  [1] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [2] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [3] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [4] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [5] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [6] PASS  expected escalate_sensitive, got escalate_sensitive
+        outcome=escalate reason=sensitive_topic fallback=(key absent) grounded=— caveat=no prose_gap=—
+  [7] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [8] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [9] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [10] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [11] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [12] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [13] PASS  expected escalate_fallback_gap, got escalate_fallback_gap
+        outcome=escalate reason=estatuto_fallback_gap fallback=(key absent) grounded=— caveat=no prose_gap=expired_only
+  [14] PASS  expected escalate_salary, got escalate_salary
+        outcome=escalate reason=salary_coverage_gap fallback=(key absent) grounded=— caveat=no prose_gap=—
+  [15] PASS  expected escalate_salary, got escalate_salary
+        outcome=escalate reason=salary_coverage_gap fallback=(key absent) grounded=— caveat=no prose_gap=—
+
+  Metrics (spec §2.3)
+   (a) answer rate:       0/15
+   (b) grounded:          0/0 answered turns
+   (c) caveat persisted:  0/0 answered turns
+   (e) fallback key on a turn that never took the prose branch: 0 (must be 0)
+       (informational) fallback key on a prose turn that escalated: 0 — expected, see the comment above
+   reached the fallback decision and refused it: 12 · stopped by an earlier gate: 0
+
+  TRIGGER SPLIT HOLDS: not one question was answered from the Estatuto, and no turn carried a fallback key.

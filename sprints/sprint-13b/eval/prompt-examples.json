@@ -1,0 +1,15 @@
+{
+ "_description": "The two few-shot examples in the planner system prompt (plan.md §2.3). No eval/CP-1 question may resemble them (label-banks.php overlap guard).",
+ "examples": [
+  {
+   "literal": "Quiero pedirme un año sin trabajar pero conservando mi puesto",
+   "topic": "excedencias",
+   "canonical_query": "excedencia voluntaria: reserva del puesto de trabajo"
+  },
+  {
+   "literal": "¿Puedo llevar a mi perro a la oficina?",
+   "topic": null,
+   "canonical_query": null
+  }
+ ]
+}
