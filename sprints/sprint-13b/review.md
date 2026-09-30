@@ -200,3 +200,28 @@ Agent engine, persisted, each in a fresh session, as **`test-deportivas-alava@ex
 
 ## Gate (plan §7.4, staged) — complete. CP-1 read and passed by the user (2026-09-30).
 
+
+---
+
+## Close-out (2026-09-30) — merge, deploy, verification
+
+**Squash and merge.** The WIP commits on `sprint-13b` were squashed to one commit per repo (tree hashes verified identical before and after), merged to `main` with `--no-ff`, and both `main` and `sprint-13b` pushed (`sprint-13b` force-with-lease, it was rewritten). `hr-frontend/count-strings*` and `hr-docs/sedena/` were left untracked and out of every commit.
+
+| Repo | Squashed commit | Merge commit on `main` |
+|---|---|---|
+| hr-backend | `e45b54d` | `fddb6aa00fd27abcbd5a11f322aa5d1c3588d37e` |
+| hr-ai | `249ac5a` | `5bdfaa88a6e729e1ea9fbf18df463104eeadb76b` |
+| hr-frontend | `ed80549` | `0af716ed749c5380b08c625d17f6f090313812a4` |
+| hr-docs | `a18501d` | `0c0edb8a32826d6ecb1f23a854409118414395cf` |
+
+**Deploy.** Pre-merge snapshot `hr-staging-pre-13b-merge` (available before anything moved) → on-box checkouts reset (`git reset --hard`, `git clean -fd` after a dry run; clean, `.git` preserved) → `deploy.sh` with the four merge SHAs above (leak scan clean, no pending migrations, health green on attempt 3) → fixed OTP re-applied in the flat compose file → `hr-backend`, worker and scheduler recreated with the `vars.sh` exports → artisan health (`--version` Laravel 13.16.1, `migrate:status --pending`: none, `about`: staging, debug off, pgsql). Images were rebuilt from the same trees as the WIP-SHA build, so layers were cached.
+
+| Verification (from the deployed images) | Result |
+|---|---|
+| 22 golden traces on the deployed commit `fddb6aa` (`ops/golden-verify.sh`: deployed image runtime, throwaway Postgres and `APP_KEY`, never the staging database) | **22 passed, 122 assertions** |
+| Live colloquial `cp1-03` «Me caso en octubre, ¿me dan días libres?» over the real HTTP path (msg 7039, `test-deportivas-alava`, agent engine) | answered «17 días naturales de permiso retribuido por matrimonio…». Trace steps `planner_round > normalization > rule_verdict`; `normalization.verdict=accepted`, validator `nd-1`, canonical «permiso retribuido por matrimonio», confidence 0.95; consumer `planner_call/reference_fact` with `rescued_answer: true`; `planner.prompt_version` = the frozen `sha256:ae1366e9…dc4d`. Round 1a was skipped (`follow_up`) because the employee's active session already held the previous CP-1 turn; the planner called `reference_fact` itself and reached the same verified fact. The same question as the first turn of a session (CP-1, msg 7021) ran Round 1a and rescued the answer |
+| Classic smoke via override flip and back (`answer-engine:set classic`, «¿Cuántos días de permiso retribuido me corresponden por matrimonio?», msg 7041, then `answer-engine:set agent`) | classic answered (17 days plus the Estatuto base); its trace has **no `agent` block**; DB read-back: `answer_engine_settings.engine = agent` |
+
+**Snapshots** (`hr-staging-db`, manual): `post-ingest-20260906`, `post-11b`, `post-12a`, `post-13`, **`post-13b`** (2026-09-30 11:15 UTC, after verification). `pre-13b-merge` deleted. `post-13-cp1` (Sprint 13's CP-1 snapshot) was not on the keep list and not named for deletion; left in place.
+
+**Spend.** Gate S1–S4 and CP-1 ≈ $35.0 by the list-price tally above, plus ≈ $0.1 for the two close-out turns: **≈ $35 of the $50 cap** (the user's running figure was ≈ $36). Staging is left on the agent engine (DB override), general lane off; `main` defaults to classic.
