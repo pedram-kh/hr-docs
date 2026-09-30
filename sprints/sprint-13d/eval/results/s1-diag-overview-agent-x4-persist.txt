@@ -1,0 +1,29 @@
+  projected spend: 4 turns × $0.080 = $0.32 (cap $0.60)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/c20-jornada.json — engine(s): agent — repeat=4
+
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+
+  Engine: agent
+    pass rate: 4/4
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":4}
+    path distribution: {"reference_fact_composition":4}
+    authority distribution: {"official_convenio+structured_reference":4}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 4/4
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 16490 / 19070 ms
+    cost (list pricing, informational): $0.2962 total, $0.07405/turn, $0.07405/answer
+    by class: {"fact_convenio_wide":{"n":4,"pass":4,"hard":0,"answers":4,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":4,"pass":4}}
+
+EXIT=0

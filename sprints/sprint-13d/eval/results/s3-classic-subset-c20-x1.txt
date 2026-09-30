@@ -1,0 +1,26 @@
+  projected spend: 3 turns × $0.060 = $0.18 (cap $0.40)
+answer:gate — /var/hr-docs/sprints/sprint-13b/eval/fact-routing-existing-canonical-anchored.json — engine(s): classic — repeat=1
+
+  [fr-c20-jornada-493db.canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+        facts: selected=[140,143] offered=[140,143] cited=[140]
+  [fr-c20-jornada-942ab.canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de Actividad deportiva (monitores)' not found (approved) on this convenio
+        facts: selected=[140,143] offered=[140,143] cited=[140,143]
+  [fr-c20-jornada-b7bd5.canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de Sala' not found (approved) on this convenio
+        facts: selected=[140,143] offered=[140,143] cited=[140,143]
+
+  Engine: classic
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3}
+    path distribution: {"reference_fact_composition":3}
+    authority distribution: {"official_convenio+structured_reference":2,"official_convenio+structured_reference+national_law":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 13208 / 14860 ms
+    cost (list pricing, informational): $0.2069 total, $0.06897/turn, $0.06897/answer
+    by class: {"fact_convenio_wide":{"n":1,"pass":1,"hard":0,"answers":1,"lane_answers":0},"fact_group_labelled_unbound":{"n":2,"pass":2,"hard":0,"answers":2,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":3,"pass":3}}
+

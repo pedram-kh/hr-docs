@@ -1,0 +1,21 @@
+  projected spend: 1 turns × $0.060 = $0.06 (cap $0.30)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/c20-jornada.json — engine(s): classic — repeat=1
+
+  [c20j-annual-colloquial] classic FAIL outcome=answer path=— reason=— first_tool=—
+
+  Engine: classic
+    pass rate: 0/1
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":1}
+    path distribution: {"prose":1}
+    authority distribution: {"official_convenio":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 13573 / 13573 ms
+    cost (list pricing, informational): $0.0637 total, $0.06371/turn, $0.06371/answer
+    by class: {"fact_convenio_wide":{"n":1,"pass":0,"hard":0,"answers":1,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|unanchored":{"n":1,"pass":0}}
+    colloquial-unanchored (G1): overall 0/1 = 0% | convenio-wide 0/1 = 0% | group-unbound — | situational (informational) —
+    STOP CONDITION: convenio-wide 0/1 = 0% < 50% (S1 decision B) — no further spend until diagnosed
+
+EXIT=1

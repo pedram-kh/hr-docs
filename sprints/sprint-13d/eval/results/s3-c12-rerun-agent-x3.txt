@@ -1,0 +1,27 @@
+  projected spend: 3 turns × $0.060 = $0.18 (cap $0.60)
+answer:gate — /var/hr-docs/sprints/sprint-13b/eval/fact-routing-existing-canonical-anchored.json — engine(s): agent — repeat=3
+
+  [fr-c12-permisos-retribuidos-493db.canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c12-permisos-retribuidos-493db.canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c12-permisos-retribuidos-493db.canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+
+  Engine: agent
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3}
+    path distribution: {"reference_fact_composition":3}
+    authority distribution: {"official_convenio":3}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 3/3
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 37010 / 38681 ms
+    cost (list pricing, informational): $0.3548 total, $0.11828/turn, $0.11828/answer
+    by class: {"fact_convenio_wide":{"n":3,"pass":3,"hard":0,"answers":3,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":3,"pass":3}}
+
+EXIT=0

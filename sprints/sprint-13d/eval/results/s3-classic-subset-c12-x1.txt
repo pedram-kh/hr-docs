@@ -1,0 +1,19 @@
+  projected spend: 1 turns × $0.060 = $0.06 (cap $0.15)
+answer:gate — /var/hr-docs/sprints/sprint-13b/eval/fact-routing-existing-canonical-anchored.json — engine(s): classic — repeat=1
+
+  [fr-c12-permisos-retribuidos-493db.canonical] classic FAIL outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=—
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+
+  Engine: classic
+    pass rate: 0/1
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"escalate":1}
+    path distribution: {"reference_fact_composition":1}
+    authority distribution: {"official_convenio":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 48596 / 48596 ms
+    cost (list pricing, informational): $0.1369 total, $0.13687/turn, $—/answer
+    by class: {"fact_convenio_wide":{"n":1,"pass":0,"hard":0,"answers":0,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":1,"pass":0}}
+

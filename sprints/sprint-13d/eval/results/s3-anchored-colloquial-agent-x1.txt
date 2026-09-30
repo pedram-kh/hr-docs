@@ -1,0 +1,54 @@
+  projected spend: 17 turns × $0.060 = $1.02 (cap $1.20)
+answer:gate — /var/hr-docs/sprints/sprint-13b/eval/fact-routing-existing-colloquial-anchored.json — engine(s): agent — repeat=1
+
+  [fr-c2-festivos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c2-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c3-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c6-festivos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c6-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c8-vacaciones-23cb6.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+  [fr-c8-vacaciones-1c878.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II, III y IV' not found (approved) on this convenio
+  [fr-c8-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c11-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c12-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c13-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c15-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c17-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c19-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c20-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c22-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c25-vacaciones-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+
+  Engine: agent
+    pass rate: 17/17
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":17}
+    path distribution: {"reference_fact_composition":15,"reference_fact":2}
+    authority distribution: {"official_convenio+structured_reference":9,"official_convenio":4,"official_convenio+structured_reference+national_law":2,"structured_reference":2}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 17/17
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 11291 / 18386 ms
+    cost (list pricing, informational): $0.9586 total, $0.05639/turn, $0.05639/answer
+    by class: {"fact_convenio_wide":{"n":15,"pass":15,"hard":0,"answers":15,"lane_answers":0},"fact_group_labelled_unbound":{"n":2,"pass":2,"hard":0,"answers":2,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|anchored":{"n":17,"pass":17}}
+

@@ -1,0 +1,43 @@
+EXIT=0
+  projected spend: 4 turns × $0.070 = $0.28 (cap $0.50)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/c20-jornada.json — engine(s): classic,agent — repeat=1
+
+  [c20j-annual-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-annual-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-overview-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+
+  Engine: classic
+    pass rate: 2/2
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":2}
+    path distribution: {"reference_fact_composition":2}
+    authority distribution: {"official_convenio+structured_reference":2}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 16331 / 19275 ms
+    cost (list pricing, informational): $0.1503 total, $0.07513/turn, $0.07513/answer
+    by class: {"fact_convenio_wide":{"n":2,"pass":2,"hard":0,"answers":2,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":2,"pass":2}}
+
+  Engine: agent
+    pass rate: 2/2
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":2}
+    path distribution: {"reference_fact_composition":2}
+    authority distribution: {"official_convenio+structured_reference":2}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 2/2
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 12179 / 16191 ms
+    cost (list pricing, informational): $0.1380 total, $0.06898/turn, $0.06898/answer
+    by class: {"fact_convenio_wide":{"n":2,"pass":2,"hard":0,"answers":2,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":2,"pass":2}}
+
+EXIT=0
