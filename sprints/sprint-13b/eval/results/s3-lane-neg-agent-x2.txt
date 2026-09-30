@@ -1,0 +1,176 @@
+  projected spend: 150 turns × $0.070 = $10.50 (cap $12.00)
+answer:gate — /var/hr-docs/sprints/sprint-13/eval/general-lane.json — engine(s): agent — repeat=2
+
+  [ln-01-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-01-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-01-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-01-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-01-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-01-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-02-cov] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [ln-02-cov] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [ln-02-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-02-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-02-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-02-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-03-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-03-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-03-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-03-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-03-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-03-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=reference_fact
+  [ln-04-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-04-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-04-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-04-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-04-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=reference_fact
+  [ln-04-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-05-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-05-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-05-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-05-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-05-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-05-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-06-cov] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-06-cov] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-06-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-06-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-06-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=reference_fact
+  [ln-06-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=reference_fact
+  [ln-07-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-07-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-07-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-07-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-07-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-07-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-08-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-08-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-08-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-08-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-08-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-08-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-09-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-09-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-09-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-09-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-09-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-09-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-10-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-10-cov] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-10-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-10-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-10-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-10-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-11-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-11-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-11-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-11-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-11-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-11-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-12-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-13-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=salary_lookup
+  [ln-14-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-14-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-14-ni] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-14-ni] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-14-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-14-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-15-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-15-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-15-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-15-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-15-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-15-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-16-cov] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [ln-16-cov] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [ln-16-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-16-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-16-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-16-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-17-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-17-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-17-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-17-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-17-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-17-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-18-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-18-cov] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-18-ni] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-18-ni] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-18-miss] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-18-miss] agent PASS outcome=answer path=— reason=— first_tool=national_law
+  [ln-19-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-19-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-19-ni] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+  [ln-19-ni] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=reference_fact
+  [ln-19-miss] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-19-miss] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-20-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-20-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-20-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-20-ni] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=convenio_search
+  [ln-20-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-20-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-21-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-21-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-21-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-21-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-21-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-21-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-22-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-22-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-22-ni] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-22-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-22-miss] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-22-miss] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [ln-23-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-23-cov] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-23-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-23-ni] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-23-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-23-miss] agent PASS outcome=escalate path=salary_sql reason=salary_coverage_gap first_tool=convenio_search
+  [ln-24-cov] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-24-cov] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [ln-24-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-24-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-24-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-24-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-25-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-25-cov] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [ln-25-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-25-ni] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-25-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [ln-25-miss] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+
+  Engine: agent
+    pass rate: 150/150
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":101,"escalate":49}
+    path distribution: {"reference_fact_composition":18,"prose":88,"reference_fact":4,"(none)":7,"salary_sql":25,"agent_planner":8}
+    authority distribution: {"official_convenio":19,"national_law":60,"structured_reference":4,"official_convenio+structured_reference":6,"(none)":40,"official_convenio+national_law":21}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 150/150
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 17.3 (mandated post-call terminations per 100: 78.7)
+    latency p50/p95: 12265 / 34391 ms
+    cost (list pricing, informational): $11.4335 total, $0.07622/turn, $0.1132/answer
+    by class: {"lane_negative":{"n":150,"pass":150,"hard":0,"answers":101,"lane_answers":0}}
+    normalization: {"turns_with_block":126,"verdicts":{"accepted":80,"rejected":46},"rejected_by":{"scan:E3":5,"topic_canonical_mismatch":28,"pay_intent_added":21,"canonical_guardrail":1,"scan:A1":5},"topic_dropped":0,"round1a_ran":6,"check_a_rescues":0,"rescued_answers":6}
+      rescue: [ln-04-cov] «¿Cuántos días me corresponden por el nacimiento de un hijo?» → «permiso retribuido por nacimiento de hijo: duración en días»
+      rescue: [ln-04-cov] «¿Cuántos días me corresponden por el nacimiento de un hijo?» → «permiso retribuido por nacimiento de hijo»
+      rescue: [ln-08-cov] «¿Cuántas horas a la semana tengo que trabajar?» → «jornada semanal de trabajo»
+      rescue: [ln-08-cov] «¿Cuántas horas a la semana tengo que trabajar?» → «jornada laboral semanal: número de horas de trabajo»
+      rescue: [ln-21-cov] «¿Cuántos días libres me corresponden si me caso?» → «permiso retribuido por matrimonio: número de días»
+      rescue: [ln-21-cov] «¿Cuántos días libres me corresponden si me caso?» → «permiso retribuido por matrimonio: días»
+

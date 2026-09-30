@@ -1,0 +1,22 @@
+  projected spend: 3 turns × $0.080 = $0.24 (cap $1.00)
+answer:gate — /var/hr-docs/sprints/sprint-13/eval/situational.json — engine(s): agent — repeat=3
+
+  [c2-permisos-matrimonio] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [c2-permisos-matrimonio] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [c2-permisos-matrimonio] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+
+  Engine: agent
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3}
+    path distribution: {"reference_fact_composition":3}
+    authority distribution: {"official_convenio+structured_reference":2,"official_convenio+structured_reference+national_law":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 0/0
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 8074 / 9570 ms
+    cost (list pricing, informational): $0.2039 total, $0.06798/turn, $0.06798/answer
+    by class: {"(none)":{"n":3,"pass":3,"hard":0,"answers":3,"lane_answers":0}}
+

@@ -1,0 +1,90 @@
+=== cp1-01 msg=7017 session=ed968184-c401-44f0-8911-3f0134e1c53c
+  Q: Entré este mes, ¿cuánto tiempo estoy en fase de prueba?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=1 conf=0.9 rejected_by=[]
+       canonical: "duración del periodo de prueba" | reason: Pregunta directa sobre duración del periodo de prueba, tema verificado.
+       round1a={"ran":true,"active":false,"topic_id":1} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":1,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: El período de prueba, en caso de concertarse por escrito, no podrá exceder de dos meses en ningún caso [Fuente 1][Fuente 2]. Durante ese período tienes los mismos derechos y obligaciones que correspondan a tu categoría profesional y puesto de trabajo, como si 
+  cost=0.0736 lat=11069ms rule_overrides=0
+=== cp1-02 msg=7019 session=10c748fa-47ad-440c-b5c2-0ba923dc05a9
+  Q: ¿Cuál es el tope de horas que puedo trabajar en un año?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=2 conf=0.9 rejected_by=[]
+       canonical: "jornada máxima anual de trabajo" | reason: Pregunta por el tope anual de horas de trabajo, tema jornada con dato verificado.
+       round1a={"ran":true,"active":false,"topic_id":2} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":2,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: La jornada máxima en cómputo anual, incluidas las horas de formación, se fija por grupos profesionales y por año: para 2024, Grupos 1 y 2: 1.592 horas anuales, Grupos 3 y 4: 1.705 horas anuales; para 2025, Grupos 1 y 2: 1.585 horas anuales, Grupos 3 y 4: 1.670
+  cost=0.0866 lat=17219ms rule_overrides=0
+=== cp1-03 msg=7021 session=86a2d80a-b757-4aea-a367-4403f4f46f43
+  Q: Me caso en octubre, ¿me dan días libres?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=5 conf=0.95 rejected_by=[]
+       canonical: "permiso retribuido por matrimonio" | reason: Consulta sobre días libres por boda, tema con dato verificado.
+       round1a={"ran":true,"active":false,"topic_id":5} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":5,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: Por matrimonio se conceden 17 días naturales, con presentación del certificado del Registro correspondiente [Fuente 2][Fuente 1][Fuente 3]. Estos días deben disfrutarse previo aviso y justificación, con derecho a remuneración [Fuente 2]. Se reconocen los mismo
+  cost=0.0885 lat=12432ms rule_overrides=0
+=== cp1-04 msg=7023 session=517a6c95-5776-4644-b395-dd3547f4c39b
+  Q: Si se muere un familiar cercano, ¿me dejan faltar al trabajo?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=5 conf=0.9 rejected_by=[]
+       canonical: "permiso retribuido por fallecimiento de familiar" | reason: Pregunta coloquial sobre permiso retribuido por fallecimiento de familiar, tema con dato verificado.
+       round1a={"ran":true,"active":false,"topic_id":5} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":5,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: En caso de fallecimiento de un familiar, se tiene derecho a ausentarse del trabajo con remuneración: 5 días laborables por fallecimiento de hijo/a, cónyuge o pareja de hecho; 3 días laborables por fallecimiento de padres/madres o hermanos/hermanas; y 2 días la
+  cost=0.0888 lat=13022ms rule_overrides=0
+=== cp1-05 msg=7025 session=32d48efb-4b9a-4a3e-8710-7e5f2743fbee
+  Q: Mi pareja va a dar a luz, ¿cuántos días libres me tocan?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=5 conf=0.9 rejected_by=[]
+       canonical: "permiso retribuido por nacimiento de hijo para el otro progenitor" | reason: Pregunta por días de permiso retribuido por nacimiento de hijo de la pareja
+       round1a={"ran":true,"active":false,"topic_id":5} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":5,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: Además de las horas de ausencia por nacimiento, las fuentes disponibles no recogen en el convenio un permiso retribuido específico en días por el simple nacimiento de un hijo o hija (el artículo 29 del convenio no contempla ese supuesto entre sus letras a) a o
+  cost=0.1786 lat=113093ms rule_overrides=0
+=== cp1-06 msg=7027 session=e7843adb-9261-4935-a16d-4172b91bad1b
+  Q: ¿Cuántos días puedo cogerme para irme de viaje en verano?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=3 conf=0.85 rejected_by=[]
+       canonical: "duración de las vacaciones anuales" | reason: Pregunta coloquial sobre días de vacaciones disponibles para viajar en verano.
+       round1a={"ran":true,"active":false,"topic_id":3} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":3,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: El periodo de disfrute de vacaciones se sitúa entre el 1 de junio y el 30 de septiembre, además de las fiestas de Navidad y Semana Santa [Fuente 1]. En cuanto a los días disponibles, para 2024 corresponden 30 días naturales de vacaciones al año, para 2025 32 d
+  cost=0.1023 lat=20472ms rule_overrides=0
+=== cp1-07 msg=7029 session=86a3f7e3-ec6f-43e1-ab67-a413e43cdf16
+  Q: ¿Qué días del año son fiesta y no se trabaja?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > rule_verdict
+  NORM verdict=accepted topic=4 conf=0.9 rejected_by=[]
+       canonical: "calendario de días festivos no laborables" | reason: Pregunta directa sobre festivos, tema con dato verificado.
+       round1a={"ran":false,"skipped":"compound_question"} consumers=[{"via":"planner_call","tool":"reference_fact","outcome":"answer","topic_id":4,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: Se establecen como mínimo dos días festivos anuales que, orientativamente, serán el 1 de enero y el 25 de diciembre, que serán de cierre de la instalación, no susceptibles de compensación [Fuente 1][Fuente 2][Fuente 3]. Para las empresas que ya vengan abriendo
+  cost=0.0859 lat=13741ms rule_overrides=0
+=== cp1-08 msg=7031 session=3773e08c-2a0a-49ce-b3f6-74f17d958d87
+  Q: Me mudo de casa la semana que viene, ¿tengo algún día libre por eso?
+  outcome=answer path=reference_fact_composition reason=- first_tool=reference_fact
+  steps: planner_round > normalization > round1a > rule_verdict
+  NORM verdict=accepted topic=5 conf=0.9 rejected_by=[]
+       canonical: "permiso retribuido por traslado de domicilio" | reason: Pregunta por día libre pagado por mudanza, corresponde a permisos retribuidos con dato verificado.
+       round1a={"ran":true,"active":false,"topic_id":5} consumers=[{"via":"round_1a","tool":"reference_fact","outcome":"answer","topic_id":5,"disagreement":false,"rescued_answer":true,"lexicon_topic_id":null}]
+  answer: Por traslado de domicilio habitual tienes derecho a un día laborable de permiso retribuido, previo aviso y justificación [Fuente 1][Fuente 2]. Si el desplazamiento es superior a 75 km, el permiso se amplía a dos días laborables [Fuente 1][Fuente 2].
+  cost=0.0827 lat=9607ms rule_overrides=0
+=== cp1-09 msg=7033 session=2e03405a-9f01-486a-b2a1-64343e5f5751
+  Q: Mi jefa me ha dicho que en agosto no puedo cogerme días, ¿puede hacer eso?
+  outcome=answer path=- reason=- first_tool=reference_fact
+  steps: planner_round > normalization > rule_verdict > tool_call > rule_verdict
+  NORM verdict=rejected topic=3 conf=0.7 rejected_by=["scan:D1"]
+       canonical: "vacaciones: fijación del periodo vacacional por la empresa y restricciones por mes" | reason: Empleado pregunta si la empresa puede prohibir vacaciones en un mes concreto
+       round1a=null consumers=[]
+  answer: El período de disfrute de vacaciones establecido es el comprendido entre el 1 de junio y el 30 de septiembre, así como las fiestas de Navidad y de Semana Santa [Fuente 1], por lo que agosto sí está dentro del período habilitado para disfrutar vacaciones. En ca
+  cost=0.0817 lat=20801ms rule_overrides=0
+=== cp1-10 msg=7035 session=64acebfa-8d73-4ed9-b6c9-5606d77f8c87
+  Q: ¿La empresa me da seguro médico?
+  outcome=escalate path=- reason=low_confidence first_tool=convenio_search
+  steps: planner_round > normalization > rule_verdict
+  NORM verdict=accepted topic=9 conf=0.4 rejected_by=[]
+       canonical: "seguro médico como beneficio social a cargo de la empresa" | reason: Pregunta por beneficio social (seguro médico), posible mejora voluntaria no cubierta como tema propio; se aproxima a retribución/beneficios sociales.
+       round1a=null consumers=[{"via":"planner_call","tool":"convenio_search","outcome":"escalate","rescued_answer":false,"check_a_rescued":false,"union_top_score":0.617886,"literal_top_score":0.602014,"canonical_top_score":0.560384,"literal_hits_restored":0,"retrieval_score_floor":0.4}]
+  answer: Un/a compañero/a de Recursos Humanos revisará tu consulta y te responderá.
+  cost=0.0676 lat=10719ms rule_overrides=0

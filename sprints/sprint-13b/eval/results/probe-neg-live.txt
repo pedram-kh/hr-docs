@@ -1,0 +1,32 @@
+  [nn-01] ACCEPTED
+      «¿cuántos días me dan si me caso?»
+      → topic=permisos retribuidos canonical=«permiso retribuido por matrimonio: duración en días» conf=0.95 first_tool=normalize_question
+  [nn-05] ACCEPTED
+      «acabo de empezar, ¿cuánto me pueden tener a prueba?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba» conf=0.95 first_tool=normalize_question
+  [nn-08] ACCEPTED
+      «¿cuántas horas al año me toca trabajar?»
+      → topic=jornada canonical=«jornada anual de trabajo: número de horas» conf=0.9 first_tool=normalize_question
+  [nn-11] ACCEPTED
+      «¿qué días libres me dan por asuntos familiares?»
+      → topic=permisos retribuidos canonical=«permiso retribuido por asuntos propios o familiares» conf=0.75 first_tool=normalize_question
+  [nn-13] ACCEPTED
+      «¿cuántas vacaciones tengo?»
+      → topic=vacaciones canonical=«duración de las vacaciones anuales» conf=0.95 first_tool=normalize_question
+  [nn-16] REJECTED by canonical_guardrail,topic_canonical_mismatch
+      «me despiden, ¿me dan algo?»
+      → topic=11 canonical=«indemnización y liquidación por despido» conf=0.5 first_tool=normalize_question
+  [nn-17] REJECTED by pay_intent_added
+      «¿me pagan más si trabajo de noche?»
+      → topic=9 canonical=«plus de nocturnidad por trabajo nocturno» conf=0.75 first_tool=normalize_question
+  [nn-19] ACCEPTED
+      «¿cuánto tiempo me dan para avisar si me voy?»
+      → topic=preaviso canonical=«preaviso del trabajador por dimisión o baja voluntaria» conf=0.9 first_tool=normalize_question
+  [nn-21] ACCEPTED
+      «¿puedo pedir días libres por la mudanza?»
+      → topic=permisos retribuidos canonical=«permiso retribuido por traslado de domicilio» conf=0.85 first_tool=normalize_question
+  [nn-23] ACCEPTED
+      «¿tengo derecho a festivos?»
+      → topic=festivos canonical=«días festivos: disfrute o descanso» conf=0.75 first_tool=normalize_question
+
+summary: {"cases":10,"scored":10,"skipped":0,"errors":0,"verdicts":{"accepted":8,"rejected":2},"declined":0,"rejected_by":{"canonical_guardrail":1,"topic_canonical_mismatch":1,"pay_intent_added":1},"topic_correct":{"correct":0,"of":0},"escaped":0,"cost_usd":0.1451,"p50_ms":2698,"prompt_versions":["sha256:ae1366e9a8a54ae971e444cb1b8fc5f137c4a1177d305b18b559fcef5121dc4d"]}

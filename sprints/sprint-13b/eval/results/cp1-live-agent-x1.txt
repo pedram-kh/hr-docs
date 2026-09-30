@@ -1,0 +1,39 @@
+  projected spend: 10 turns × $0.080 = $0.80 (cap $1.50)
+answer:gate — /tmp/eval13b/cp1-run.json — engine(s): agent — repeat=1
+
+  [cp1-01] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-02] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-03] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-04] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-05] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-06] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-07] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-08] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [cp1-09] agent PASS outcome=answer path=— reason=— first_tool=reference_fact
+  [cp1-10] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+
+  Engine: agent
+    pass rate: 10/10
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":9,"escalate":1}
+    path distribution: {"reference_fact_composition":8,"prose":1,"(none)":1}
+    authority distribution: {"official_convenio+structured_reference":4,"official_convenio":3,"official_convenio+national_law":1,"official_convenio+structured_reference+national_law":1,"(none)":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 0/0
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 100.0)
+    latency p50/p95: 13022 / 113093 ms
+    cost (list pricing, informational): $0.9363 total, $0.09363/turn, $0.10403/answer
+    by class: {"(none)":{"n":10,"pass":10,"hard":0,"answers":9,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|unlabelled":{"n":10,"pass":10}}
+    normalization: {"turns_with_block":10,"verdicts":{"accepted":9,"rejected":1},"rejected_by":{"scan:D1":1},"topic_dropped":1,"round1a_ran":7,"check_a_rescues":0,"rescued_answers":8}
+      rescue: [cp1-01] «Entré este mes, ¿cuánto tiempo estoy en fase de prueba?» → «duración del periodo de prueba»
+      rescue: [cp1-02] «¿Cuál es el tope de horas que puedo trabajar en un año?» → «jornada máxima anual de trabajo»
+      rescue: [cp1-03] «Me caso en octubre, ¿me dan días libres?» → «permiso retribuido por matrimonio»
+      rescue: [cp1-04] «Si se muere un familiar cercano, ¿me dejan faltar al trabajo?» → «permiso retribuido por fallecimiento de familiar»
+      rescue: [cp1-05] «Mi pareja va a dar a luz, ¿cuántos días libres me tocan?» → «permiso retribuido por nacimiento de hijo para el otro progenitor»
+      rescue: [cp1-06] «¿Cuántos días puedo cogerme para irme de viaje en verano?» → «duración de las vacaciones anuales»
+      rescue: [cp1-07] «¿Qué días del año son fiesta y no se trabaja?» → «calendario de días festivos no laborables»
+      rescue: [cp1-08] «Me mudo de casa la semana que viene, ¿tengo algún día libre por eso?» → «permiso retribuido por traslado de domicilio»
+

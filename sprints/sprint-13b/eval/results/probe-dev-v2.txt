@@ -1,0 +1,62 @@
+  [dv-vac-01.colloquial] ACCEPTED
+      «¿Cuántos días libres al año puedo coger para descansar?»
+      → topic=vacaciones canonical=«vacaciones anuales: número de días» conf=0.85 first_tool=normalize_question
+  [dv-vac-02.colloquial] ACCEPTED
+      «¿Cuánto tiempo al año me dejan desconectar del trabajo cobrando?»
+      → topic=vacaciones canonical=«vacaciones anuales retribuidas: duración» conf=0.75 first_tool=normalize_question
+  [dv-vac-03.colloquial] REJECTED by scan:E2
+      «¿Cuántos días puedo pedir para desconectar a lo largo del año?»
+      → topic=11 canonical=«derecho a la desconexión digital: días o límites» conf=0.4 first_tool=normalize_question
+  [dv-vac-04.colloquial] ACCEPTED
+      «¿Cuántos días al año me puedo ir de vacas sin que me descuenten?»
+      → topic=vacaciones canonical=«días de vacaciones anuales retribuidas» conf=0.9 first_tool=normalize_question
+  [dv-vac-05.colloquial] ACCEPTED
+      «¿Cuántos días seguidos puedo estar sin venir y que me sigan pagando?»
+      → topic=5 canonical=«días consecutivos de ausencia con permiso retribuido» conf=0.5 first_tool=normalize_question
+  [dv-jor-01.colloquial] REJECTED by scan:D1
+      «¿Cuántas horas tengo que hacer en total durante el año?»
+      → topic=2 canonical=«jornada anual: número total de horas de trabajo al año» conf=0.9 first_tool=normalize_question
+  [dv-jor-02.colloquial] ACCEPTED
+      «¿Cuál es el máximo de horas que me pueden hacer trabajar en doce meses?»
+      → topic=jornada canonical=«jornada máxima anual de trabajo» conf=0.9 first_tool=normalize_question
+  [dv-jor-03.colloquial] ACCEPTED
+      «¿Cuántas horas semanales me corresponde trabajar de media?»
+      → topic=jornada canonical=«jornada semanal de trabajo: horas de media a la semana» conf=0.9 first_tool=normalize_question
+  [dv-jor-04.colloquial] ACCEPTED
+      «¿Cuántas horas de trabajo real me piden en un año completo?»
+      → topic=jornada canonical=«jornada anual de trabajo efectivo» conf=0.9 first_tool=normalize_question
+  [dv-jor-05.colloquial] ACCEPTED
+      «¿Cuánto tengo que trabajar al año según el convenio?»
+      → topic=jornada canonical=«jornada anual de trabajo» conf=0.9 first_tool=normalize_question
+  [dv-per-01.colloquial] REJECTED by scan:E2
+      «¿En qué casos me pagan el día aunque no vaya a trabajar?»
+      → topic=5 canonical=«permisos retribuidos: días de ausencia con derecho a pago» conf=0.85 first_tool=normalize_question
+  [dv-per-02.colloquial] REJECTED by scan:E2,pay_intent_added
+      «¿Cuándo puedo faltar sin que me lo descuenten?»
+      → topic=5 canonical=«permisos retribuidos: ausencias del trabajo con derecho a retribución» conf=0.75 first_tool=normalize_question
+  [dv-per-03.colloquial] ACCEPTED
+      «Si un familiar está ingresado en el hospital, ¿puedo ausentarme cobrando?»
+      → topic=permisos retribuidos canonical=«permiso retribuido por hospitalización de familiar» conf=0.9 first_tool=normalize_question
+  [dv-per-04.colloquial] ACCEPTED
+      «¿Me dan tiempo libre pagado para ir al médico?»
+      → topic=permisos retribuidos canonical=«permiso retribuido para asistencia médica» conf=0.85 first_tool=normalize_question
+  [dv-per-05.colloquial] ACCEPTED
+      «¿Qué motivos me dejan faltar sin que me penalicen?»
+      → topic=permisos retribuidos canonical=«ausencias justificadas al trabajo con permiso retribuido» conf=0.75 first_tool=normalize_question
+  [dv-pru-01.colloquial] ACCEPTED
+      «Llevo dos semanas en la empresa, ¿cuánto tiempo estoy todavía a prueba?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba» conf=0.9 first_tool=normalize_question
+  [dv-pru-02.colloquial] ACCEPTED
+      «¿Cuánto tarda en pasar mi tiempo de prueba inicial?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba» conf=0.9 first_tool=normalize_question
+  [dv-pru-03.colloquial] ACCEPTED
+      «¿Cuántos meses tengo que aguantar de prueba en un puesto nuevo?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba en puesto nuevo» conf=0.95 first_tool=normalize_question
+  [dv-pru-04.colloquial] ACCEPTED
+      «¿Cuánto tiempo tienen para decidir si me quedo o no?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba» conf=0.75 first_tool=normalize_question
+  [dv-pru-05.colloquial] ACCEPTED
+      «¿Cuántos meses de prueba tiene un contrato nuevo como el mío?»
+      → topic=periodo de prueba canonical=«duración del periodo de prueba en el contrato de trabajo» conf=0.85 first_tool=normalize_question
+
+summary: {"cases":20,"scored":20,"skipped":0,"errors":0,"verdicts":{"accepted":15,"rejected":4,"accepted_no_topic":1},"declined":0,"rejected_by":{"scan:E2":3,"scan:D1":1,"pay_intent_added":1},"topic_correct":{"correct":15,"of":15},"escaped":0,"cost_usd":0.284,"p50_ms":2645,"prompt_versions":["sha256:ae1366e9a8a54ae971e444cb1b8fc5f137c4a1177d305b18b559fcef5121dc4d"]}

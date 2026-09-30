@@ -1,0 +1,216 @@
+  projected spend: 76 turns × $0.075 = $5.70 (cap $8.00)
+answer:gate — /tmp/eval13b/fact-routing-existing-colloquial-unanchored.json — engine(s): agent — repeat=1
+
+  [fr-c2-jornada-0631b.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos profesionales 1 y 2' not found (approved) on this convenio
+  [fr-c2-jornada-1b820.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos profesionales 3 y 4' not found (approved) on this convenio
+  [fr-c2-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c2-periodo-de-prueba-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c2-permisos-retribuidos-493db.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c3-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c3-periodo-de-prueba-4ce46.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos 3, 4, 5 y 6' not found (approved) on this convenio
+  [fr-c3-permisos-retribuidos-493db.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=conflict first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c4-periodo-de-prueba-4ce46.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos 3, 4, 5 y 6' not found (approved) on this convenio
+  [fr-c4-periodo-de-prueba-9a73b.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Contratos de formación en alternancia' not found (approved) on this convenio
+  [fr-c6-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c6-periodo-de-prueba-e94e3.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos Profesionales 1 y 2' not found (approved) on this convenio
+  [fr-c6-periodo-de-prueba-5c827.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos Profesionales 3, 4 y 5' not found (approved) on this convenio
+  [fr-c6-periodo-de-prueba-d5323.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Contratos por circunstancias de la producción (Art. 15.2 ET) de duración reducida' not found (approved) on this convenio
+  [fr-c6-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c8-jornada-23cb6.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+  [fr-c8-jornada-fddcb.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II, III' not found (approved) on this convenio
+  [fr-c8-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c8-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c10-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c11-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c11-jornada-cbd46.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Personal de servicios con pernocta de los usuarios (campamentos, casas de colonias, albergues y equipamientos similares)' not found (approved) on this convenio
+  [fr-c11-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c12-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c12-jornada-70e35.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'camareras de pisos' not found (approved) on this convenio
+  [fr-c12-periodo-de-prueba-6354c.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos titulados' not found (approved) on this convenio
+  [fr-c12-periodo-de-prueba-3da30.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Primeros Jefes (nivel 1)' not found (approved) on this convenio
+  [fr-c12-periodo-de-prueba-1e238.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Segundos Jefes (nivel 2)' not found (approved) on this convenio
+  [fr-c12-periodo-de-prueba-688da.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Oficiales (nivel 3)' not found (approved) on this convenio
+  [fr-c12-periodo-de-prueba-26681.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'No cualificados (niveles 4 y 5)' not found (approved) on this convenio
+  [fr-c12-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c13-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c13-periodo-de-prueba-1274b.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos II y III (Administrativos y Mandos)' not found (approved) on this convenio
+  [fr-c13-periodo-de-prueba-846e5.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo IV (Operarios)' not found (approved) on this convenio
+  [fr-c13-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c14-periodo-de-prueba-24d5a.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'General' not found (approved) on this convenio
+  [fr-c15-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c15-periodo-de-prueba-7f1c4.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Contratos para la práctica profesional' not found (approved) on this convenio
+  [fr-c15-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c17-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c17-jornada-c87a6.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo III (Experto en Talleres)' not found (approved) on this convenio
+  [fr-c17-periodo-de-prueba-3773a.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo 1' not found (approved) on this convenio
+  [fr-c17-periodo-de-prueba-0b6a4.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo 2' not found (approved) on this convenio
+  [fr-c17-periodo-de-prueba-4ce46.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos 3, 4, 5 y 6' not found (approved) on this convenio
+  [fr-c17-periodo-de-prueba-559ec.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Contrato formativo (práctica profesional)' not found (approved) on this convenio
+  [fr-c17-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c18-jornada-7178c.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Personal en régimen de guardia o expectativa' not found (approved) on this convenio
+  [fr-c18-periodo-de-prueba-d9485.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=conflict first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c18-periodo-de-prueba-fba4c.colloquial] agent FAIL outcome=escalate path=reference_fact_composition reason=conflict first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c19-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c19-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c20-jornada-493db.colloquial] agent FAIL outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c20-jornada-942ab.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de Actividad deportiva (monitores)' not found (approved) on this convenio
+  [fr-c20-jornada-b7bd5.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de Sala' not found (approved) on this convenio
+  [fr-c20-periodo-de-prueba-4e51d.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos 3, 4 y 5' not found (approved) on this convenio
+  [fr-c20-periodo-de-prueba-cd076.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo 6' not found (approved) on this convenio
+  [fr-c20-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c21-periodo-de-prueba-6e4b5.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c21-periodo-de-prueba-2716c.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c21-periodo-de-prueba-4d045.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c22-jornada-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c22-periodo-de-prueba-04a62.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Personal obrero y subalterno' not found (approved) on this convenio
+  [fr-c22-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c23-periodo-de-prueba-493db.colloquial] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c24-periodo-de-prueba-bb044.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos titulados superiores' not found (approved) on this convenio
+  [fr-c24-periodo-de-prueba-3fabb.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Técnicos de grado medio y administrativos cualificados' not found (approved) on this convenio
+  [fr-c24-periodo-de-prueba-1ea76.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Resto de personal' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-23cb6.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo I' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-03adc.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo II' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-c2160.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo III' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-9257b.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupo IV' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-8bbb3.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos V y VI' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-e5a58.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'Grupos VII y VIII' not found (approved) on this convenio
+  [fr-c25-periodo-de-prueba-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c25-permisos-retribuidos-493db.colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7)
+  [fr-c26-periodo-de-prueba-24d5a.colloquial] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+        note: as_of_date not honoured (no engine supports a caller-supplied date yet — roadmap.md §7); group_label 'General' not found (approved) on this convenio
+
+  Engine: agent
+    pass rate: 71/76
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":42,"escalate":34}
+    path distribution: {"reference_fact_composition":36,"reference_fact":40}
+    authority distribution: {"official_convenio":28,"official_convenio+structured_reference":8,"structured_reference":40}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 76/76
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 100.0)
+    latency p50/p95: 4631 / 31679 ms
+    cost (list pricing, informational): $3.7455 total, $0.04928/turn, $0.08918/answer
+    by class: {"fact_group_labelled_unbound":{"n":42,"pass":42,"hard":0,"answers":13,"lane_answers":0},"fact_convenio_wide":{"n":29,"pass":26,"hard":0,"answers":26,"lane_answers":0},"fact_scoped":{"n":5,"pass":3,"hard":0,"answers":3,"lane_answers":0}}
+    by phrasing|anchored: {"colloquial|unanchored":{"n":76,"pass":71}}
+    colloquial-unanchored (G1): overall 71/76 = 93% | convenio-wide 26/29 = 90% | group-unbound 42/42 = 100% | situational (informational) —
+    normalization: {"turns_with_block":76,"verdicts":{"accepted":76},"rejected_by":[],"topic_dropped":0,"round1a_ran":76,"check_a_rescues":0,"rescued_answers":42}
+      rescue: [fr-c2-jornada-0631b.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c2-jornada-1b820.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo»
+      rescue: [fr-c2-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas al año»
+      rescue: [fr-c2-periodo-de-prueba-493db.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c3-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo»
+      rescue: [fr-c6-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas al año»
+      rescue: [fr-c6-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios: días libres»
+      rescue: [fr-c8-jornada-23cb6.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c8-jornada-fddcb.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c8-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c8-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios o familiares: días libres»
+      rescue: [fr-c10-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c11-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas al año»
+      rescue: [fr-c11-jornada-cbd46.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c11-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios o familiares»
+      rescue: [fr-c12-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: horas al año»
+      rescue: [fr-c12-jornada-70e35.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo»
+      rescue: [fr-c12-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos familiares: días libres»
+      rescue: [fr-c13-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual: número de horas de trabajo al año»
+      rescue: [fr-c13-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios o familiares: días libres»
+      rescue: [fr-c15-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo»
+      rescue: [fr-c15-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos particulares/familiares»
+      rescue: [fr-c17-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas al año»
+      rescue: [fr-c17-jornada-c87a6.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas al año»
+      rescue: [fr-c17-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios: días de libre disposición»
+      rescue: [fr-c19-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual: número de horas de trabajo al año»
+      rescue: [fr-c19-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos familiares: días»
+      rescue: [fr-c20-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios/familiares: días libres»
+      rescue: [fr-c21-periodo-de-prueba-6e4b5.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c21-periodo-de-prueba-2716c.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c21-periodo-de-prueba-4d045.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c22-jornada-493db.colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [fr-c22-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos propios o familiares: días libres»
+      rescue: [fr-c23-periodo-de-prueba-493db.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-23cb6.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-03adc.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-c2160.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-9257b.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-8bbb3.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-e5a58.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-periodo-de-prueba-493db.colloquial] «Acabo de empezar, ¿cuánto me pueden tener a prueba?» → «duración del periodo de prueba»
+      rescue: [fr-c25-permisos-retribuidos-493db.colloquial] «¿Qué días libres me dan por asuntos familiares?» → «permiso retribuido por asuntos familiares: días libres»
+
