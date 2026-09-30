@@ -1,0 +1,49 @@
+SCENARIO d seeded fact ids [179,180,181], employee group null (all inside a txn that will be rolled back)
+sanity: nodes 32/34/35 = [{"id":32,"parent_id":null,"status":"approved","label":"Grupo 2"},{"id":34,"parent_id":32,"status":"approved","label":"área 5"},{"id":35,"parent_id":32,"status":"approved","label":"resto áreas"}]
+  projected spend: 6 turns × $0.060 = $0.36 (cap $1.00)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/s2-seeded.json — engine(s): classic,agent — repeat=3
+
+  [s2-d-ungrouped-wide-pair] classic PASS outcome=answer path=reference_fact reason=— first_tool=—
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+  [s2-d-ungrouped-wide-pair] classic PASS outcome=answer path=reference_fact reason=— first_tool=—
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+  [s2-d-ungrouped-wide-pair] classic PASS outcome=answer path=reference_fact reason=— first_tool=—
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+  [s2-d-ungrouped-wide-pair] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+  [s2-d-ungrouped-wide-pair] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+  [s2-d-ungrouped-wide-pair] agent PASS outcome=answer path=reference_fact reason=— first_tool=reference_fact
+        facts: selected=[179,180] offered=[] cited=[] fact_set_ok=yes
+
+  Engine: classic
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3}
+    path distribution: {"reference_fact":3}
+    authority distribution: {"structured_reference":3}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 1479 / 1554 ms
+    cost (list pricing, informational): $0.0000 total, $0.00000/turn, $0/answer
+    by class: {"s2_seeded":{"n":3,"pass":3,"hard":0,"answers":3,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":3,"pass":3}}
+
+  Engine: agent
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":3}
+    path distribution: {"reference_fact":3}
+    authority distribution: {"structured_reference":3}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 3/3
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 1526 / 1784 ms
+    cost (list pricing, informational): $0.0000 total, $0.00000/turn, $0/answer
+    by class: {"s2_seeded":{"n":3,"pass":3,"hard":0,"answers":3,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":3,"pass":3}}
+
+GATE EXIT=0
+ROLLBACK CHECK: OK (staging unchanged)

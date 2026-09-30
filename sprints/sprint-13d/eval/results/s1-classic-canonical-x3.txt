@@ -1,0 +1,45 @@
+  projected spend: 15 turns × $0.050 = $0.75 (cap $1.20)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/c20-jornada.json — engine(s): classic — repeat=3
+
+  [c20j-annual-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-annual-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-annual-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-overview-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-descanso-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-descanso-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-descanso-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-libre-disposicion-canonical] classic FAIL outcome=escalate path=— reason=low_confidence first_tool=—
+  [c20j-libre-disposicion-canonical] classic FAIL outcome=escalate path=— reason=low_confidence first_tool=—
+  [c20j-libre-disposicion-canonical] classic FAIL outcome=escalate path=— reason=low_confidence first_tool=—
+  [c20j-irregular-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-irregular-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-irregular-canonical] classic PASS outcome=answer path=reference_fact_composition reason=— first_tool=—
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+
+  Engine: classic
+    pass rate: 12/15
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":12,"escalate":3}
+    path distribution: {"reference_fact_composition":12,"(none)":3}
+    authority distribution: {"official_convenio+structured_reference":9,"(none)":3,"official_convenio+structured_reference+national_law":3}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    latency p50/p95: 8606 / 18435 ms
+    cost (list pricing, informational): $0.8956 total, $0.05971/turn, $0.07464/answer
+    by class: {"fact_convenio_wide":{"n":15,"pass":12,"hard":0,"answers":12,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":12,"pass":12},"canonical|unanchored":{"n":3,"pass":0}}
+
+EXIT=1

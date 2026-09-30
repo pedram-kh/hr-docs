@@ -188,3 +188,7 @@ one. No topic has needed more than one topic-specific rule.
 - `sprints/sprint-10c/plan.md` §D5 (the multi-year-schedule precedent this ADR generalizes), §D2 (the preaviso disambiguation-rule precedent this ADR names as the pattern's first instance)
 - `sprints/sprint-10c/review.md` (the run-1/run-2 measurements, the two bugs' full evidence, the cost, and the open granularity-trade-off flag this ADR formalizes)
 - `sprints/sprint-10c/data-pass-handoff.md` (the sprint-close deliverable — ranked verification ask, group-tree unlock quantification, the convenio-18 near-duplicate example, the festivos coverage note)
+
+## Addendum — Slice 13d (ADR-0037)
+
+ADR-0034's bundling can (and did, convenio 20 / `jornada`, facts 140 + 143) leave two general verified facts under one topic, which used to escalate every question on it. They are now answered together when their `raw_values` name disjoint quantities. This does **not** reopen the rejected alternative: nothing model-generated becomes an upsert identity — `raw_values` keys are read once from rows a human already verified, only to decide compose-vs-escalate. HR may still bundle such a pair into one fact (this ADR's intended shape); the slice's code serves the *next* pair.

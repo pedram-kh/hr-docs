@@ -1,0 +1,107 @@
+{
+ "_description": "Slice 13d S2 — seeded contradiction/precedence cases. Run ONLY through probes/s2-seeded-gate.php (seeds convenio 21 / festivos inside a transaction that is always rolled back; nothing is committed). One scenario per case id.",
+ "cases": [
+  {
+   "id": "s2-a-same-quantity",
+   "bank": "13d",
+   "class": "s2_seeded",
+   "authored": "canonical",
+   "anchored": true,
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cuántos días festivos tengo al año?",
+   "note": "two wide facts, same start, SAME raw_values key, different values -> escalate (never answer)",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "escalate"
+   }
+  },
+  {
+   "id": "s2-b-null-raw-values",
+   "bank": "13d",
+   "class": "s2_seeded",
+   "authored": "canonical",
+   "anchored": true,
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cuántos días festivos tengo al año?",
+   "note": "two wide facts, same start, null raw_values -> escalate",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "escalate"
+   }
+  },
+  {
+   "id": "s2-c-group-precedence",
+   "bank": "13d",
+   "class": "s2_seeded",
+   "authored": "canonical",
+   "anchored": true,
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cuántos días festivos tengo al año?",
+   "note": "group fact bound to the employee's node + a complementary wide pair; employee on that node -> the group fact only, no fact_set",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "value_contains": [
+     "Gamma"
+    ],
+    "value_not_contains": [
+     "Alfa",
+     "Beta"
+    ],
+    "fact_set": {
+     "absent": true
+    }
+   }
+  },
+  {
+   "id": "s2-d-ungrouped-wide-pair",
+   "bank": "13d",
+   "class": "s2_seeded",
+   "authored": "canonical",
+   "anchored": true,
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cuántos días festivos tengo al año?",
+   "note": "same data; employee ungrouped -> the wide complementary pair (both facts)",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "selected_count": 2,
+     "cited_all": true
+    }
+   }
+  },
+  {
+   "id": "s2-e-indeterminate-node",
+   "bank": "13d",
+   "class": "s2_seeded",
+   "authored": "canonical",
+   "anchored": true,
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cuántos días festivos tengo al año?",
+   "note": "fact bound to a sub-area of the employee's node + a complementary wide pair -> escalate, no fall-through",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "escalate"
+   }
+  }
+ ]
+}

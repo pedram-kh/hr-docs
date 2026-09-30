@@ -51,3 +51,7 @@ Build 7c as **one sprint in two internal phases under one review**, in strict or
 - **No conflict/version resolution (7d).** The two-verified safe rule and the same-point conflict check **escalate**; they never pick a winner, merge, or delete. Semantic version resolution remains Sprint 7d.
 - **Scope discipline.** Composition is scoped to **fact + convenio-prose on a shared topic**. A salary+reference compound, or arbitrary multi-topic triples, stay escalate-with-note (the existing `cross_path` posture) — richer per-clause decomposition is a later follow-up.
 - Cites ADR-0006 (salary SQL), ADR-0015 (`/synthesise`·`/ground`), ADR-0016 (router + salary pre-classifier + fail-safe), ADR-0020 (inert-until-verified), ADR-0021 (the `structured_reference` bound), ADR-0007 (hr-backend owns the decision + writes; hr-ai reads/returns).
+
+## Addendum — Slice 13d (ADR-0037)
+
+Composition now takes an ordered **set** of facts when a same-validity tie is provably complementary: one typed `reference_fact` source per fact (each verbatim, each with a `fact_id`), Check B admits a fact citation only if its `fact_id` was offered, `/ground` entails each cited fact against its own value, and the fact-vs-prose figure guard runs per fact. A single fact builds byte-identical arrays and requests (no `fact_id`). The "two verified matches" rule in the Decision (most-recent validity wins; same-validity conflict escalates) is unchanged except for that one narrowed case.

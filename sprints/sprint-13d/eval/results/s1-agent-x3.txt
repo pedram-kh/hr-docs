@@ -1,0 +1,71 @@
+  projected spend: 21 turns × $0.070 = $1.47 (cap $2.50)
+answer:gate — /var/hr-docs/sprints/sprint-13d/eval/c20-jornada.json — engine(s): agent — repeat=3
+
+  [c20j-annual-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-annual-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-annual-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140] fact_set_ok=yes
+  [c20j-overview-canonical] agent FAIL outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-overview-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-descanso-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-descanso-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-descanso-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-libre-disposicion-canonical] agent FAIL outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [c20j-libre-disposicion-canonical] agent FAIL outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [c20j-libre-disposicion-canonical] agent FAIL outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [c20j-irregular-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-irregular-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-irregular-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[143] fact_set_ok=yes
+  [c20j-annual-colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-annual-colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [c20j-annual-colloquial] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [ho-jor-04] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [ho-jor-04] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+  [ho-jor-04] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+        facts: selected=[140,143] offered=[140,143] cited=[140,143] fact_set_ok=yes
+
+  Engine: agent
+    pass rate: 17/21
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":20,"escalate":1}
+    path distribution: {"reference_fact_composition":21}
+    authority distribution: {"official_convenio+structured_reference":15,"official_convenio+structured_reference+national_law":3,"official_convenio":3}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 21/21
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 0.0 (mandated post-call terminations per 100: 42.9)
+    latency p50/p95: 11725 / 21317 ms
+    cost (list pricing, informational): $1.5726 total, $0.07488/turn, $0.07863/answer
+    by class: {"fact_convenio_wide":{"n":21,"pass":17,"hard":0,"answers":20,"lane_answers":0}}
+    by phrasing|anchored: {"canonical|anchored":{"n":12,"pass":11},"canonical|unanchored":{"n":3,"pass":0},"colloquial|unanchored":{"n":6,"pass":6}}
+    colloquial-unanchored (G1): overall 6/6 = 100% | convenio-wide 6/6 = 100% | group-unbound — | situational (informational) —
+    normalization: {"turns_with_block":9,"verdicts":{"accepted":9},"rejected_by":[],"topic_dropped":0,"round1a_ran":9,"check_a_rescues":0,"rescued_answers":9}
+      rescue: [c20j-libre-disposicion-canonical] «¿Cuántos días de libre disposición tengo al año?» → «días de libre disposición al año»
+      rescue: [c20j-libre-disposicion-canonical] «¿Cuántos días de libre disposición tengo al año?» → «días de libre disposición al año»
+      rescue: [c20j-libre-disposicion-canonical] «¿Cuántos días de libre disposición tengo al año?» → «días de libre disposición al año»
+      rescue: [c20j-annual-colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [c20j-annual-colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [c20j-annual-colloquial] «¿Cuántas horas al año me toca trabajar?» → «jornada anual de trabajo: número de horas»
+      rescue: [ho-jor-04] «¿A cuántas horas de trabajo al año estoy obligado?» → «jornada anual de trabajo: número de horas»
+      rescue: [ho-jor-04] «¿A cuántas horas de trabajo al año estoy obligado?» → «jornada anual de trabajo»
+      rescue: [ho-jor-04] «¿A cuántas horas de trabajo al año estoy obligado?» → «jornada anual de trabajo»
+
+EXIT=1

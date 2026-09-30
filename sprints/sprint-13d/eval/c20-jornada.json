@@ -1,0 +1,209 @@
+{
+ "_description": "Slice 13d S1 — convenio 20 / jornada (facts 140 + 143, complementary, both convenio-wide) for test-deporte-navarra@example.com. 5 canonical + 2 colloquial (the 13b existing colloquial for fr-c20-jornada-493db, and held-out ho-jor-04 verbatim). Pass: answer via reference_fact[_composition]; facts_selected=[140,143]; every cited fact ∈ offered; >=1 cited; overview also cited_all (reported, not gated, on the others). Classic colloquial-unanchored is recorded, not gated (13b contract).",
+ "cases": [
+  {
+   "id": "c20j-annual-canonical",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "canonical",
+   "anchored": true,
+   "question": "¿Cuál es mi jornada máxima anual?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  },
+  {
+   "id": "c20j-overview-canonical",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "canonical",
+   "anchored": true,
+   "question": "¿Qué dice el convenio sobre mi jornada de trabajo?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1,
+     "cited_all": true
+    }
+   }
+  },
+  {
+   "id": "c20j-descanso-canonical",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "canonical",
+   "anchored": true,
+   "question": "¿Qué descanso me corresponde en una jornada diaria continuada de más de 6 horas?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  },
+  {
+   "id": "c20j-libre-disposicion-canonical",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "canonical",
+   "anchored": false,
+   "question": "¿Cuántos días de libre disposición tengo al año?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  },
+  {
+   "id": "c20j-irregular-canonical",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "canonical",
+   "anchored": true,
+   "question": "¿Puede la empresa distribuir mi jornada de forma irregular?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  },
+  {
+   "id": "c20j-annual-colloquial",
+   "bank": "13d",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "colloquial",
+   "anchored": false,
+   "question": "¿Cuántas horas al año me toca trabajar?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  },
+  {
+   "id": "ho-jor-04",
+   "bank": "held_out",
+   "class": "fact_convenio_wide",
+   "topic": "jornada",
+   "convenio": "GESTIÓN DEPORTIVA NAVARRA",
+   "convenio_id": 20,
+   "email": "test-deporte-navarra@example.com",
+   "authored": "colloquial",
+   "anchored": false,
+   "question": "¿A cuántas horas de trabajo al año estoy obligado?",
+   "expected_tools": {
+    "first": "reference_fact"
+   },
+   "expect": {
+    "outcome": "answer",
+    "path": [
+     "reference_fact",
+     "reference_fact_composition"
+    ],
+    "fact_set": {
+     "facts_selected": [
+      140,
+      143
+     ],
+     "cited_min": 1
+    }
+   }
+  }
+ ]
+}
