@@ -287,6 +287,11 @@ services:
       context: ./hr-frontend
       args:
         VITE_API_BASE_URL: /api
+        # Sprint 12b (items 1, 7): staging builds as the DEMO by default.
+        # Normal build = export both =true before `docker compose build
+        # frontend-dist` (hr-docs/deploy.md "Frontend demo flags").
+        VITE_SHOW_CHUNK_HEALTH: ${VITE_SHOW_CHUNK_HEALTH:-false}
+        VITE_SHOW_COVERAGE: ${VITE_SHOW_COVERAGE:-false}
     image: hr-staging-hr-frontend:latest
     restart: "no"
     volumes:
