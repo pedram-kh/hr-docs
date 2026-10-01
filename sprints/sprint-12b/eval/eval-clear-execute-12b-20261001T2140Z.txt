@@ -1,0 +1,12 @@
+== 12b eval-clear · EXECUTE · run_id=12b-20261001T2140Z
+db_host=hr-staging-db.cpsukkwcomk6.eu-west-1.rds.amazonaws.com  env=staging  actor=#1 admin@hr-staging.internal
+manifest=/tmp/eval-clear-manifest-12b-20261001T2140Z.json  sha256=fb4f12dcf2da52e6f67b3fda2470dda8f8624df47d96bbaf13e30ed0ca616b7d  rows=677
+snapshot=hr-staging-pre-12b-close (available)
+-- result
+open before: 677   open after: 0
+closed: 677  by tier {"A":639,"B":38}  by prior status {"assigned":1,"in_progress":4,"new":672}
+skipped: 0   errors: 0
+-- left open (0)
+escalation_events written by this run: status_change=677  bulk_closed=677  total=1354 (expect 1354 = 2 × 677)
+snapshot=hr-staging-pre-12b-close  run_id=12b-20261001T2140Z  manifest_sha256=fb4f12dcf2da52e6f67b3fda2470dda8f8624df47d96bbaf13e30ed0ca616b7d
+result file: /tmp/eval-clear-execute-result-12b-20261001T2140Z.json

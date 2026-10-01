@@ -1,0 +1,32 @@
+== 12b eval-clear · DRY RUN · run_id=12b-20261001T2140Z
+db_host=hr-staging-db.cpsukkwcomk6.eu-west-1.rds.amazonaws.com  env=staging  frozen_max_id=1824
+predicate_sha256=c0f1d5dd524efd28de1f0c48a273d9ddecb042486576eaf6c7f4e9cfe808b5bd
+cards in table: 678  (open 677, resolved 0, closed 1)
+-- tier × status (open cards that WOULD close)
+ tier |   new | assigned | in_progress | total
+ A    |   637 |        1 |           1 |   639
+ B    |    35 |        0 |           3 |    38
+ TOTAL|   672 |        1 |           4 |   677
+-- by account (would close): account | cards | first → last created
+  test-midingest@example.com                   243  2026-09-11 → 2026-09-30  (tier A)
+  test-andalucia@example.com                   233  2026-09-11 → 2026-09-30  (tier A)
+  test-fullgap@example.com                      94  2026-09-11 → 2026-10-01  (tier A)
+  employee@hr-staging.internal                  35  2026-09-10 → 2026-10-01  (tier B)
+  test-navarra@example.com                      32  2026-09-12 → 2026-10-01  (tier A)
+  test-gipuzkoa@example.com                     20  2026-09-12 → 2026-10-01  (tier A)
+  test-deporte-estatal@example.com               6  2026-09-29 → 2026-10-01  (tier A)
+  test-ocio-alava@example.com                    5  2026-09-29 → 2026-09-29  (tier A)
+  salary-test@hr-staging.internal                3  2026-09-06 → 2026-09-06  (tier B)
+  test-hosteleria-navarra@example.com            3  2026-09-09 → 2026-09-14  (tier A)
+  test-andalucia-nocat@example.com               2  2026-09-29 → 2026-09-29  (tier A)
+  test-deportivas-alava@example.com              1  2026-09-30 → 2026-09-30  (tier A)
+-- human-touched (6): id, uuid, account, status, assigned_to, events, resolution?
+  #1  2b0155fa-dda7-49f9-9c10-17f85a0ffb42  salary-test@hr-staging.internal  in_progress  assigned_to=-  events=4  resolution=yes
+  #2  329b07d7-ffbf-46a3-9e67-079fb1313e78  salary-test@hr-staging.internal  in_progress  assigned_to=-  events=2  resolution=yes
+  #3  c7899096-fe1e-4e30-9c19-b192f323c8fb  salary-test@hr-staging.internal  new  assigned_to=-  events=0  resolution=yes
+  #280  aebf8f02-7e66-47a9-8f22-a8e976adf179  test-navarra@example.com  assigned  assigned_to=1  events=2  resolution=no
+  #281  b3c1462e-e003-4b5f-bf83-0380f7fa965c  test-hosteleria-navarra@example.com  in_progress  assigned_to=1  events=3  resolution=no
+  #293  f88885e8-8c35-4157-9263-9ef1f905be5e  employee@hr-staging.internal  in_progress  assigned_to=1  events=2  resolution=no
+-- STAYS OPEN (0): id, uuid, account, status, reason
+-- already closed (1): #288 (employee@hr-staging.internal)
+manifest: /tmp/eval-clear-manifest-12b-20261001T2140Z.json  sha256=fb4f12dcf2da52e6f67b3fda2470dda8f8624df47d96bbaf13e30ed0ca616b7d  (677 rows)

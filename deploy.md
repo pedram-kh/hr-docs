@@ -445,3 +445,22 @@ Continues Session 6's "Sprint 8, Step 1" entry above (the scheduler). This sessi
 `HR_GENERAL_LANE_ENABLED` and the 13c sub-flag `HR_GENERAL_LANE_MODEL_KNOWLEDGE` are `"true"` in **both** the repo copy (`infra/compose/docker-compose.staging.yml`) and the box's flat `/opt/hr-staging/docker-compose.staging.yml`, so the pilot build has the lane live and a `deploy.sh` run (which overwrites the flat file from the repo copy) keeps it. The `config/hr.php` defaults stay `false`, so any environment without these lines has no lane. The Guardarraíles toggles (`general_lane_enabled`, `general_lane_model_knowledge_enabled`) are restrict-only and take effect with no deploy (the policy snapshot is cached; a write flushes it). The box-only `STAGING_FIXED_OTP_CODE` drift is unchanged (re-apply after every `deploy.sh`).
 
 `golden-verify.sh` now takes the PHPUnit filter as `$1` and defaults to `Sprint13(c(Lane)?)?GoldenTraceTest` (the Sprint-13 traces plus the 13c lane-on traces).
+
+### Session 13 (Slice 12b — frontend demo flags)
+
+**Frontend demo flags: staging builds as the DEMO by default; flipping to the normal build is a frontend rebuild, never a backend deploy.** `VITE_SHOW_CHUNK_HEALTH` (the Chunk Health block in the document drawer; default off) and `VITE_SHOW_COVERAGE` (the Cobertura *nav item* only; the page stays reachable at `#view=coverage` behind its permission) are Vite build args — baked at build time, like `VITE_API_BASE_URL`. `docker-compose.staging.yml` (`frontend-dist.build.args`) defaults both to `false`; the Dockerfile's own defaults (chunk-health off, coverage on) and `.env.example` (both on) are for local dev. **Hides UI only: no data, route, permission or backend payload changes.**
+
+To show both again on staging (no migration → no snapshot needed):
+
+```bash
+cd /opt/hr-staging
+source hr-docs/infra/vars.sh
+export AWS_REGION RDS_ENDPOINT STAGING_EIP S3_DOCUMENTS_BUCKET="$NAME_S3_DOCUMENTS" S3_BACKUPS_BUCKET="$NAME_S3_BACKUPS"   # same discipline as every manual recreate (Session 8)
+export VITE_SHOW_CHUNK_HEALTH=true VITE_SHOW_COVERAGE=true
+docker compose -f docker-compose.staging.yml build frontend-dist
+docker compose -f docker-compose.staging.yml up -d frontend-dist     # copies dist into the caddy volume and exits 0
+```
+
+To return to the demo build, run the same two `docker compose` lines **without** the two `VITE_SHOW_*` exports (or `=false`) — the compose defaults apply. Verify in a browser (hard refresh): demo = no «Cobertura» in the sidebar, no Chunk Health in a document drawer.
+
+The box's flat `docker-compose.staging.yml` carries the same two `args` lines (added at the 12b deploy, by a minimal in-place edit that keeps the box-only `STAGING_FIXED_OTP_CODE`; backup at `docker-compose.staging.yml.pre-12b`). A full `deploy.sh` overwrites it from the repo copy, which already has them.

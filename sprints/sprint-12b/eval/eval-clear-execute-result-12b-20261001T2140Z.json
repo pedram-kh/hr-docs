@@ -1,0 +1,3407 @@
+{
+    "mode": "execute",
+    "run_id": "12b-20261001T2140Z",
+    "manifest_sha256": "fb4f12dcf2da52e6f67b3fda2470dda8f8624df47d96bbaf13e30ed0ca616b7d",
+    "snapshot_id": "hr-staging-pre-12b-close",
+    "open_before": 677,
+    "open_after": 0,
+    "by_tier": {
+        "A": 639,
+        "B": 38
+    },
+    "by_prior_status": {
+        "assigned": 1,
+        "in_progress": 4,
+        "new": 672
+    },
+    "events_status_change": 677,
+    "events_reason": 677,
+    "left_open": [],
+    "outcomes": {
+        "1": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "in_progress"
+        },
+        "2": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "in_progress"
+        },
+        "3": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "4": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "5": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "6": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "7": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "8": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "9": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "10": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "11": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "12": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "13": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "14": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "15": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "16": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "17": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "18": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "19": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "20": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "21": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "22": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "23": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "24": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "25": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "26": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "27": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "28": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "29": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "30": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "31": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "32": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "33": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "34": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "35": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "36": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "37": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "38": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "39": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "40": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "41": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "42": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "43": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "44": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "45": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "46": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "47": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "48": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "49": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "50": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "51": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "52": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "53": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "54": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "55": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "56": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "57": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "58": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "59": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "60": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "61": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "62": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "63": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "64": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "65": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "66": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "67": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "68": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "69": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "70": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "71": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "72": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "73": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "74": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "75": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "76": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "77": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "78": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "79": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "80": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "81": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "82": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "83": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "84": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "85": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "86": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "87": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "88": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "89": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "90": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "91": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "92": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "93": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "94": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "95": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "96": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "97": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "98": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "99": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "100": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "101": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "102": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "103": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "104": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "105": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "106": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "107": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "108": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "109": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "110": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "111": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "112": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "113": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "114": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "115": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "116": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "117": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "118": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "119": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "120": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "121": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "122": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "123": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "124": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "125": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "126": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "127": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "128": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "129": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "130": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "131": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "132": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "133": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "134": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "135": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "136": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "137": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "138": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "139": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "140": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "141": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "142": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "143": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "144": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "145": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "146": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "147": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "148": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "149": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "150": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "151": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "152": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "153": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "154": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "155": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "156": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "157": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "158": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "159": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "160": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "161": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "162": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "163": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "164": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "165": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "166": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "167": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "168": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "169": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "170": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "171": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "172": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "173": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "174": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "175": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "176": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "177": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "178": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "179": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "180": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "181": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "182": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "183": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "184": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "185": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "186": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "187": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "188": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "189": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "190": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "191": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "192": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "193": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "194": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "195": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "196": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "197": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "198": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "199": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "200": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "201": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "202": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "203": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "204": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "205": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "206": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "207": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "208": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "209": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "210": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "211": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "212": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "213": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "214": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "215": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "216": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "217": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "218": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "219": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "220": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "221": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "222": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "223": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "224": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "225": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "226": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "227": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "228": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "229": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "230": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "231": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "232": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "233": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "234": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "235": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "236": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "237": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "238": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "239": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "240": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "241": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "242": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "243": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "244": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "245": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "246": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "247": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "248": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "249": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "250": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "251": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "252": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "253": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "254": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "255": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "256": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "257": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "258": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "259": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "260": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "261": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "262": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "263": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "264": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "265": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "266": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "267": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "268": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "269": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "270": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "271": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "272": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "273": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "274": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "275": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "276": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "277": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "278": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "279": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "280": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "assigned"
+        },
+        "281": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "in_progress"
+        },
+        "282": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "283": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "284": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "285": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "286": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "287": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "289": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "290": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "291": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "292": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "293": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "in_progress"
+        },
+        "294": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "295": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "296": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "297": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "298": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "299": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "300": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "301": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "302": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "303": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "306": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "307": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "308": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "309": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "310": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "311": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "312": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "313": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "314": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "315": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "321": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "322": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "323": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "324": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "325": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "326": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "327": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "330": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "331": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "332": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "333": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "334": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "335": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "336": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "337": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "338": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "339": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "340": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "341": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "342": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "343": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "344": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "345": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "346": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "347": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "348": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "349": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "354": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "524": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "525": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "526": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "527": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "528": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "529": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "530": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "531": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "534": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "535": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "543": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "544": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "545": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "546": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "547": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "550": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "551": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "552": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "553": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "554": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "555": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "556": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "557": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "558": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "559": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "560": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "561": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "562": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "563": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "564": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "565": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "566": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "567": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "568": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "569": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "570": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "571": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "572": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "573": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "574": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "575": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "576": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "577": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "578": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "579": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "580": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "581": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "582": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "583": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "584": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "585": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "586": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "587": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "588": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "589": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "590": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "591": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "592": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "593": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "594": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "595": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "596": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "597": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "598": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "599": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "600": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "601": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "602": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "603": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "604": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "605": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "606": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "607": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "608": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "609": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "610": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "615": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "618": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "622": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "625": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "629": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "630": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "631": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "634": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "639": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "642": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "663": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "666": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "667": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "683": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "684": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "686": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "687": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "688": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "689": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "691": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "692": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "693": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "695": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "697": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "698": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "699": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "713": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "721": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "722": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "723": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "725": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "726": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "727": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "728": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "729": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "731": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "732": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "733": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "734": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "735": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "737": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "740": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "741": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "742": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "743": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "745": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "747": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "748": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "749": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "750": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "752": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "753": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "754": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "755": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "756": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "757": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "758": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "759": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "760": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "761": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "762": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "763": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "764": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "765": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "766": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "767": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "768": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "769": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "770": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "771": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "772": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "773": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "774": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "775": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "777": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "778": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "785": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "793": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "794": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "795": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "796": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "797": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "798": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "799": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "800": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "801": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "802": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "803": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "804": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "805": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "806": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "807": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "808": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "809": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "810": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "811": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "812": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "813": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "814": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "815": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "816": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "817": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "818": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "819": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "820": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "821": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "822": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "823": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "824": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "825": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "826": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "827": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "828": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "829": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "830": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "831": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "832": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "833": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "834": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "835": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "836": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "837": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "838": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "839": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "840": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "847": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "848": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "849": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "850": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "851": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "852": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "853": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "854": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "855": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "856": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "857": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "858": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1109": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1267": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1268": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1269": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1270": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1271": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1272": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1273": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1274": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1275": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1276": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1277": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1278": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1279": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1280": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1281": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1282": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1283": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1284": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1285": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1286": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1287": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1288": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1289": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1290": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1291": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1292": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1293": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1294": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1295": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1296": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1297": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1298": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1299": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1300": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1301": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1302": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1303": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1304": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1305": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1306": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1307": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1308": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1309": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1310": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1311": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1312": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1313": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1314": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1315": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1316": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1317": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1318": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1319": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1320": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1321": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1322": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1323": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1324": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1325": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1326": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1327": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1328": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1329": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1330": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1342": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1353": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1466": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1467": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1468": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1469": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1470": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1471": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1472": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1473": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1474": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1475": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1476": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1477": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1478": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1479": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1480": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1481": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1482": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1483": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1484": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1485": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1486": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1487": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1488": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1489": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1490": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1491": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1492": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1493": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1494": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1581": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1582": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1697": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1698": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1758": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1759": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1760": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1761": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1762": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1763": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1764": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1765": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1766": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1767": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1768": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1769": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1770": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1771": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1815": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1816": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1817": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1818": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1819": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1820": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1821": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1822": {
+            "result": "closed",
+            "tier": "B",
+            "prior_status": "new"
+        },
+        "1823": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        },
+        "1824": {
+            "result": "closed",
+            "tier": "A",
+            "prior_status": "new"
+        }
+    }
+}
