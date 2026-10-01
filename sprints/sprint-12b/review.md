@@ -1,6 +1,6 @@
-# Slice 12b — review (demo polish) — CP-1 run 2026-10-01, awaiting sign-off
+# Slice 12b — review (demo polish) — CLOSED 2026-10-02
 
-**Outcome: every item is live on staging; item 2 executed against the frozen manifest; CP-1 checklist run in a real browser on the live site; nothing merged to `main` yet.** Branch `sprint-12b` in `hr-frontend` (head `3c72d50`) and `hr-docs`; `hr-backend` untouched.
+**Outcome: CP-1 passed; every item is live on staging; item 2 executed against the frozen manifest; merged to `main` (`--no-ff`, WIP squashed to one commit per repo) and deployed via `deploy.sh` — see "Close-out" at the end.** `hr-backend` untouched.
 
 | | |
 |---|---|
@@ -77,4 +77,30 @@ Logged in as the seeded admin test account (the documented staging fixed code; o
 6. **The activity log shows the appended event as "bulk closed"** (the type string, humanised). Not fixed: no product change this slice. The reason code is in the note.
 7. **Phone: Historial and Documents tables overflow the page width** (the `docs-table` has no scroll wrapper; ~790 px on a 390 px screen with real data). Pre-existing: those rules and markup are untouched by this sprint. Ticket.
 8. **Staging box vs repo compose.** The two build-arg lines were added to the box's flat `docker-compose.staging.yml` by a minimal in-place edit (12a's lesson). The repo copy already had them from the sprint's first docs commit; the box copy was then brought to match exactly, including the two comment lines. The **only** remaining difference is the box-only `STAGING_FIXED_OTP_CODE: "135790"`. Backup of the previous box file: `docker-compose.staging.yml.pre-12b`.
-9. **Not merged.** `sprint-12b` is deployed from the working tree (rsync), as with 13e; merge and the close-out record wait for sign-off.
+
+## Close-out
+
+**Squash and merge.** Each repo's slice work is one commit on `sprint-12b`, merged to `main` with `--no-ff`; `main` and `sprint-12b` pushed. `hr-backend` and `hr-ai` are unchanged (nothing to merge; the one-off item-2 script lives under `sprints/sprint-12b/scripts/` with its outputs in `eval/`, never in the product tree). `hr-frontend/count-strings*` stayed untracked and out of the commit (an earlier WIP commit had swept them in; removed before the squash, the shipped tree otherwise identical to what CP-1 ran).
+
+| Repo | Branch commit | `main` merge commit (deployed) | Previous `main` (rollback target) |
+|---|---|---|---|
+| hr-backend | — (no change) | `54fea620f09e156ce1d2e476289380e943256db6` | same |
+| hr-ai | — (no change) | `09503bc86602509bbb0b72f94a585c0443ca98b5` | same |
+| hr-frontend | `eb1b8ab637601d9b686b1516998787f99e4792a7` | `513733c9ac35a697a34cfacd5464a93489cc2bf4` | `e3e94f603b1842b9efdaf8a44e7dc3093ca985f8` |
+| hr-docs | `6cf8b1e55392366beaa29706098060999d3f9af0` | `fa0bda8de3303cec44f751076b8f7b5bb0c46819` (deployed; this close-out is a later docs-only commit) | `ac7dcd67ad49d7cf04cf3250131afc512c4636f0` (box was on `a0079b7d477ca7e3ca819e5890a9f811626fbf4a`) |
+
+Rollback of the build: `deploy.sh 54fea620f09e156ce1d2e476289380e943256db6 09503bc86602509bbb0b72f94a585c0443ca98b5 e3e94f603b1842b9efdaf8a44e7dc3093ca985f8 a0079b7d477ca7e3ca819e5890a9f811626fbf4a` (no migration belongs to the slice). Rollback of the data operation: `eval-clear.php` with `EC_MODE=reverse` and the frozen manifest (fixture-tested, not run on staging), or the snapshot `hr-staging-pre-12b-close` restored to a throwaway instance (never in place).
+
+**Deploy.** On-box `hr-frontend` checkout reset (`git reset --hard`, `git clean -fd` after a dry run that listed only the sprint's rsync-injected files and the untracked `count-strings*`; the other three checkouts were already clean) → `deploy.sh` with the four SHAs above (leak scan clean; "Nothing to migrate"; all health checks green on attempt 2; `.last-good-shas` updated) → the flat compose was overwritten from the repo copy (**diff against it: empty**, so the box now had `STAGING_FIXED_OTP_CODE: ""`) → fixed OTP `135790` re-applied (the only diff) → `hr-backend`, worker and scheduler recreated with the `vars.sh` exports → health. No pre-deploy snapshot (no migration); the post-close snapshot below covers the state after.
+
+**Health.** Laravel 13.16.1, environment staging, debug off, maintenance off, `APP_URL`/`DB_HOST` populated, `STAGING_FIXED_OTP_CODE=135790`, no pending migrations, `/up` 200 on the box, `/api/up` and `/` 200 on the public host, hr-ai healthy; worker and scheduler running. Verified with a real artisan command, not `/up` alone.
+
+**Demo flags (final state).** The repo compose defaults `VITE_SHOW_CHUNK_HEALTH` and `VITE_SHOW_COVERAGE` to `false`, so `deploy.sh` builds the demo with no override; the served bundle is `assets/index-D7eoXvSs.js`, the same hash as the CP-1 build. Flip procedure: `deploy.md` Session 13.
+
+**Verification of the deployed build** (screenshots of the live site, real Chrome, admin test account): sidebar groups fold (two groups folded at once, `aria-expanded` false/true as expected; Cobertura absent); board with columns Nuevas / Asignadas / En curso / Resueltas and **no Cerrada column**, toggle «Mostrar cerradas (678)» unchecked; Analítica in Spanish prose (checked above in CP-1, re-viewed after deploy); **Cobertura hidden from the sidebar and still reachable by `#view=coverage`** («Análisis · Cobertura»).
+
+**What the board shows now.** Two open cards, both from `Test Navarra (Limpieza)` asking «¿Qué es el quiet quitting?» (reasons «Revisión pedida por el empleado» and «Información general bloqueada»): someone tested after the close. They are after the frozen manifest, so they stay open by design; nothing to do unless they should be cleared too (a new manifest and a new confirm).
+
+**Snapshots** (`hr-staging-db`, manual): `post-ingest-20260906`, `post-11b`, `post-12a`, `post-13`, `post-13b`, `post-13d`, `post-13c`, `post-13e`, **`pre-12b-close`** (2026-10-01 21:34 UTC, **kept until the demo is done** — it is the rollback for the bulk close; delete it afterwards), **`post-12b`** (2026-10-01 22:29 UTC, after the deploy and verification).
+
+**Left on the box:** `/opt/hr-staging/docker-compose.staging.yml.pre-12b` (the pre-sprint flat compose; harmless, can be deleted).
