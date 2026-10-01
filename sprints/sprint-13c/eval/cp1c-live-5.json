@@ -1,0 +1,40 @@
+{
+  "_description": "Slice 13c CP-1 (user-directed 2026-10-01): the five live topics, each asked with its frozen pool wording (POOL-25, -07, -05, -03, -04), profile cov, persisted on staging (test-gipuzkoa) with the lane + sub-flag on for that one process. Run: answer:gate --engine=agent --persist --set=<this>.",
+  "cases": [
+    {
+      "id": "cp1c-1-excedencia",
+      "class": "cp1_live",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Qué es una excedencia?",
+      "expect": {}
+    },
+    {
+      "id": "cp1c-2-it",
+      "class": "cp1_live",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Qué significa IT?",
+      "expect": {}
+    },
+    {
+      "id": "cp1c-3-parte-de-baja",
+      "class": "cp1_live",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Qué es el parte de baja médica?",
+      "expect": {}
+    },
+    {
+      "id": "cp1c-4-vida-laboral",
+      "class": "cp1_live",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Qué es la vida laboral?",
+      "expect": {}
+    },
+    {
+      "id": "cp1c-5-mutua",
+      "class": "cp1_live",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Qué es una mutua colaboradora con la Seguridad Social?",
+      "expect": {}
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+  projected spend: 40 turns × $0.075 = $3.00 (cap $5.50)
+answer:gate — /var/hr-docs/sprints/sprint-13c/eval/lane-positives.json — engine(s): agent — repeat=2
+
+  [LP-01-cov] agent PASS outcome=escalate path=general_knowledge reason=general_lane_blocked first_tool=convenio_search
+  [LP-01-cov] agent PASS outcome=escalate path=general_knowledge reason=general_lane_blocked first_tool=convenio_search
+  [LP-07-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-07-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-09-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-09-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-11-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-11-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-14-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-14-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-15-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-15-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-25-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-25-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-28-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-28-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-29-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-29-cov] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [LP-45-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-45-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-47-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-47-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-48-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-48-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-53-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-53-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-58-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-58-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-65-cov] agent PASS outcome=escalate path=general_knowledge reason=general_lane_blocked first_tool=convenio_search
+  [LP-65-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=general_knowledge
+  [LP-67-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-67-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-69-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-69-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-73-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-73-cov] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [LP-74-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=escalate
+  [LP-74-cov] agent PASS outcome=escalate path=agent_planner reason=planner_escalated first_tool=escalate
+  [LP-75-cov] agent PASS outcome=escalate path=general_knowledge reason=general_lane_blocked first_tool=convenio_search
+  [LP-75-cov] agent PASS outcome=escalate path=general_knowledge reason=general_lane_blocked first_tool=convenio_search
+
+  Engine: agent
+    pass rate: 40/40
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"escalate":8,"answer":32}
+    path distribution: {"general_knowledge":29,"prose":8,"agent_planner":3}
+    authority distribution: {"(none)":8,"official_convenio":2,"general_knowledge":24,"official_convenio+national_law":4,"national_law":2}
+    lane answers: 24 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 37/40
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 75.0 (mandated post-call terminations per 100: 20.0)
+    latency p50/p95: 13007 / 30482 ms
+    cost (list pricing, informational): $1.9258 total, $0.04815/turn, $0.06018/answer
+    by class: {"lane_positive":{"n":40,"pass":40,"hard":0,"answers":32,"lane_answers":24}}
+    normalization: {"turns_with_block":40,"verdicts":{"declined":16,"accepted":23,"rejected":1},"rejected_by":{"pay_intent_added":1},"topic_dropped":4,"round1a_ran":0,"check_a_rescues":1,"rescued_answers":0}
+
+EXIT=0

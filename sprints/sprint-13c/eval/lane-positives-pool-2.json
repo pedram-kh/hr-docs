@@ -1,0 +1,173 @@
+{
+ "_description": "Slice 13c second-tier pool (POOL-53..76), added after S0 (18/52 survivors, < 20; plan Q6 answered 'tier2'). 24 CANDIDATES, same rules as lane-positives-pool.json; S0b runs V1+V2 on these only. Frozen BEFORE S0b ran.",
+ "cases": [
+  {
+   "id": "POOL-53",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el INSS?",
+   "flags": []
+  },
+  {
+   "id": "POOL-54",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una mutua de accidentes de trabajo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-55",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el alta médica?",
+   "flags": []
+  },
+  {
+   "id": "POOL-56",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el paro?",
+   "flags": []
+  },
+  {
+   "id": "POOL-57",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la demanda de empleo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-58",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un accidente de trabajo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-59",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una enfermedad profesional?",
+   "flags": []
+  },
+  {
+   "id": "POOL-60",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la prevención de riesgos laborales?",
+   "flags": []
+  },
+  {
+   "id": "POOL-61",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el servicio de prevención?",
+   "flags": []
+  },
+  {
+   "id": "POOL-62",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la mediación laboral?",
+   "flags": []
+  },
+  {
+   "id": "POOL-63",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la representación sindical?",
+   "flags": []
+  },
+  {
+   "id": "POOL-64",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un permiso parental?",
+   "flags": []
+  },
+  {
+   "id": "POOL-65",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el ingreso mínimo vital?",
+   "flags": []
+  },
+  {
+   "id": "POOL-66",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿En qué consiste la jubilación?",
+   "flags": []
+  },
+  {
+   "id": "POOL-67",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿En qué consiste el alta en la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-68",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿En qué consiste una baja por incapacidad temporal?",
+   "flags": []
+  },
+  {
+   "id": "POOL-69",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre baja médica y alta médica?",
+   "flags": []
+  },
+  {
+   "id": "POOL-70",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre el SEPE y la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-71",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre un contrato temporal y uno indefinido?",
+   "flags": []
+  },
+  {
+   "id": "POOL-72",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Para qué sirve una mutua?",
+   "flags": []
+  },
+  {
+   "id": "POOL-73",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Para qué sirve el certificado de empresa?",
+   "flags": []
+  },
+  {
+   "id": "POOL-74",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo funciona el paro?",
+   "flags": []
+  },
+  {
+   "id": "POOL-75",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo funciona la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-76",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Por qué existe la vida laboral?",
+   "flags": []
+  }
+ ]
+}

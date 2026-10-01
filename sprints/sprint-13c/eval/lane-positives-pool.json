@@ -1,0 +1,386 @@
+{
+ "_description": "Slice 13c plan.md App. A + review additions (POOL-49..52). 52 CANDIDATES, not positives: S0 (V1 Check A + V2 corpus synthesis on profile cov = test-gipuzkoa) selects the survivors, which are frozen separately as lane-positives.json. `flags`: spec = topic named in the 13c spec; cal:* = calibration item with a predicted V2 outcome (expect_v2_fail = the corpus already answers it, must NOT survive).",
+ "cases": [
+  {
+   "id": "POOL-01",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-02",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la Tesorería General de la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-03",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la vida laboral?",
+   "flags": []
+  },
+  {
+   "id": "POOL-04",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una mutua colaboradora con la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-05",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el parte de baja médica?",
+   "flags": []
+  },
+  {
+   "id": "POOL-06",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la incapacidad temporal?",
+   "flags": []
+  },
+  {
+   "id": "POOL-07",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué significa IT?",
+   "flags": [
+    "cal:lane_candidate_on_cov"
+   ]
+  },
+  {
+   "id": "POOL-08",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la incapacidad permanente?",
+   "flags": []
+  },
+  {
+   "id": "POOL-09",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el SEPE?",
+   "flags": []
+  },
+  {
+   "id": "POOL-10",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la prestación por desempleo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-11",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el alta en la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-12",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la mejora voluntaria de la Seguridad Social?",
+   "flags": []
+  },
+  {
+   "id": "POOL-13",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la jubilación parcial?",
+   "flags": []
+  },
+  {
+   "id": "POOL-14",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la Inspección de Trabajo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-15",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el FOGASA?",
+   "flags": []
+  },
+  {
+   "id": "POOL-16",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato indefinido?",
+   "flags": []
+  },
+  {
+   "id": "POOL-17",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato fijo discontinuo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-18",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato de relevo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-19",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato en prácticas?",
+   "flags": []
+  },
+  {
+   "id": "POOL-20",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato de formación en alternancia?",
+   "flags": []
+  },
+  {
+   "id": "POOL-21",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un contrato temporal por circunstancias de la producción?",
+   "flags": []
+  },
+  {
+   "id": "POOL-22",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el contrato a tiempo parcial?",
+   "flags": []
+  },
+  {
+   "id": "POOL-23",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la subrogación de personal?",
+   "flags": []
+  },
+  {
+   "id": "POOL-24",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el periodo de prueba?",
+   "flags": [
+    "cal:fact_route_risk"
+   ]
+  },
+  {
+   "id": "POOL-25",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es una excedencia?",
+   "flags": [
+    "spec"
+   ]
+  },
+  {
+   "id": "POOL-26",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un ERTE?",
+   "flags": [
+    "spec",
+    "cal:expect_v2_fail"
+   ]
+  },
+  {
+   "id": "POOL-27",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el preaviso?",
+   "flags": [
+    "spec"
+   ]
+  },
+  {
+   "id": "POOL-28",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la movilidad funcional?",
+   "flags": []
+  },
+  {
+   "id": "POOL-29",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la modificación sustancial de condiciones de trabajo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-30",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la jornada irregular?",
+   "flags": []
+  },
+  {
+   "id": "POOL-31",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la jornada partida?",
+   "flags": []
+  },
+  {
+   "id": "POOL-32",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el teletrabajo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-33",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la desconexión digital?",
+   "flags": []
+  },
+  {
+   "id": "POOL-34",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué son las horas extraordinarias?",
+   "flags": []
+  },
+  {
+   "id": "POOL-35",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el registro de jornada?",
+   "flags": [
+    "cal:fact_route_risk"
+   ]
+  },
+  {
+   "id": "POOL-36",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un permiso retribuido?",
+   "flags": []
+  },
+  {
+   "id": "POOL-37",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué son los días de asuntos propios?",
+   "flags": []
+  },
+  {
+   "id": "POOL-38",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la reducción de jornada?",
+   "flags": []
+  },
+  {
+   "id": "POOL-39",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué son las vacaciones devengadas?",
+   "flags": []
+  },
+  {
+   "id": "POOL-40",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un certificado de empresa?",
+   "flags": []
+  },
+  {
+   "id": "POOL-41",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el comité de empresa?",
+   "flags": []
+  },
+  {
+   "id": "POOL-42",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un delegado de personal?",
+   "flags": []
+  },
+  {
+   "id": "POOL-43",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es la ultraactividad de un convenio?",
+   "flags": [
+    "cal:expect_v2_fail"
+   ]
+  },
+  {
+   "id": "POOL-44",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un plan de igualdad?",
+   "flags": []
+  },
+  {
+   "id": "POOL-45",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el SMAC?",
+   "flags": []
+  },
+  {
+   "id": "POOL-46",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un convenio colectivo?",
+   "flags": []
+  },
+  {
+   "id": "POOL-47",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es un sindicato?",
+   "flags": []
+  },
+  {
+   "id": "POOL-48",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué es el comité de seguridad y salud?",
+   "flags": []
+  },
+  {
+   "id": "POOL-49",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué diferencia hay entre una baja y una excedencia?",
+   "flags": []
+  },
+  {
+   "id": "POOL-50",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿En qué consiste la jornada irregular?",
+   "flags": []
+  },
+  {
+   "id": "POOL-51",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Qué quiere decir que un convenio está en ultraactividad?",
+   "flags": [
+    "cal:expect_v2_fail"
+   ]
+  },
+  {
+   "id": "POOL-52",
+   "class": "lane_positive_candidate",
+   "email": "test-gipuzkoa@example.com",
+   "question": "¿Cómo funciona una mutua cuando estás de baja?",
+   "flags": []
+  }
+ ]
+}
