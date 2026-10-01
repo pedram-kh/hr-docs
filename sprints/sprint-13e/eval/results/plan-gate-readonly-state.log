@@ -1,0 +1,12 @@
+RO engine_override "agent"
+RO engine_env_baseline "classic"
+RO router_floor_cfg 0.5
+RO guardrail_config {"off_domain_message":null,"router_confidence_floor":null,"convert_allowed_reasons":["low_confidence","salary_coverage_gap","explicit_request"]}
+RO blocked_topics []
+RO cards_by_reason [{"reason":"estatuto_fallback_gap","n":374},{"reason":"salary_coverage_gap","n":102},{"reason":"low_confidence","n":68},{"reason":"sensitive_topic","n":60},{"reason":"reference_fact_coverage_gap","n":42},{"reason":"planner_escalated","n":6},{"reason":"off_domain","n":5},{"reason":"explicit_request","n":5},{"reason":"general_lane_blocked","n":2},{"reason":"profile_incomplete","n":2},{"reason":"employee_requested_review","n":1},{"reason":"conflict","n":1}]
+RO cards_total 668
+RO turns_by_outcome [{"outcome":"escalate","engine":"classic","n":426},{"outcome":"escalate","engine":"agent","n":197},{"outcome":"answer","engine":"classic","n":154},{"outcome":"answer","engine":"agent","n":118},{"outcome":"needs_category","engine":"agent","n":8},{"outcome":"needs_category","engine":"classic","n":6},{"outcome":"ask","engine":"agent","n":4}]
+RO off_domain_turns_by_source [{"source":"router","n":4}]
+RO planner_escalated_by_category [{"category":"off_domain","n":3},{"category":"unanswerable","n":3}]
+RO planner_off_domain_samples [{"question":"what is the definition of job?","planner_reason":"La pregunta \"what is the definition of job?\" no es una consulta laboral/convenio específica, sino una pregunta genérica de definición fuera del dominio de RR.HH.","steps":3},{"question":"¿Me corresponde un coche de empresa?","planner_reason":"La persona pregunta si le corresponde un coche de empresa. Esto no está regulado en el convenio (instalaciones deportivas y gimnasio) ni en el Estatuto; depende de pacto individual o política interna de la empresa, no de un derecho laboral general.","steps":4},{"question":"Buenas tardes","planner_reason":"El usuario solo envía un saludo (\"Buenas tardes\") sin ninguna pregunta laboral concreta. No hay contenido que buscar; se deriva para que RR. HH. contacte y aclare qué necesita.","steps":4}]
+RO router_off_domain_samples [{"question":"En qué comunidad autónoma trabajo?","router_conf":"0.95"},{"question":"Hola","router_conf":"0.95"},{"question":"Quiero hablar con una persona de Recursos Humanos, por favor.","router_conf":"0.95"},{"question":"¿Cuál es la capital de Mongolia?","router_conf":"0.99"}]

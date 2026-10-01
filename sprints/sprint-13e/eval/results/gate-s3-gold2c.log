@@ -1,0 +1,401 @@
+  projected spend: 4 turns × $0.080 = $0.32 (cap $0.40)
+{
+    "set": "\/var\/hr-docs\/sprints\/sprint-13\/eval\/gold-2c.json",
+    "engines": [
+        "agent"
+    ],
+    "repeat": 1,
+    "aborted_on_budget": false,
+    "stop_reason": null,
+    "summary": {
+        "engines": {
+            "agent": {
+                "norm": {
+                    "turns_with_block": 2,
+                    "verdicts": {
+                        "rejected": 2
+                    },
+                    "rejected_by": {
+                        "topic_canonical_mismatch": 2
+                    },
+                    "topic_dropped": 0,
+                    "round1a_ran": 0,
+                    "check_a_rescues": 0,
+                    "rescued_answers": 0,
+                    "rescued_answers_listed": []
+                },
+                "by_phrasing_anchor": [],
+                "unanchored_breakdown": [],
+                "turns": 4,
+                "pass": 3,
+                "hard_violations": 0,
+                "hard_kinds": [],
+                "answers": 3,
+                "declines": 0,
+                "cards": 1,
+                "outcomes": {
+                    "escalate": 1,
+                    "answer": 3
+                },
+                "paths": {
+                    "reference_fact": 1,
+                    "reference_fact_composition": 1,
+                    "prose": 2
+                },
+                "authority": {
+                    "structured_reference": 1,
+                    "official_convenio": 1,
+                    "national_law": 2
+                },
+                "lane_answers": 0,
+                "forbidden_asks_reached": 0,
+                "asks_attempted": 0,
+                "asks_denied": 0,
+                "first_tool": {
+                    "correct": 0,
+                    "of": 0
+                },
+                "terminal": {
+                    "correct": 0,
+                    "of": 0
+                },
+                "corrections_per_100": 0,
+                "forced_terminations_per_100": 50,
+                "cost_usd": 0.3023,
+                "cost_per_turn_usd": 0.07559,
+                "cost_per_answer_usd": 0.10078,
+                "latency_ms": {
+                    "p50": 15509,
+                    "p95": 23530,
+                    "n": 4
+                },
+                "by_class": {
+                    "(none)": {
+                        "n": 4,
+                        "pass": 3,
+                        "hard": 0,
+                        "answers": 3,
+                        "abstentions": 0,
+                        "lane_answers": 0
+                    }
+                }
+            }
+        },
+        "cases": [
+            {
+                "id": "2c-periodo-prueba-navarra",
+                "class": null,
+                "agent": {
+                    "pass": 0,
+                    "n": 1,
+                    "signatures": [
+                        "escalate\/reference_fact\/reference_fact_coverage_gap"
+                    ]
+                }
+            },
+            {
+                "id": "2c-vacaciones-gipuzkoa",
+                "class": null,
+                "agent": {
+                    "pass": 1,
+                    "n": 1,
+                    "signatures": [
+                        "answer\/reference_fact_composition\/-"
+                    ]
+                }
+            },
+            {
+                "id": "2c-trabajo-a-distancia-navarra",
+                "class": null,
+                "agent": {
+                    "pass": 1,
+                    "n": 1,
+                    "signatures": [
+                        "answer\/-\/-"
+                    ]
+                }
+            },
+            {
+                "id": "2c-trabajo-a-distancia-gipuzkoa",
+                "class": null,
+                "agent": {
+                    "pass": 1,
+                    "n": 1,
+                    "signatures": [
+                        "answer\/-\/-"
+                    ]
+                }
+            }
+        ]
+    },
+    "rows": [
+        {
+            "repeat": 0,
+            "id": "2c-periodo-prueba-navarra",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "escalate",
+            "expected_outcome": "answer",
+            "outcome_class": "escalate",
+            "abstained_by": null,
+            "reason": "reference_fact_coverage_gap",
+            "path": "reference_fact",
+            "authority": [
+                "structured_reference"
+            ],
+            "pass": false,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Un\/a compañero\/a de Recursos Humanos revisará tu consulta y te responderá.",
+            "answer": "Un\/a compañero\/a de Recursos Humanos revisará tu consulta y te responderá.",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "reference_fact",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "finalize",
+            "expected_terminal": null,
+            "rule_verdicts": 0,
+            "rule_overrides": 0,
+            "forced_terminations": 0,
+            "tokens_prompt": 0,
+            "tokens_completion": 0,
+            "cost_usd": 0,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": null,
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": true,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 79,
+            "session_uuid": "b78e50ea-5dc1-41da-af5b-4ac5a0a57b4b",
+            "message_id": 8251
+        },
+        {
+            "repeat": 0,
+            "id": "2c-vacaciones-gipuzkoa",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": "answer",
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": "reference_fact_composition",
+            "authority": [
+                "official_convenio"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Tienes un período de vacaciones anual mínimo de 31 días naturales, de los cuales 26 son laborables, considerándose los sábados o, en su caso, los lunes, como día laborable completo [Fuente 1]. Se retribuyen a salario real, sin incluir el plus de transporte ni dietas, más la antigüedad o su parte proporcional si el ingreso fue durante el año natural [Fuente 1]. Los conceptos salariales que no se perciban con regularidad se incluyen por la cantidad media percibida durante los tres meses inmediatamente anteriores al disfrute [Fuente 1]. Si estás en Incapacidad Temporal antes de comenzar las vacaciones o esta se produce durante su disfrute, puedes disfrutarlas una vez finalice la incapacidad, si",
+            "answer": "Tienes un período de vacaciones anual mínimo de 31 días naturales, de los cuales 26 son laborables, considerándose los sábados o, en su caso, los lunes, como día laborable completo [Fuente 1]. Se retribuyen a salario real, sin incluir el plus de transporte ni dietas, más la antigüedad o su parte proporcional si el ingreso fue durante el año natural [Fuente 1]. Los conceptos salariales que no se perciban con regularidad se incluyen por la cantidad media percibida durante los tres meses inmediatamente anteriores al disfrute [Fuente 1]. Si estás en Incapacidad Temporal antes de comenzar las vacaciones o esta se produce durante su disfrute, puedes disfrutarlas una vez finalice la incapacidad, siempre que no hayan transcurrido más de 18 meses a partir del final del año en que se originaron [Fuente 1]. Si cesas en el transcurso del año, tienes derecho a la parte proporcional de vacaciones en razón del tiempo trabajado, calculada por doceavas partes [Fuente 1]. Las vacaciones se disfrutan preferentemente en los meses de junio, julio, agosto, septiembre y diciembre, por acuerdo entre empresa y personal [Fuente 1]. La elección del período se realiza por orden de antigüedad en el centro de trabajo y de forma rotativa, de modo que quien elige primero un año lo hará en último lugar al año siguiente [Fuente 1]. No puede disfrutar vacaciones a la vez más del 50% del personal de cada turno de un centro de trabajo, con un mínimo de una persona en los centros donde trabajan dos o más personas [Fuente 1]. El calendario laboral, incluidas las fechas de vacaciones, se comunica al Comité de empresa y a la plantilla hasta el 31 de marzo del año en curso; si la empresa no lo entrega a tiempo, se aplica el calendario recogido en el convenio, elaborado anualmente por la Comisión Paritaria [Fuente 1]. Si tu período de vacaciones coincide con una incapacidad temporal derivada del embarazo, el parto o la lactancia natural, o con el permiso de maternidad del artículo 48.4 de la ley de igualdad, tienes derecho a disfrutarlas en fecha distinta, al finalizar el periodo de suspensión, aunque haya terminado el año natural correspondiente [Fuente 2]. Los días de puente por cierre del centro de trabajo no se descuentan del período vacacional y se recuperan por acuerdo entre trabajador y empresa [Fuente 2].",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "reference_fact",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "finalize",
+            "expected_terminal": null,
+            "rule_verdicts": 0,
+            "rule_overrides": 0,
+            "forced_terminations": 0,
+            "tokens_prompt": 15906,
+            "tokens_completion": 3339,
+            "cost_usd": 0.097803,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": null,
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 23530,
+            "session_uuid": "084808ab-7dfb-47d0-bd7d-a478327cb196",
+            "message_id": 8253
+        },
+        {
+            "repeat": 0,
+            "id": "2c-trabajo-a-distancia-navarra",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": "answer",
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": null,
+            "authority": [
+                "national_law"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Las personas trabajadoras podrán prestar trabajo a distancia en los términos previstos en la Ley 10\/2021 de trabajo a distancia [Fuente 1]. Además, existe el derecho a solicitar adaptaciones de la duración y distribución de la jornada, incluida la prestación del trabajo a distancia, para hacer efectivo el derecho a la conciliación de la vida familiar y laboral, debiendo ser razonables y proporcionadas respecto a las necesidades de la persona trabajadora y a las necesidades organizativas o productivas de la empresa [Fuente 2]. Si tienes hijos o hijas, puedes efectuar esta solicitud hasta que cumplan doce años, y también se reconoce este derecho a quienes tengan necesidades de cuidado de hijos",
+            "answer": "Las personas trabajadoras podrán prestar trabajo a distancia en los términos previstos en la Ley 10\/2021 de trabajo a distancia [Fuente 1]. Además, existe el derecho a solicitar adaptaciones de la duración y distribución de la jornada, incluida la prestación del trabajo a distancia, para hacer efectivo el derecho a la conciliación de la vida familiar y laboral, debiendo ser razonables y proporcionadas respecto a las necesidades de la persona trabajadora y a las necesidades organizativas o productivas de la empresa [Fuente 2]. Si tienes hijos o hijas, puedes efectuar esta solicitud hasta que cumplan doce años, y también se reconoce este derecho a quienes tengan necesidades de cuidado de hijos mayores de doce años, cónyuge o pareja de hecho, familiares por consanguinidad hasta segundo grado u otras personas dependientes que convivan en el domicilio [Fuente 2]. Ante la solicitud, la empresa debe abrir un proceso de negociación que se desarrollará con la máxima celeridad y, en todo caso, durante un periodo máximo de quince días, presumiéndose la concesión si no hay oposición motivada expresa en ese plazo [Fuente 2]. Separadamente, también existe el derecho a acceder al trabajo a distancia, si tal es el régimen instaurado en la empresa y el puesto o funciones son compatibles con esta forma de realización del trabajo, cuando se cursen con regularidad estudios para la obtención de un título académico o profesional [Fuente 3]. No he encontrado en las fuentes del convenio aplicable ninguna regulación específica sobre el teletrabajo o trabajo a distancia en el sector de limpieza de edificios y locales, por lo que para ese aspecto concreto no puedo precisar condiciones adicionales.",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "convenio_search",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "forced_finish",
+            "expected_terminal": null,
+            "rule_verdicts": 1,
+            "rule_overrides": 0,
+            "forced_terminations": 1,
+            "tokens_prompt": 27827,
+            "tokens_completion": 1888,
+            "cost_usd": 0.111801,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": {
+                "verdict": "rejected",
+                "topic_id": null,
+                "canonical": "trabajo a distancia \/ teletrabajo",
+                "confidence": 0.5,
+                "rejected_by": [
+                    "topic_canonical_mismatch"
+                ],
+                "topic_dropped": false,
+                "round1a_ran": false,
+                "round1a_skipped": null,
+                "consumed": 0,
+                "check_a_rescued": false,
+                "rescued_answer": false,
+                "literal_top_score": null,
+                "canonical_top_score": null,
+                "planner_prompt_version": "sha256:9f0d13fbf44044ceeea070011a5f4da6fb89fbda7ae06215b639d580af2dfb10",
+                "literal": "¿puedo trabajar a distancia?"
+            },
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 18996,
+            "session_uuid": "28e73c01-d4d1-4f47-bd88-cdba4abbdeea",
+            "message_id": 8255
+        },
+        {
+            "repeat": 0,
+            "id": "2c-trabajo-a-distancia-gipuzkoa",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": "answer",
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": null,
+            "authority": [
+                "national_law"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Las personas trabajadoras podrán prestar trabajo a distancia en los términos previstos en la Ley 10\/2021 de trabajo a distancia [Fuente 1]. Además, existe el derecho a solicitar adaptaciones de la duración y distribución de la jornada, incluida la prestación del trabajo a distancia, para hacer efectivo el derecho a la conciliación de la vida familiar y laboral, debiendo dichas adaptaciones ser razonables y proporcionadas en relación con las necesidades de la persona trabajadora y las necesidades organizativas o productivas de la empresa [Fuente 2]. Si se tienen hijos o hijas, se puede efectuar esa solicitud hasta que cumplan doce años, y también tienen ese derecho quienes tengan necesidades ",
+            "answer": "Las personas trabajadoras podrán prestar trabajo a distancia en los términos previstos en la Ley 10\/2021 de trabajo a distancia [Fuente 1]. Además, existe el derecho a solicitar adaptaciones de la duración y distribución de la jornada, incluida la prestación del trabajo a distancia, para hacer efectivo el derecho a la conciliación de la vida familiar y laboral, debiendo dichas adaptaciones ser razonables y proporcionadas en relación con las necesidades de la persona trabajadora y las necesidades organizativas o productivas de la empresa [Fuente 2]. Si se tienen hijos o hijas, se puede efectuar esa solicitud hasta que cumplan doce años, y también tienen ese derecho quienes tengan necesidades de cuidado respecto de hijos mayores de doce años, cónyuge o pareja de hecho, familiares por consanguinidad hasta segundo grado u otras personas dependientes que convivan en el domicilio [Fuente 2]. Asimismo, se reconoce el derecho de preferencia a acceder al trabajo a distancia cuando tal sea el régimen instaurado en la empresa y el puesto o funciones sean compatibles con esta forma de trabajo, en el caso de cursar con regularidad estudios para la obtención de un título académico o profesional [Fuente 3]. No consta en las fuentes del convenio proporcionadas una regulación específica sobre el trabajo a distancia que prevalezca sobre estas disposiciones del Estatuto.",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "convenio_search",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "forced_finish",
+            "expected_terminal": null,
+            "rule_verdicts": 1,
+            "rule_overrides": 0,
+            "forced_terminations": 1,
+            "tokens_prompt": 22897,
+            "tokens_completion": 1603,
+            "cost_usd": 0.092736,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": {
+                "verdict": "rejected",
+                "topic_id": null,
+                "canonical": "trabajo a distancia o teletrabajo",
+                "confidence": 0.45,
+                "rejected_by": [
+                    "topic_canonical_mismatch"
+                ],
+                "topic_dropped": false,
+                "round1a_ran": false,
+                "round1a_skipped": null,
+                "consumed": 0,
+                "check_a_rescued": false,
+                "rescued_answer": false,
+                "literal_top_score": null,
+                "canonical_top_score": null,
+                "planner_prompt_version": "sha256:9f0d13fbf44044ceeea070011a5f4da6fb89fbda7ae06215b639d580af2dfb10",
+                "literal": "¿puedo trabajar a distancia?"
+            },
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 15509,
+            "session_uuid": "7f69402e-f727-41eb-9b3f-7155e0d5e039",
+            "message_id": 8257
+        }
+    ]
+}

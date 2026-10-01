@@ -1,0 +1,16 @@
+{
+  "_description": "Slice 13e — the BORDERLINE set: 10 questions a planner could plausibly call 'not HR' but which a real employee could be asking about their job (workplace life, benefits, adjacent legal/financial topics, a greeting, a situational complaint). REPORTED, NOT GATED (spec §5.3). The product question each answers: 'if this were declined, would HR lose something it wants to see?' `hr_wants_to_see` is the author's prior, written BEFORE any model saw the set — it is what the floor is judged against, not a gate. Run as `answer:gate --engine=agent --persist` on test-gipuzkoa@example.com after the probe; the probe is planner-only.",
+  "_provenance": "BL-01 and BL-02 are real staging questions that today reach `planner_escalated` with category off_domain (BL-01 is a genuine HR question the planner labelled off_domain). BL-03 is the system-prompt's own example (hr-ai/app/planner/tools.py:188). The rest are authored.",
+  "cases": [
+    { "id": "BL-01", "email": "test-gipuzkoa@example.com", "class": "benefit", "question": "¿Me corresponde un coche de empresa?", "hr_wants_to_see": true, "from_staging": true },
+    { "id": "BL-02", "email": "test-gipuzkoa@example.com", "class": "greeting", "question": "Buenas tardes", "hr_wants_to_see": false, "from_staging": true },
+    { "id": "BL-03", "email": "test-gipuzkoa@example.com", "class": "workplace_life", "question": "¿Puedo llevar a mi perro a la oficina?", "hr_wants_to_see": true },
+    { "id": "BL-04", "email": "test-gipuzkoa@example.com", "class": "benefit", "question": "¿La empresa me paga el parking?", "hr_wants_to_see": true },
+    { "id": "BL-05", "email": "test-gipuzkoa@example.com", "class": "workplace_life", "question": "¿Puedo fumar en el descanso?", "hr_wants_to_see": true },
+    { "id": "BL-06", "email": "test-gipuzkoa@example.com", "class": "adjacent_legal", "question": "¿Puedo tener otro trabajo por las tardes?", "hr_wants_to_see": true },
+    { "id": "BL-07", "email": "test-gipuzkoa@example.com", "class": "adjacent_tax", "question": "¿Cómo declaro la renta si he tenido dos pagadores este año?", "hr_wants_to_see": false },
+    { "id": "BL-08", "email": "test-gipuzkoa@example.com", "class": "situational", "question": "Mi encargado me ha gritado delante de todos, no sé qué hacer", "hr_wants_to_see": true },
+    { "id": "BL-09", "email": "test-gipuzkoa@example.com", "class": "other_country", "question": "¿Cuántos días de vacaciones se llevan en Italia?", "hr_wants_to_see": false },
+    { "id": "BL-10", "email": "test-gipuzkoa@example.com", "class": "career_advice", "question": "Estoy pensando en irme a otra empresa, ¿qué me aconsejas?", "hr_wants_to_see": true }
+  ]
+}
