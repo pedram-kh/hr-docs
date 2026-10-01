@@ -121,6 +121,12 @@ services:
       # off with no deploy. Remove these two lines to drop the baseline.
       HR_GENERAL_LANE_ENABLED: "true"
       HR_GENERAL_LANE_MODEL_KNOWLEDGE: "true"
+      # Slice 13e (ADR-0039): decline confirmed off-domain questions instead of
+      # escalating them. The default in config/hr.php is OFF (a fresh environment
+      # escalates exactly as before); staging is ON since the Slice 13e close
+      # (2026-10-01). "false" (+ recreate) is the kill switch. The router
+      # confirmation floor (HR_DECLINE_ROUTER_CONFIRM_FLOOR, 0.90) is left at its default.
+      HR_DECLINE_ENABLED: "true"
     volumes:
       - ./entrypoint.sh:/entrypoint.sh:ro
       - ingest-scratch:/opt/hr-staging/ingest-scratch

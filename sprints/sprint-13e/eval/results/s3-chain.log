@@ -1,0 +1,5 @@
+STAGE whitelist EXIT=0
+STAGE gold2c EXIT=1
+STAGE situational EXIT=1
+STAGE lane EXIT=0
+CHAIN_DONE

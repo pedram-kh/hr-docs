@@ -1,0 +1,269 @@
+  projected spend: 3 turns × $0.080 = $0.24 (cap $0.40)
+{
+    "set": "\/var\/hr-docs\/sprints\/sprint-13\/eval\/situational.json",
+    "engines": [
+        "agent"
+    ],
+    "repeat": 3,
+    "aborted_on_budget": false,
+    "stop_reason": null,
+    "summary": {
+        "engines": {
+            "agent": {
+                "norm": {
+                    "turns_with_block": 0,
+                    "verdicts": [],
+                    "rejected_by": [],
+                    "topic_dropped": 0,
+                    "round1a_ran": 0,
+                    "check_a_rescues": 0,
+                    "rescued_answers": 0,
+                    "rescued_answers_listed": []
+                },
+                "by_phrasing_anchor": [],
+                "unanchored_breakdown": [],
+                "turns": 3,
+                "pass": 3,
+                "hard_violations": 0,
+                "hard_kinds": [],
+                "answers": 3,
+                "declines": 0,
+                "cards": 0,
+                "outcomes": {
+                    "answer": 3
+                },
+                "paths": {
+                    "reference_fact_composition": 3
+                },
+                "authority": {
+                    "official_convenio+structured_reference": 3
+                },
+                "lane_answers": 0,
+                "forbidden_asks_reached": 0,
+                "asks_attempted": 0,
+                "asks_denied": 0,
+                "first_tool": {
+                    "correct": 0,
+                    "of": 0
+                },
+                "terminal": {
+                    "correct": 0,
+                    "of": 0
+                },
+                "corrections_per_100": 0,
+                "forced_terminations_per_100": 0,
+                "cost_usd": 0.2042,
+                "cost_per_turn_usd": 0.06807,
+                "cost_per_answer_usd": 0.06807,
+                "latency_ms": {
+                    "p50": 6258,
+                    "p95": 6415,
+                    "n": 3
+                },
+                "by_class": {
+                    "(none)": {
+                        "n": 3,
+                        "pass": 3,
+                        "hard": 0,
+                        "answers": 3,
+                        "abstentions": 0,
+                        "lane_answers": 0
+                    }
+                }
+            }
+        },
+        "cases": [
+            {
+                "id": "c2-permisos-matrimonio",
+                "class": null,
+                "agent": {
+                    "pass": 3,
+                    "n": 3,
+                    "signatures": [
+                        "answer\/reference_fact_composition\/-"
+                    ]
+                }
+            }
+        ]
+    },
+    "rows": [
+        {
+            "repeat": 0,
+            "id": "c2-permisos-matrimonio",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": null,
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": "reference_fact_composition",
+            "authority": [
+                "official_convenio",
+                "structured_reference"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Por matrimonio corresponden 18 días naturales de licencia retribuida [Fuente 1][Fuente 3], que pueden acumularse al período de vacaciones completo siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. A estos efectos, el compañero o compañera sentimental que conviva habitualmente con la persona trabajadora, acreditando suficientemente esta situación, tiene la misma consideración que el cónyuge [Fuente 2].",
+            "answer": "Por matrimonio corresponden 18 días naturales de licencia retribuida [Fuente 1][Fuente 3], que pueden acumularse al período de vacaciones completo siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. A estos efectos, el compañero o compañera sentimental que conviva habitualmente con la persona trabajadora, acreditando suficientemente esta situación, tiene la misma consideración que el cónyuge [Fuente 2].",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "reference_fact",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "finalize",
+            "expected_terminal": null,
+            "rule_verdicts": 0,
+            "rule_overrides": 0,
+            "forced_terminations": 0,
+            "tokens_prompt": 20320,
+            "tokens_completion": 469,
+            "cost_usd": 0.067995,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": null,
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 6258,
+            "session_uuid": "b6f738ab-95f9-45fa-b449-4c33e16cb670",
+            "message_id": 8383
+        },
+        {
+            "repeat": 1,
+            "id": "c2-permisos-matrimonio",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": null,
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": "reference_fact_composition",
+            "authority": [
+                "official_convenio",
+                "structured_reference"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Por matrimonio corresponde una licencia retribuida de 18 días naturales [Fuente 1][Fuente 3]. Estos 18 días pueden acumularse al período de vacaciones completo, siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. El compañero o compañera sentimental que conviva habitualmente con la persona trabajadora, acreditando suficientemente esta situación, tiene la misma consideración que el cónyuge a estos efectos [Fuente 2].",
+            "answer": "Por matrimonio corresponde una licencia retribuida de 18 días naturales [Fuente 1][Fuente 3]. Estos 18 días pueden acumularse al período de vacaciones completo, siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. El compañero o compañera sentimental que conviva habitualmente con la persona trabajadora, acreditando suficientemente esta situación, tiene la misma consideración que el cónyuge a estos efectos [Fuente 2].",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "reference_fact",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "finalize",
+            "expected_terminal": null,
+            "rule_verdicts": 0,
+            "rule_overrides": 0,
+            "forced_terminations": 0,
+            "tokens_prompt": 20328,
+            "tokens_completion": 528,
+            "cost_usd": 0.068904,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": null,
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 6415,
+            "session_uuid": "5b6533b5-eb70-4f53-8937-59f0dd5b202d",
+            "message_id": 8385
+        },
+        {
+            "repeat": 2,
+            "id": "c2-permisos-matrimonio",
+            "class": null,
+            "engine": "agent",
+            "skipped": false,
+            "note": null,
+            "outcome": "answer",
+            "expected_outcome": null,
+            "outcome_class": "answer",
+            "abstained_by": null,
+            "reason": null,
+            "path": "reference_fact_composition",
+            "authority": [
+                "official_convenio",
+                "structured_reference"
+            ],
+            "pass": true,
+            "must_not_answer_violated": false,
+            "hard_kind": null,
+            "lane_answer": false,
+            "lane_basis": null,
+            "lane_words": null,
+            "caveat_ok": null,
+            "answer_excerpt": "Por matrimonio corresponden 18 días naturales de licencia retribuida [Fuente 1][Fuente 3], que pueden acumularse al período de vacaciones completo siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. Esta licencia se aplica también al compañero o compañera sentimental que conviva habitualmente y acredite suficientemente dicha situación [Fuente 2].",
+            "answer": "Por matrimonio corresponden 18 días naturales de licencia retribuida [Fuente 1][Fuente 3], que pueden acumularse al período de vacaciones completo siempre que se preavise con al menos 30 días de antelación [Fuente 1][Fuente 3]. Esta licencia se aplica también al compañero o compañera sentimental que conviva habitualmente y acredite suficientemente dicha situación [Fuente 2].",
+            "forbidden_ask_reached": false,
+            "ask_attempted": false,
+            "ask_denied": false,
+            "first_tool": "reference_fact",
+            "first_tool_executed": null,
+            "expected_first_tool": null,
+            "terminal": "finalize",
+            "expected_terminal": null,
+            "rule_verdicts": 0,
+            "rule_overrides": 0,
+            "forced_terminations": 0,
+            "tokens_prompt": 20298,
+            "tokens_completion": 427,
+            "cost_usd": 0.067299,
+            "bank": null,
+            "anchored": null,
+            "phrasing": null,
+            "situational": false,
+            "norm": null,
+            "fact_trace": null,
+            "fact_set_ok": null,
+            "declined": false,
+            "has_card": false,
+            "planner_category": null,
+            "decline_granted": null,
+            "decline_denied_by": null,
+            "decline_source": null,
+            "decline_confirm": null,
+            "decline_veto": null,
+            "latency_ms": 6031,
+            "session_uuid": "fbfb8f20-03eb-469d-ac18-71019773cc6e",
+            "message_id": 8387
+        }
+    ]
+}
+EXIT=0
