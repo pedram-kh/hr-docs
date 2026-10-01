@@ -55,7 +55,8 @@ Five live topics persisted on staging (`test-gipuzkoa@example.com`, `cov`; `eval
 7. **Prompt iterations**: length (once, p50 only moved ≈ 12 of the ≈ 25 words asked; frozen as is) and define-only (S2c). Both inside the plan's ≤ $1.0 reserve.
 8. **Goldens 28 and 29 re-recorded** (trace gained `general_lane_blocked.sub`); 32 and 33 added.
 9. **Abstention fix after S3c** (the blocker, §6), which changed `/synthesise` (opt-in field), `ProsePath`, `CorpusMiss` and `AnswerGate`. Not in the plan.
-10. **Gate semantics changed mid-slice** (disclosed in `s3a-report.md` addendum): the row carries the full `answer` and `lane_answer_without_caveat` is a hard check from S3b on; from S3d an abstention is `abstain`, never `answer`.
+10. **Lane goldens were date-fragile (found at the close-out deploy).** `Sprint13cLaneGoldenTraceTest` recorded the literal `scope_filters.as_of_date` (2026-09-30), so 7 of the 8 lane goldens failed on the deployed build the next day, while the 25 Sprint-13 goldens (which normalise it) passed. Fixed in a test-only follow-up on `main` (`4b929ef`: the lane comparator normalises today's date to `#as_of_date:today`, fixtures updated; no app code), then redeployed. The full suite passed 1389/1389 before and after.
+11. **Gate semantics changed mid-slice** (disclosed in `s3a-report.md` addendum): the row carries the full `answer` and `lane_answer_without_caveat` is a hard check from S3b on; from S3d an abstention is `abstain`, never `answer`.
 
 ## 4. Findings and tickets (roadmap §7)
 
@@ -79,8 +80,48 @@ Full account: `eval/results/s3d-report.md`.
 
 ## 7. Staging state at close
 
-Staging engine override: **agent** (DB), as 13b/13d left it. The close-out section below records merge SHAs, deploy, flags, verification and snapshots.
+See the close-out below.
 
 ## Close-out
 
-(appended at merge time)
+**Squash and merge.** The 13c WIP commits were squashed to one commit per repo (tree hashes verified identical before and after), merged to `main` with `--no-ff`, and `main` and `sprint-13c` pushed. `hr-frontend/count-strings*` stayed untracked and out of every commit.
+
+| Repo | Squashed branch commit | `main` merge commit | Previous `main` (rollback target) |
+|---|---|---|---|
+| hr-backend | `8bde38c` | `2d0e08ce8d1e4c455d94d52760e20877c39ad435`; follow-up test-only fix **`4b929efbc72c1d501094504b9d5d3b76115b100c`** (deployed) | `2004e38ed6c63d96563e63d136d9335ab1571d1b` |
+| hr-ai | `d82b62e` | `09503bc86602509bbb0b72f94a585c0443ca98b5` | `e9a1e31cf792739e80ec0e215aa9a8eb09ba7eb5` |
+| hr-frontend | `5a7c736` | `cf374d8592a99653cae2a1dc93c57b48f9146630` | `8aa460328c123f6c27c35bcee2ecd2580f3b60aa` |
+| hr-docs | `66d92e0` | `0c5f4386c6598bdf76a339576a8b74aa6af5ad6c` (deployed; this close-out is a later docs-only commit) | `ae6caca` (box was on `56aae3b40c63366d454b2a4455a009bf664c5cb5`) |
+
+Rollback: `deploy.sh 2004e38… e9a1e31… 8aa4603… 56aae3b…` (the full SHAs above). One migration belongs to the slice (`2026_09_30_120000_add_general_lane_model_knowledge_toggle_and_catalogue_pages`, additive, already applied during the gate); `deploy.sh` reported "Nothing to migrate" both times.
+
+**Deploy.** Pre-merge snapshot `hr-staging-pre-13c-merge` (available before anything moved on the box) → on-box checkouts reset (`git reset --hard`, `git clean -fd` after a dry run listing only the slice's injected files; `.git` preserved) → `deploy.sh` with the four merge SHAs (leak scan clean, health green on attempt 2) → fixed OTP `135790` re-applied in the flat compose → `hr-backend`, worker and scheduler recreated with the `vars.sh` exports → artisan health. The golden fix (deviation 10) needed a second `deploy.sh` with the follow-up backend SHA (leak scan clean, nothing to migrate, health green on attempt 3), the OTP re-applied and the three services recreated again. Final: Laravel 13.16.1, PHP 8.4.26, `migrate:status --pending` none, environment staging, debug off, maintenance off, pgsql, `/up` 200.
+
+**Flags (final state).**
+
+| Where | `HR_GENERAL_LANE_ENABLED` | `HR_GENERAL_LANE_MODEL_KNOWLEDGE` |
+|---|---|---|
+| `config/hr.php` defaults (`main`) | `false` | `false` |
+| repo compose `hr-docs/infra/compose/docker-compose.staging.yml` (deployed hr-docs `0c5f438`) | `"true"` | `"true"` |
+| box compose `/opt/hr-staging/docker-compose.staging.yml` (diff against the repo copy: only `STAGING_FIXED_OTP_CODE: "135790"`) | `"true"` | `"true"` |
+| running `hr-backend` container env | `true` | `true` |
+| Guardarraíles admin values (`general_lane_enabled`, `general_lane_model_knowledge_enabled`) | `null` (no override) | `null` |
+| Engine override (`answer_engine_settings`) | `agent` | |
+
+**Verification (from the deployed build; staging flags only, no per-process override).**
+
+| Check | Result |
+|---|---|
+| Goldens on the deployed commit `4b929ef` (`ops/golden-verify.sh`: deployed image runtime, throwaway Postgres and `APP_KEY`, never the staging DB; filter `Sprint13(c(Lane)?)?GoldenTraceTest`) | **35 passed, 216 assertions** (25 Sprint-13 traces + 8 lane goldens + 2 lane behaviour tests). The first run on `2d0e08c` failed 7 lane goldens on the date (deviation 10); the 25 Sprint-13 traces passed |
+| Live lane answer over the real HTTP path (`ops/close-smoke.sh`, `test-gipuzkoa@example.com`, fresh session, «¿Qué es una mutua colaboradora con la Seguridad Social?») | `outcome=answer`, response `general_lane = {basis: model_knowledge, sources: []}` (what the frontend renders as the chip), draft + model caveat ("Información general, redactada sin consultar tu convenio… sin una fuente verificable…"). Trace of msg 8055 (previous build, same wording): `floor_decision.authority_used = ["general_knowledge"]`, `path = general_knowledge`, `general_lane.basis = model_knowledge`, source `conocimiento general del modelo`, `shape.verdict = pass`, `prompt_sha256 = 68893dba…57a59af`. Repeated on the final build (msg 8063) with the same payload and answer shape |
+| Entitlement question refused by the pre-screen, end to end (msg 8073, «¿Tengo derecho a teletrabajar dos días por semana?», agent engine, real planner) | the corpus synthesis abstained via the flag (`floor_decision.note = "synthesis abstained (flag)"`), the lane was **not** opened (no `general_lane` block, no `general_knowledge` step), the turn escalated `low_confidence` with the HR hand-over message and no answer. The deployed `GeneralLanePostCheck::questionRefusal()` returns `prescreen_v1` for this question and for «¿Con cuántos días de preaviso…?» (msg 8067, same shape), and `null` for the mutua and SMAC questions that do open the lane. Honest scope: this is the *hand-over denial* branch (`CorpusMiss` returns null for a blocked question, the corpus escalation stands); the forced `general_lane_blocked` / `question_prescreen` branch needs the planner to call the lane on such a question and did not occur in this run (it is covered by golden 30) |
+| Guardarraíles toggles turn it off with no deploy (real admin HTTP API, `admin@hr-staging.internal`, `POST /api/admin/guardrails`; fresh session per turn) | lane toggle `false` → `effective` false for both, the mutua question escalated `low_confidence`, no lane payload (msg 8081); restored to `null` → lane answer again (msg 8083). Model-knowledge toggle `false` → lane `effective` still true, model-knowledge `effective` false, mutua escalated (msg 8085, no catalogue page exists for it so the web-only lane has nothing); restored to `null`, effective true both. Every POST returned 200 |
+| Classic smoke via override flip and back (`answer-engine:set classic --admin=…`, «¿Cuántos días de permiso retribuido me corresponden por matrimonio?», then `agent`) | classic answered (20 días naturales + parejas de hecho, cited); its trace (msg 8089) has **no `agent` block** and no `engine` key, the agent turn of the same question (msg 8087) has both; DB read-back `agent` |
+
+Other live turns on the way (all `test-*@example.com`, persisted, visible in Historial): corpus answers for the matrimonio, indemnización, fallecimiento, mudanza and NEG-13 birthday questions; planner escalations for «coche de empresa»; `salary_coverage_gap` for the festivo plus question. No lane answer on any entitlement question.
+
+**Snapshots** (`hr-staging-db`, manual): `post-ingest-20260906`, `post-11b`, `post-12a`, `post-13`, `post-13b`, `post-13d`, **`post-13c`** (2026-10-01 01:06 UTC, after verification and with the engine and toggles restored). `pre-13c-merge` deleted.
+
+**Spend.** Gate stages, CP-1 and the abstention fix ≈ $20.6 (table in §1) plus the close-out's 18 live turns (≈ $0.03 per lane turn, ≈ $0.06–0.10 per agent corpus turn, upper bound 18 × $0.074 = $1.3; the figure below uses ≈ $1.1): **≈ $21.7 of the $25 cap**. The golden runs use a throwaway Postgres and no model calls.
+
+**Staging state.** Lane and model knowledge **on** (env), admin overrides null, engine override agent. The Guardarraíles writes above left audit rows in `guardrail_config_events` (4 writes: off, restore, off, restore). Persisted close-out turns remain under `test-gipuzkoa@example.com` and `test-deporte-estatal@example.com` (msgs 8055–8089).
