@@ -12,6 +12,6 @@ cp $W/.env.example $W/.env
 docker run --rm -v $W:/app -w /app composer:2 install --no-interaction --no-progress --prefer-dist --ignore-platform-reqs -q
 docker run --rm --network container:pg13verify -v $W:/var/www -w /var/www \
   -e APP_ENV=testing -e APP_KEY=base64:$(head -c32 /dev/urandom | base64) -e DB_CONNECTION=pgsql -e DB_HOST=127.0.0.1 -e DB_PORT=5432 -e DB_DATABASE=hr_platform_test -e DB_USERNAME=hr -e DB_PASSWORD=hr_secret \
-  --entrypoint php hr-staging-hr-backend:latest artisan test --filter=Sprint13GoldenTraceTest
+  --entrypoint php hr-staging-hr-backend:latest artisan test --filter="${1:-Sprint13(c(Lane)?)?GoldenTraceTest}"
 docker rm -f pg13verify >/dev/null
 sudo rm -rf $W

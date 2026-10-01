@@ -1,0 +1,34 @@
+  projected spend: 12 turns × $0.080 = $0.96 (cap $2.00)
+answer:gate — /var/hr-docs/sprints/sprint-13/eval/situational.json — engine(s): agent — repeat=1
+
+  [s1-periodo-prueba-canonical] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [s1-periodo-prueba-situational] agent PASS outcome=escalate path=reference_fact reason=reference_fact_coverage_gap first_tool=reference_fact
+  [s2-vacaciones-canonical] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+  [s2-vacaciones-situational] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+  [s3-preaviso-canonical] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [s3-preaviso-situational] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [s4-festivos-canonical] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [s4-festivos-situational] agent PASS outcome=escalate path=— reason=low_confidence first_tool=convenio_search
+  [s5-horas-extra-canonical] agent PASS outcome=escalate path=agent_figure_guard reason=low_confidence first_tool=convenio_search
+  [s5-horas-extra-situational] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=convenio_search
+  [c1-permisos-asuntos-propios] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+  [c2-permisos-matrimonio] agent PASS outcome=answer path=reference_fact_composition reason=— first_tool=reference_fact
+
+  Engine: agent
+    pass rate: 12/12
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"escalate":7,"answer":5}
+    path distribution: {"reference_fact":2,"reference_fact_composition":5,"prose":3,"(none)":1,"agent_figure_guard":1}
+    authority distribution: {"structured_reference":2,"official_convenio":3,"official_convenio+national_law":3,"(none)":3,"official_convenio+structured_reference":1}
+    lane answers: 0 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 0/0
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 8.3 (mandated post-call terminations per 100: 50.0)
+    latency p50/p95: 8763 / 27686 ms
+    cost (list pricing, informational): $0.7623 total, $0.06353/turn, $0.15247/answer
+    by class: {"(none)":{"n":12,"pass":12,"hard":0,"answers":5,"lane_answers":0}}
+    normalization: {"turns_with_block":7,"verdicts":{"accepted":5,"rejected":2},"rejected_by":{"scan:E3":1,"topic_canonical_mismatch":1},"topic_dropped":0,"round1a_ran":2,"check_a_rescues":0,"rescued_answers":1}
+      rescue: [s5-horas-extra-situational] «me han hecho quedarme dos horas más ayer, ¿me tienen que pagar algo por eso?» → «horas trabajadas de más sobre la jornada ordinaria: compensación u horas extraordinarias»
+
+EXIT=0

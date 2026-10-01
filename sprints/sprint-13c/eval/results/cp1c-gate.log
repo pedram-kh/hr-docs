@@ -1,0 +1,25 @@
+  projected spend: 5 turns × $0.080 = $0.40 (cap $1.00)
+answer:gate — /var/hr-docs/sprints/sprint-13c/eval/cp1c-live-5.json — engine(s): agent — repeat=1
+
+  [cp1c-1-excedencia] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [cp1c-2-it] agent PASS outcome=answer path=— reason=— first_tool=convenio_search
+  [cp1c-3-parte-de-baja] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [cp1c-4-vida-laboral] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [cp1c-5-mutua] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+
+  Engine: agent
+    pass rate: 5/5
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":5}
+    path distribution: {"prose":2,"general_knowledge":3}
+    authority distribution: {"official_convenio+national_law":1,"official_convenio":1,"general_knowledge":3}
+    lane answers: 3 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 0/0
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 60.0 (mandated post-call terminations per 100: 40.0)
+    latency p50/p95: 17984 / 22432 ms
+    cost (list pricing, informational): $0.2791 total, $0.05581/turn, $0.05581/answer
+    by class: {"cp1_live":{"n":5,"pass":5,"hard":0,"answers":5,"lane_answers":3}}
+    normalization: {"turns_with_block":5,"verdicts":{"accepted":4,"declined":1},"rejected_by":[],"topic_dropped":1,"round1a_ran":0,"check_a_rescues":0,"rescued_answers":0}
+

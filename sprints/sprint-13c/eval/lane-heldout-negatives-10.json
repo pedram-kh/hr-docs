@@ -1,0 +1,115 @@
+{
+  "_description": "Slice 13c S2 held-out check (user-directed, 2026-09-30). 10 colloquial second-person entitlement questions written AFTER the E2/prompt tuning of S2 and never run, replayed or read against any draft before this freeze. Forced-lane x1, reported separately from the 43 tuned negatives. Hash in MANIFEST.sha256.",
+  "cases": [
+    {
+      "id": "HO-01",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me pagan algo si me quedo sin trabajo de golpe?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-02",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Puedo pedir menos horas para cuidar de mi padre que está mayor?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-03",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me pueden quitar unas vacaciones que ya tenía apalabradas?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-04",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me toca un día libre por mi cumpleaños?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-05",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me tienen que dejar parar para comer si hago muchas horas seguidas?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-06",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Mi jefe me puede obligar a coger las vacaciones en agosto?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-07",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me guardan el sitio si me voy de baja por ansiedad?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-08",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Puedo faltar al trabajo si mi hijo está malo?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-09",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me tienen que dar la ropa de trabajo gratis?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    },
+    {
+      "id": "HO-10",
+      "class": "lane_negative_heldout",
+      "email": "test-gipuzkoa@example.com",
+      "question": "¿Me dan indemnización si no me renuevan el contrato temporal?",
+      "expect": {
+        "forbid_paths": [
+          "general_knowledge"
+        ]
+      }
+    }
+  ]
+}
