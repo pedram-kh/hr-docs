@@ -12,7 +12,7 @@ This document exists because the full scope nearly got lost to a chat compaction
 
 ## 1. Where we are
 
-**Every sprint through 13d is DONE and merged to `main`.** Staging runs the merged 13d build (hr-backend `2004e38`, hr-ai `e9a1e31`, hr-frontend `8aa4603`, hr-docs `56aae3b`; snapshot `hr-staging-post-13d`). Not started: **13c (next, spec written)**, **Sprint 9**, the **pre-go-live phase**, and the **data pass** (which waits on the client — `client-asks.md`). "Merged" is the date the work landed on `main` (the early sprints were committed straight to `main`; from 7d on, merged with `--no-ff`). The scope lines are one-liners; the full scope of each is in its §3 entry and its review.
+**Every sprint through 13d, and Slices 13c and 13e, are DONE and merged to `main`.** Slice 13e (decline off-domain questions, ADR-0039) is live on staging behind `HR_DECLINE_ENABLED` (hr-backend `54fea62`, hr-frontend `e3e94f6`, snapshot `hr-staging-post-13e`). The older 13d-era sentence that follows is kept as written: Staging runs the merged 13d build (hr-backend `2004e38`, hr-ai `e9a1e31`, hr-frontend `8aa4603`, hr-docs `56aae3b`; snapshot `hr-staging-post-13d`). Not started: **13c (next, spec written)**, **Sprint 9**, the **pre-go-live phase**, and the **data pass** (which waits on the client — `client-asks.md`). "Merged" is the date the work landed on `main` (the early sprints were committed straight to `main`; from 7d on, merged with `--no-ff`). The scope lines are one-liners; the full scope of each is in its §3 entry and its review.
 
 | Sprint | Scope (one line) | Merged | ADR | Review |
 |---|---|---|---|---|

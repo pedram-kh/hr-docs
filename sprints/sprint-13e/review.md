@@ -9,7 +9,7 @@
 | hr-ai | **untouched** (planner prompt `sha256:9f0d13fb…` unchanged; Option B, no `confidence` field) |
 | Migrations | none (the outcome lives in `trace.floor_decision.outcome`; the rollup column is `string(32)`) |
 | What HR sees | `declined` is its own figure in Analítica (excluded from the deflection denominator), declines per day, a «Declinadas esta semana» ranking, a `declined` bucket and badge in Historial, a «Declinación» step in the trace panel |
-| Cost | **≈ $6.84 of the $8 cap** (list price, measured from the rows; includes the $0.19 plan-gate probe) |
+| Cost | **≈ $6.93 of the $8 cap** (list price; gate and CP-1 $6.84 measured from the rows, including the $0.19 plan-gate probe, plus ≈ $0.09 for the two close-out smoke turns) |
 
 ## Gate
 
@@ -78,3 +78,46 @@ Backend **1564/1564** (baseline 1389; +175: gate truth table 121, structural, ag
 - **Greeting follow-up** (from finding 1).
 - **Known-flaky cases: an auto-×3 rule in `answer:gate`** (from decision 2).
 - Both are written up in `roadmap.md` §7; no code in this slice.
+
+## Close-out
+
+**Squash and merge.** Each repo's slice work is one commit on `sprint-13e` (the build was never committed in pieces), merged to `main` with `--no-ff`, and `main` and `sprint-13e` pushed. hr-ai is untouched (`main` unchanged). `hr-frontend/count-strings*` stayed untracked and out of every commit.
+
+| Repo | Branch commit | `main` merge commit (deployed) | Previous `main` (rollback target) |
+|---|---|---|---|
+| hr-backend | `e3ba1f1` | `54fea620f09e156ce1d2e476289380e943256db6` | `4b929efbc72c1d501094504b9d5d3b76115b100c` |
+| hr-ai | — (no change) | `09503bc86602509bbb0b72f94a585c0443ca98b5` | same |
+| hr-frontend | `5e27175` | `e3e94f603b1842b9efdaf8a44e7dc3093ca985f8` | `cf374d8592a99653cae2a1dc93c57b48f9146630` |
+| hr-docs | `e9a51dd` | `a0079b7d477ca7e3ca819e5890a9f811626fbf4a` (deployed; this close-out is a later docs-only commit) | `436b2b5` (box was on `0c5f4386c6598bdf76a339576a8b74aa6af5ad6c`) |
+
+Rollback: `deploy.sh 4b929efbc72c1d501094504b9d5d3b76115b100c 09503bc86602509bbb0b72f94a585c0443ca98b5 cf374d8592a99653cae2a1dc93c57b48f9146630 0c5f4386c6598bdf76a339576a8b74aa6af5ad6c`. No migration belongs to the slice (`deploy.sh` reported "Nothing to migrate"); a rollback to the previous build also needs nothing beyond that, because declines already written are plain `message_traces` rows the older build reads as unknown outcomes (displayed, not interpreted) — or set `HR_DECLINE_ENABLED: "false"` and recreate to stop new ones without a rollback.
+
+**Deploy.** Pre-merge snapshot `hr-staging-pre-13e-merge` (available before anything moved on the box; the slice has no migration, taken as the user instructed) → on-box checkouts reset (`git reset --hard`, `git clean -fd` after a dry run listing only the slice's injected files and the untracked `count-strings*`; `.git` preserved) → `deploy.sh` with the four merge SHAs (leak scan clean; compose hit a transient "removal already in progress" on the worker while recreating, the script carried on and finished: `.last-good-shas` updated to the four SHAs above, nothing to migrate) → fixed OTP `135790` re-applied in the flat compose (the only diff against the repo copy) → `hr-backend`, worker and scheduler recreated with the `vars.sh` exports → health. Final: Laravel 13.16.1, PHP 8.4.26, environment staging, debug off, maintenance off, pgsql, `migrate:status --pending` none, `/up` 200 on the box and `/api/up` 200 on the public host, hr-ai healthy.
+
+**Flags (final state).**
+
+| Where | `HR_DECLINE_ENABLED` | `HR_DECLINE_ROUTER_CONFIRM_FLOOR` |
+|---|---|---|
+| `config/hr.php` default (`main`) | `false` | `0.90` |
+| `phpunit.xml` (the suite only) | `true` | — |
+| repo compose `hr-docs/infra/compose/docker-compose.staging.yml` (deployed hr-docs `a0079b7`) | `"true"` | not set |
+| box compose `/opt/hr-staging/docker-compose.staging.yml` (diff against the repo copy: only `STAGING_FIXED_OTP_CODE: "135790"`) | `"true"` | not set |
+| running `hr-backend` container (`config('hr.decline')`) | `true` | `0.9` |
+| General lane / model knowledge (13c, unchanged) | `true` / `true` | |
+| Engine override (`answer_engine_settings`) | `agent` | |
+
+**Verification (from the deployed build `54fea62`; staging flags only, no per-process override).**
+
+| Check | Result |
+|---|---|
+| Goldens on the deployed commit (`ops/golden-verify.sh`: deployed image runtime, throwaway Postgres and `APP_KEY`, never the staging DB; filter `Sprint13(c(Lane)?)?GoldenTraceTest`) | **36 passed, 223 assertions** (26 Sprint-13 traces including the re-recorded 04 and the new `04_flag_off`, 8 lane goldens, 2 lane behaviour tests) |
+| Decline suites on the same image (`Sprint13eDecline*`, `DeclineGateTest`, `DeclineStructuralTest`) | **167 passed, 1605 assertions** |
+| Live decline over the real HTTP path (`ops/close-smoke.sh`, `test-gipuzkoa@example.com`, «¿Cuál es el mejor sitio para ver las auroras boreales?», msg 8417) | `outcome=decline`, `escalated=false`, no reason, fixed decline copy; trace: `floor_decision.outcome=decline`, `path=agent_planner`, `decline.granted=true`, `source=planner`, router confirm 1.0, `gate_version=dg-1` |
+| Classic smoke via override flip and back (`answer-engine:set classic --admin=admin@hr-staging.internal`, «¿Cuántos días de permiso retribuido me corresponden por matrimonio?», then `agent`) | classic answered (20 días naturales + parejas de hecho, cited, msg 8419, path `reference_fact_composition`); its trace has **no `agent` block**; DB read-back `agent` after the flip back |
+| Served frontend | `assets/index-CAIh6q5-.js` contains the decline/Analítica strings (same hash as the gate build — the merge tree equals the injected tree) |
+
+**Snapshots** (`hr-staging-db`, manual): `post-ingest-20260906`, `post-11b`, `post-12a`, `post-13`, `post-13b`, `post-13d`, `post-13c`, **`post-13e`** (2026-10-01 19:27 UTC, after verification and with the engine restored). `pre-13e-merge` deleted.
+
+**Spend.** Gate and CP-1 ≈ $6.84 of the $8 cap (S1 $0.83, S2 $0.46, S3 $5.15, `c2` re-run $0.20, probe $0.19) plus the close-out's two live turns (≈ $0.03 for the decline, ≈ $0.06 for the classic answer): **≈ $6.93**. The golden and decline-suite runs use a throwaway Postgres and no model calls.
+
+**Staging state.** Decline **on** (env), lane and model knowledge on, engine override `agent`. Persisted turns remain under `test-gipuzkoa@example.com` (msgs 8389–8395 at CP-1, 8417 and 8419 at close-out).
