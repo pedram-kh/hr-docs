@@ -1,0 +1,25 @@
+  projected spend: 3 turns × $0.050 = $0.15 (cap $0.50)
+answer:gate — /tmp/pif.json — engine(s): agent — repeat=1
+
+  [PIF-fullgap] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [PIF-expired] agent PASS outcome=answer path=general_knowledge reason=— first_tool=convenio_search
+  [PIF-navarra] agent PASS outcome=escalate path=reference_fact_composition reason=low_confidence first_tool=reference_fact
+
+  Engine: agent
+    pass rate: 3/3
+    false answers on must-escalate cases (hard, must be 0): 0
+    all HARD violations (must be 0): 0 []
+    outcomes: {"answer":2,"escalate":1}
+    declines: 0 — escalation cards: 1
+    path distribution: {"general_knowledge":2,"reference_fact_composition":1}
+    authority distribution: {"general_knowledge":2,"(none)":1}
+    lane answers: 2 — forbidden asks reached: 0 — asks attempted/denied: 0/0
+    first-tool accuracy: 3/3
+    terminal-action accuracy: 0/0
+    rule corrections per 100 turns: 66.7 (mandated post-call terminations per 100: 0.0)
+    latency p50/p95: 19620 / 21213 ms
+    cost (list pricing, informational): $0.1158 total, $0.03859/turn, $0.05789/answer
+    by class: {"lane_positive":{"n":3,"pass":3,"hard":0,"answers":2,"abstentions":0,"lane_answers":2}}
+    normalization: {"turns_with_block":2,"verdicts":{"accepted":1,"declined":1},"rejected_by":[],"topic_dropped":1,"round1a_ran":0,"check_a_rescues":0,"rescued_answers":0}
+
+GATE_EXIT=0

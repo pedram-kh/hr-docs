@@ -1,0 +1,509 @@
+{
+ "_description": "Correction-13c-01 derived bank (x): same questions as the frozen bank, profile swapped to test-hosteleria-navarra@example.com. Not a frozen bank.",
+ "cases": [
+  {
+   "id": "LP-01-cov-x",
+   "pool_id": "POOL-01",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es la Seguridad Social?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.477266,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-07-cov-x",
+   "pool_id": "POOL-07",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué significa IT?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "BAJA",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.434643,
+    "confidence": 0.1
+   },
+   "flags": [
+    "cal:lane_candidate_on_cov"
+   ]
+  },
+  {
+   "id": "LP-09-cov-x",
+   "pool_id": "POOL-09",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el SEPE?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "EMPLEO",
+   "s0": {
+    "corpus_shape": "check_a_miss",
+    "lane_gate_derived": "V1_check_a_miss",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.388042,
+    "confidence": null
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-11-cov-x",
+   "pool_id": "POOL-11",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el alta en la Seguridad Social?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.458595,
+    "confidence": 0
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-14-cov-x",
+   "pool_id": "POOL-14",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es la Inspección de Trabajo?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "PRL",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.486385,
+    "confidence": 0.15
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-15-cov-x",
+   "pool_id": "POOL-15",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el FOGASA?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "EMPLEO",
+   "s0": {
+    "corpus_shape": "check_a_miss",
+    "lane_gate_derived": "V1_check_a_miss",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.314174,
+    "confidence": null
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-25-cov-x",
+   "pool_id": "POOL-25",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es una excedencia?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "RRLL",
+   "s0": {
+    "corpus_shape": "entailment_only",
+    "lane_gate_derived": "V2_entailment_only",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.614435,
+    "confidence": 0.85
+   },
+   "flags": [
+    "spec"
+   ]
+  },
+  {
+   "id": "LP-28-cov-x",
+   "pool_id": "POOL-28",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es la movilidad funcional?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "RRLL",
+   "s0": {
+    "corpus_shape": "entailment_only",
+    "lane_gate_derived": "V2_entailment_only",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.635374,
+    "confidence": 0.85
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-29-cov-x",
+   "pool_id": "POOL-29",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es la modificación sustancial de condiciones de trabajo?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "RRLL",
+   "s0": {
+    "corpus_shape": "entailment_only",
+    "lane_gate_derived": "V2_entailment_only",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.700568,
+    "confidence": 0.75
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-45-cov-x",
+   "pool_id": "POOL-45",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el SMAC?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "RRLL",
+   "s0": {
+    "corpus_shape": "check_a_miss",
+    "lane_gate_derived": "V1_check_a_miss",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.279884,
+    "confidence": null
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-47-cov-x",
+   "pool_id": "POOL-47",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es un sindicato?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "RRLL",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.569819,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-48-cov-x",
+   "pool_id": "POOL-48",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el comité de seguridad y salud?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "PRL",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.555079,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-53-cov-x",
+   "pool_id": "POOL-53",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el INSS?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "check_a_miss",
+    "lane_gate_derived": "V1_check_a_miss",
+    "opens_on_unmodified_sprint13_lane": true,
+    "top_score": 0.385612,
+    "confidence": null
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-58-cov-x",
+   "pool_id": "POOL-58",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es un accidente de trabajo?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "PRL",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.529824,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-65-cov-x",
+   "pool_id": "POOL-65",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es el ingreso mínimo vital?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.463582,
+    "confidence": 0.05
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-67-cov-x",
+   "pool_id": "POOL-67",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿En qué consiste el alta en la Seguridad Social?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.473833,
+    "confidence": 0.05
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-69-cov-x",
+   "pool_id": "POOL-69",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué diferencia hay entre baja médica y alta médica?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "BAJA",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.501903,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-73-cov-x",
+   "pool_id": "POOL-73",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Para qué sirve el certificado de empresa?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "EMPLEO",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.518537,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-74-cov-x",
+   "pool_id": "POOL-74",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cómo funciona el paro?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "EMPLEO",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.527673,
+    "confidence": 0.1
+   },
+   "flags": []
+  },
+  {
+   "id": "LP-75-cov-x",
+   "pool_id": "POOL-75",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Cómo funciona la Seguridad Social?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   },
+   "gate_set": true,
+   "family": "SS",
+   "s0": {
+    "corpus_shape": "synthesis_abstention",
+    "lane_gate_derived": "V2_synthesis_abstention",
+    "opens_on_unmodified_sprint13_lane": false,
+    "top_score": 0.515807,
+    "confidence": 0.1
+   },
+   "flags": []
+  }
+ ]
+}
