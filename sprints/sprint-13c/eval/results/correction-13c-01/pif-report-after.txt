@@ -1,0 +1,82 @@
+==== test-fullgap@example.com | convenio 7 ACCIÓN E INTERVENCIÓN SOCIAL ESTATAL | msg 8551 ====
+answer: Un permiso PIF (Permiso Individual de Formación) es una autorización que la empresa puede conceder a una persona trabajadora para ausentarse de su puesto con el fin de realizar una acción formativa reconocida, ya sea oficial o acordada con la organización. Su finalidad es facilitar el desarrollo de competencias y cualificaciones profesionales, permitiendo compatibilizar el empleo con la formación. Las condiciones, du
+floor_decision.path=general_knowledge outcome=answer reason=-
+general_lane.basis="model_knowledge" words=101 postcheck={"passed":true} shape={"verdict":"pass","rule_ids":[]}
+badge (UI: general_lane.basis present) = YES
+general_lane_precondition={"kind":"synthesis_abstention","confidence":0.1,"authority_used":[]}
+prose_gap=null
+termination="forced_finish"
+step[0] planner_round calls=["normalize_question","convenio_search"]
+step[1] {"i":1,"type":"normalization","topic":5,"verdict":"accepted","confidence":0.4,"rejected_by":null}
+step[2] tool_call convenio_search status=no_material summary={"status":"abstained"}
+step[3] planner_round calls=["general_knowledge"]
+step[4] {"i":4,"rule":"general_lane_finish","type":"rule_verdict","verdict":"force_finish"}
+
+==== test-hosteleria-navarra@example.com | convenio 21 HOSTELERIA NAVARRA | msg 8553 ====
+answer: Un permiso PIF, o Permiso Individual Formativo, es una autorización que el empresario concede a una persona trabajadora para ausentarse de su puesto y realizar una acción formativa relacionada con su actividad profesional, aunque no la organice la propia empresa. Sirve para facilitar el acceso a formación reconocida oficialmente, favoreciendo el desarrollo de competencias y la empleabilidad, dentro del sistema de for
+floor_decision.path=general_knowledge outcome=answer reason=-
+general_lane.basis="model_knowledge" words=100 postcheck={"passed":true} shape={"verdict":"pass","rule_ids":[]}
+badge (UI: general_lane.basis present) = YES
+general_lane_precondition={"kind":"fallback_gap","prose_gap":{"reason_code":"EXPIRED_NO_SUCCESSOR","pending_embed":false,"classification":"expired_only"}}
+prose_gap=null
+termination="forced_finish"
+step[0] planner_round calls=["normalize_question","convenio_search"]
+step[1] {"i":1,"type":"normalization","topic":null,"verdict":"declined","confidence":0.3,"rejected_by":null}
+step[2] tool_call convenio_search status=no_material summary={"status":"check_a_failed","gap_class":"expired_only"}
+step[3] planner_round calls=["general_knowledge"]
+step[4] {"i":4,"rule":"general_lane_finish","type":"rule_verdict","verdict":"force_finish"}
+
+==== test-navarra@example.com | convenio 22 LIMPIEZA DE EDIFICIOS Y LOCALES | msg 8555 ====
+answer: Un/a compañero/a de Recursos Humanos revisará tu consulta y te responderá.
+floor_decision.path=reference_fact_composition outcome=escalate reason=low_confidence
+general_lane.basis=null words=null postcheck=null shape=null
+badge (UI: general_lane.basis present) = NO
+general_lane_precondition=null
+prose_gap=null
+termination="finalize"
+step[0] {"i":0,"type":"round0","seeded":["reference_fact"]}
+
+==== test-fullgap@example.com | convenio 7 ACCIÓN E INTERVENCIÓN SOCIAL ESTATAL | msg 8557 ====
+answer: Un permiso PIF (Permiso Individual Formativo) es un mecanismo que posibilita a una persona trabajadora ausentarse de su puesto para cursar una acción formativa reconocida oficialmente, vinculada a su desarrollo profesional. Sirve para facilitar el acceso a estudios o certificaciones mientras se mantiene la relación laboral, coordinando los tiempos de formación con la actividad en la empresa. Su concesión suele depend
+floor_decision.path=general_knowledge outcome=answer reason=-
+general_lane.basis="model_knowledge" words=112 postcheck={"passed":true} shape={"verdict":"pass","rule_ids":[]}
+badge (UI: general_lane.basis present) = YES
+general_lane_precondition={"kind":"synthesis_abstention","confidence":0,"authority_used":[]}
+prose_gap=null
+termination="forced_finish"
+step[0] planner_round calls=["normalize_question","convenio_search"]
+step[1] {"i":1,"type":"normalization","topic":11,"verdict":"rejected","confidence":0.4,"rejected_by":"topic_canonical_mismatch"}
+step[2] {"i":2,"rule":"normalization_validation","type":"rule_verdict","verdict":"deny"}
+step[3] tool_call convenio_search status=no_material summary={"status":"abstained"}
+step[4] planner_round calls=["general_knowledge"]
+step[5] {"i":5,"rule":"general_lane_finish","type":"rule_verdict","verdict":"force_finish"}
+
+==== test-hosteleria-navarra@example.com | convenio 21 HOSTELERIA NAVARRA | msg 8559 ====
+answer: Un permiso PIF (Permiso Individual de Formación) es una autorización que una empresa puede conceder a una persona trabajadora para ausentarse de su puesto y cursar una acción formativa reconocida por una titulación oficial, dentro del sistema de formación profesional para el empleo. Sirve para facilitar el desarrollo de competencias y la cualificación del personal, permitiendo compatibilizar el trabajo con estudios o
+floor_decision.path=general_knowledge outcome=answer reason=-
+general_lane.basis="model_knowledge" words=102 postcheck={"passed":true} shape={"verdict":"pass","rule_ids":[]}
+badge (UI: general_lane.basis present) = YES
+general_lane_precondition={"kind":"fallback_gap","prose_gap":{"reason_code":"EXPIRED_NO_SUCCESSOR","pending_embed":false,"classification":"expired_only"}}
+prose_gap=null
+termination="forced_finish"
+step[0] planner_round calls=["normalize_question","convenio_search"]
+step[1] {"i":1,"type":"normalization","topic":null,"verdict":"declined","confidence":0.3,"rejected_by":null}
+step[2] tool_call convenio_search status=no_material summary={"status":"check_a_failed","gap_class":"expired_only"}
+step[3] planner_round calls=["general_knowledge"]
+step[4] {"i":4,"rule":"general_lane_finish","type":"rule_verdict","verdict":"force_finish"}
+
+==== test-navarra@example.com | convenio 22 LIMPIEZA DE EDIFICIOS Y LOCALES | msg 8561 ====
+answer: Un permiso PIF (Protección Integral frente a la violencia, también vinculado a permisos por motivos de fuerza mayor familiar) es una ausencia laboral retribuida u no retribuida que se solicita para atender situaciones urgentes relacionadas con el cuidado o la protección de familiares, o circunstancias personales graves que exigen atención inmediata. Sirve para que la persona trabajadora pueda ausentarse de su puesto 
+floor_decision.path=general_knowledge outcome=answer reason=-
+general_lane.basis="model_knowledge" words=109 postcheck={"passed":true} shape={"verdict":"pass","rule_ids":[]}
+badge (UI: general_lane.basis present) = YES
+general_lane_precondition={"kind":"synthesis_abstention","confidence":0.1,"authority_used":[]}
+prose_gap=null
+termination="forced_finish"
+step[0] {"i":0,"type":"round0","seeded":[],"deferred":["reference_fact_composition_low_confidence"]}
+step[1] planner_round calls=["normalize_question","convenio_search"]
+step[2] {"i":2,"type":"normalization","topic":null,"verdict":"declined","confidence":0.3,"rejected_by":null}
+step[3] tool_call convenio_search status=no_material summary={"status":"abstained"}
+step[4] planner_round calls=["general_knowledge"]
+step[5] {"i":5,"rule":"general_lane_finish","type":"rule_verdict","verdict":"force_finish"}
+

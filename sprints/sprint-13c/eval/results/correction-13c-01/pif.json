@@ -1,0 +1,47 @@
+{
+ "_description": "Correction-13c-01: the PIF question on the three accounts.",
+ "cases": [
+  {
+   "id": "PIF-fullgap",
+   "class": "lane_positive",
+   "email": "test-fullgap@example.com",
+   "question": "¿Qué es un permiso PIF?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "PIF-expired",
+   "class": "lane_positive",
+   "email": "test-hosteleria-navarra@example.com",
+   "question": "¿Qué es un permiso PIF?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  },
+  {
+   "id": "PIF-navarra",
+   "class": "lane_positive",
+   "email": "test-navarra@example.com",
+   "question": "¿Qué es un permiso PIF?",
+   "expect": {},
+   "expected_tools": {
+    "first": [
+     "convenio_search",
+     "national_law",
+     "reference_fact"
+    ]
+   }
+  }
+ ]
+}
