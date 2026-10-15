@@ -1,0 +1,2575 @@
+{
+  "generated_at": "2026-10-14T11:33:47+00:00",
+  "source": "staging, read-only, tagging_status = under_review",
+  "count": 47,
+  "current_text_definition": "retrieval_status=active and document_type in convenio_text, partial_agreement, national_law, internal_hr_ruling",
+  "confirm_tags_without_convenio_retrievable": false,
+  "documents": [
+    {
+      "id": 31,
+      "uuid": "e4dc1595-6c60-4fce-bcbf-55180bc9a33c",
+      "title": "PACTO CULTURA NAVARRA",
+      "source_filename": "PACTO CULTURA NAVARRA.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.75,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 2,
+      "pages_with_text": 2,
+      "page_count": 2,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 22,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "PACTO CULTURA",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "PACTO CULTURA NAVARRA.pdf",
+              "registry_value": null
+            },
+            {
+              "facet": "company",
+              "parsed_value": "SEDENA, S.L.",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [
+        {
+          "facet": "document_type",
+          "value": "partial_agreement",
+          "confidence": 0.95
+        },
+        {
+          "facet": "convenio",
+          "value": "01100635012017",
+          "confidence": 0.85
+        },
+        {
+          "facet": "territory",
+          "value": "31",
+          "confidence": 0.95
+        },
+        {
+          "facet": "sector",
+          "value": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL",
+          "confidence": 0.85
+        },
+        {
+          "facet": "validity",
+          "value": "2019-01-01..2021-12-31",
+          "confidence": 0.75
+        },
+        {
+          "facet": "topic",
+          "value": "retribución",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "bajas médicas",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "permisos retribuidos",
+          "confidence": 0.85
+        }
+      ],
+      "cover_text": "REUNIDOS\n\nACUERDAN\n\nPRIMERO.- AMBITO DE APLICACIÓN\n\nSEGUNDO.-\n\nTERCERO.- INCREMENTO SALARIAL\n\nEn Pamplona a 12 de diciembre de 2019\n\nREUNIDOS\n\nDe una parte: en representación de la empresa SEDENA, Don [nombre], con DNI. [DNI], consejero delegado.\n\nDe otra parte: El comité de empresa de SEDENA, S.L.\n\nACUERDAN\n\nPRIMERO.- AMBITO DE APLICACIÓN: El presente acuerdo será de aplicación a las personas trabajadoras de Sedena S.L , cuyo Convenio Colectivo de aplicación es el ocio educativo y animación socio cultural y prestan servicio en los siguientes centros de trabajo que Sedena gestiona en Navarra:\n\n1. Gestión de servicios socioculturales de la Red Civivox\n2. Casa de la Juventud de Pamplona\n3. Centro Sociocultural Civican\n4. Servicio de Información y Recursos pa",
+      "page1_hash": "3060f93b2e178ced452b30ce88ea9083",
+      "duplicate_first_pages": [
+        {
+          "id": 47,
+          "uuid": "2aa6ad5f-c210-475c-8d33-00ab0355cdf3",
+          "title": "Pacto de la empresa",
+          "source_filename": "Pacto de la empresa.pdf",
+          "document_type": "convenio_text",
+          "retrieval_status": "historical",
+          "tagging_status": "under_review"
+        }
+      ],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 55,
+      "uuid": "54639919-d1c5-42d0-8c8d-30078a35e053",
+      "title": "Plan Igualdad texto",
+      "source_filename": "Plan_Igualdad_texto.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 78,
+      "page_count": 78,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 39,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "territory",
+              "parsed_value": "Plan Igualdad",
+              "registry_value": null
+            },
+            {
+              "facet": "sector",
+              "parsed_value": "Plan Igualdad",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Plan_Igualdad_texto.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Plan de Igualdad de Sedena 2023-2027\nPágina 1 de 78\nIV PLAN DE IGUALDAD \nENTRE\nMUJERES Y HOMBRES EN LA \nEMPRESA \nSEDENA, S.L.",
+      "page1_hash": "31869b93e40debcb671e3a85a4e6d137",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 76,
+      "uuid": "abb0c1f9-f07a-422f-b13c-01220944c773",
+      "title": "99100055012011 COEAS Estatal 2025 2027",
+      "source_filename": "99100055012011_COEAS Estatal_2025 2027.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2025-01-01",
+      "validity_end": "2027-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 74,
+      "page_count": 74,
+      "chunk_count": 0,
+      "scope": {
+        "convenio_id": 11,
+        "numero": "99100055012011",
+        "name": "OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL",
+        "territory": {
+          "id": 12,
+          "code": "99",
+          "name": "Estatal"
+        },
+        "sector": {
+          "id": 3,
+          "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL"
+        }
+      },
+      "open_tasks": [
+        {
+          "task_id": 52,
+          "type": "conflict",
+          "kind": "conflict",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "parsed sector COEAS disagrees with registry",
+              "registry_value": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL",
+              "registry_value_note": "The task stores the sentence only. This is the bound convenio sector DocumentTagger compared (DocumentTagger.php rule 3)."
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "III. OTRAS DISPOSICIONES\nMINISTERIO DE TRABAJO Y ECONOMÍA SOCIAL\n5694\nResolución de 25 de febrero de 2026, de la Dirección General de Trabajo, por \nla que se registra y publica el IV Convenio colectivo marco estatal de ocio \neducativo y animación sociocultural.\nVisto el texto del IV Convenio colectivo marco estatal de ocio educativo y animación \nsociocultural (código de convenio n.º 99100055012011), que fue suscrito con fecha 28 de \nnoviembre de 2025, de una parte por la Federación Estatal de Organizaciones \nEmpresariales de Ocio Educativo y Sociocultural (FOESC), la Fundación Catalana de \nL'Esplai (AEEISSS), la Asociación de Empresas de Educación Cultura y Tiempo Libre \n(EDUCATIA) y la Asociación Nacional de Empresas Socioculturales (ANESOC), en \nrepresentación de las empresas del sector,",
+      "page1_hash": "e5be97f421aac6c7db53814ba8e8e434",
+      "duplicate_first_pages": [],
+      "version_context": [
+        {
+          "id": 6,
+          "title": "TABLAS SALARIALES COEAS Estatal",
+          "document_type": "salary_tables",
+          "validity_start": null,
+          "validity_end": null,
+          "retrieval_status": "active",
+          "tagging_status": "verified",
+          "authority_level": "official_convenio"
+        },
+        {
+          "id": 87,
+          "title": "99100055012011 COEAS Estatal 2020 2023",
+          "document_type": "convenio_text",
+          "validity_start": "2020-01-01",
+          "validity_end": "2023-12-31",
+          "retrieval_status": "historical",
+          "tagging_status": "under_review",
+          "authority_level": "official_convenio"
+        }
+      ],
+      "would_confirming_give_only_current_text": true,
+      "other_active_prose_count": 0,
+      "employees": {
+        "by_status": {
+          "active": 3
+        },
+        "headcount": 3
+      }
+    },
+    {
+      "id": 14,
+      "uuid": "55184e0c-77e0-4570-8113-433d7a9a148f",
+      "title": "Acuerdo fin de huelga UBIK - SEDENA SL 2019-2022 (2019-08-07)",
+      "source_filename": "Acuerdo fin de huelga UBIK - SEDENA SL 2019-2022 (2019-08-07).pdf",
+      "document_type": "partial_agreement",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.85,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 12,
+      "pages_with_text": 12,
+      "page_count": 12,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 12,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "fin huelga UBIK SEDENA SL 2019-2022 (2019-08-07)",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Acuerdo fin de huelga UBIK - SEDENA SL 2019-2022 (2019-08-07).pdf",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "SEDENA, S.L. - Biblioteca de creación UBIK",
+              "registry_value": null
+            },
+            {
+              "facet": "sector",
+              "parsed_value": "Biblioteca de creación / Cultura contemporánea",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [
+        {
+          "facet": "document_type",
+          "value": "partial_agreement",
+          "confidence": 0.95
+        },
+        {
+          "facet": "territory",
+          "value": "20",
+          "confidence": 0.9
+        },
+        {
+          "facet": "validity",
+          "value": "2019-01-01..2022-12-31",
+          "confidence": 0.85
+        },
+        {
+          "facet": "topic",
+          "value": "jornada",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "vacaciones",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "festivos",
+          "confidence": 0.85
+        },
+        {
+          "facet": "topic",
+          "value": "bajas médicas",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "retribución",
+          "confidence": 0.95
+        }
+      ],
+      "cover_text": "ACUERDO DE FIN DE HUELGA DE SEDENA, S.L. Y PERSONAL DEL CENTRO DE TRABAJO EMPLEADAS Y EMPLEADOS EN LA BIBLIOTECA DE CREACIÓN UBIK.\n\n1. Ámbito funcional, personal y temporal:\n\n2. Modalidades de contratación:\n\nACUERDO DE FIN DE HUELGA DE SEDENA, S.L. Y PERSONAL DEL CENTRO DE TRABAJO EMPLEADAS Y EMPLEADOS EN LA BIBLIOTECA DE CREACIÓN UBIK.\n\nEl presente acuerdo será de aplicación exclusivamente para el personal actual y futuro ocupado en la Biblioteca de creación UBIK con la categoría de técnico especialista y coordinación de servicio.\n\n1. Ámbito funcional, personal y temporal:\nEl presente acuerdo será de aplicación para las y los mediadores y persona de coordinación actuales y futuros con la categoría de técnico especialista y coordinación del servicio de atención a la biblioteca de creación ",
+      "page1_hash": "2d050a956fef60f7c403e37be8ae3037",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 90,
+      "uuid": "13b025e6-502b-47dc-b61a-d687acded41a",
+      "title": "ACUERDO PARCIAL COEAS ANDALUCIA Alhambra",
+      "source_filename": "ACUERDO PARCIAL COEAS ANDALUCIA_Alhambra.pdf",
+      "document_type": "partial_agreement",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 11,
+      "page_count": 11,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 63,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "COEAS Alhambra",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "ACUERDO PARCIAL COEAS ANDALUCIA_Alhambra.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "00307421\n3. Otras disposiciones\nCONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO\nResolución de 9 de septiembre de 2024, de la Dirección General de Trabajo, \nSeguridad y Salud Laboral, por la que se procede a la publicación del Acuerdo \nParcial de la Comisión Negociadora del II Convenio Colectivo de la Comunidad \nAutónoma de Andalucía del Sector Ocio Educativo y Animación Sociocultural.\nVisto el texto del Acuerdo Parcial de la Comisión Negociadora del II Convenio Colectivo \nde la Comunidad Autónoma de Andalucía del Sector Ocio Educativo y Animación \nSociocultural, cód. 71100045082024, suscrito por las partes legitimadas, en fecha 19 de \njunio de 2024, y de conformidad con lo dispuesto en el artículo 90, apartados 2 y 3, \ndel Real Decreto Legislativo 2/2015, de 23 de octubre, por el que se a",
+      "page1_hash": "e6c8a5416014609f3a615d529dfd94b3",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 5,
+      "uuid": "170f3fec-84ae-4001-a48f-605fcb4e3c71",
+      "title": "Tabla 2026",
+      "source_filename": "Tabla 2026.xlsx",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 0,
+      "page_count": 0,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 43,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "Tabla",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Tabla 2026.xlsx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": null,
+      "page1_hash": null,
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 7,
+      "uuid": "0c2bb5be-e131-4206-a380-66ca58d2bb2b",
+      "title": "TABLAS SALARIALES Deporte Estatal",
+      "source_filename": "TABLAS SALARIALES Deporte Estatal.xlsx",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 0,
+      "page_count": 0,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 53,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "SALARIALES Deporte",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "TABLAS SALARIALES Deporte Estatal.xlsx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": null,
+      "page1_hash": null,
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 10,
+      "uuid": "7d5cb553-9dcf-427f-a3b3-6d13e9929259",
+      "title": "Tablas acuerdo parcial Alhambra",
+      "source_filename": "Tablas acuerdo parcial_Alhambra.xlsx",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 0,
+      "page_count": 0,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 72,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "territory",
+              "parsed_value": "Alhambra",
+              "registry_value": null
+            },
+            {
+              "facet": "sector",
+              "parsed_value": "Alhambra",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Tablas acuerdo parcial_Alhambra.xlsx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": null,
+      "page1_hash": null,
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 105,
+      "uuid": "cb9487d6-95e6-42cc-90c8-7511f5952987",
+      "title": "PERIODOS DE PRUEBA",
+      "source_filename": "PERIODOS DE PRUEBA.docx",
+      "document_type": "reference_source",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2022-01-01",
+      "validity_end": "2025-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 7,
+      "page_count": 7,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 70,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "territory",
+              "parsed_value": "PERIODOS PRUEBA",
+              "registry_value": null
+            },
+            {
+              "facet": "sector",
+              "parsed_value": "PERIODOS PRUEBA",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "PERIODOS DE PRUEBA.docx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "[ESTATAL]\nESTATAL\nENSEÑANZA Y FORMACIÓN NO REGLADA\nGrupos 1 y 2: Un mes\nGrupo 3 o grado superior: Dos meses\nINSTALACIONES DEPORTIVAS Y GIMNASIO\nGrupos 1 y 2: Tres meses\nGrupos 3,4 y 5: Dos meses\nCOEAS ESTATAL\nGrupo 1: Seis meses\nGrupo 2: dos meses\nGrupos 3,4,5 y 6: un mes\n(excepto titulados grado superior y grado medio que son DOS meses)",
+      "page1_hash": "2aff556d061e92d498872ddbd66d9b69",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 106,
+      "uuid": "052a3228-0053-4d8f-b2f8-91bceda7bca2",
+      "title": "PERÍODOS PRUEBA ACTUALIZADOS 2026",
+      "source_filename": "PERÍODOS PRUEBA ACTUALIZADOS 2026.docx",
+      "document_type": "reference_source",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2026-01-01",
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 1,
+      "page_count": 1,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 71,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "territory",
+              "parsed_value": "PERÍODOS PRUEBA ACTUALIZADOS",
+              "registry_value": null
+            },
+            {
+              "facet": "sector",
+              "parsed_value": "PERÍODOS PRUEBA ACTUALIZADOS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "PERÍODOS PRUEBA ACTUALIZADOS 2026.docx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "[Sección 1]\nÁLAVA\nActividades Deportivas (Empresas para terceros): El periodo de prueba no podrá exceder de dos meses en ningún caso.\nOcio Educativo y Animación Sociocultural:\nGrupo 1: 5 meses.\nGrupo 2: 2 meses.\nGrupos 3, 4, 5 y 6: 1 mes, salvo titulados de grado medio o superior, que tendrán 2 meses.\nNota: Para contratos menores a 9 meses, el periodo se reduce proporcionalmente, con un mínimo de 15 días.\nNAVARRA\nHostelería: Varía según el tipo de contrato y grupo profesional:\nGrupo 1 (todas las áreas) y Grupo 2 (área 5): 90 días (indefinidos), 75 días (temporales > 3 meses) y 60 días (temporales hasta 3 meses).\nGrupo 2 (resto áreas): 60 días (indefinidos), 45 días (temporales > 3 meses) y 30 días (temporales hasta 3 meses).\nGrupo 3 (todas las áreas): 45 días (indefinidos), 30 días (tempor",
+      "page1_hash": "43453b4c15fae1fd76000b65965d6fd3",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 15,
+      "uuid": "b6dca35b-8b88-4f17-994f-a57dec395eb8",
+      "title": "limpieza",
+      "source_filename": "limpieza.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 28,
+      "page_count": 28,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 13,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "limpieza",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "limpieza.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "CONVENIO COLECTIVO PROVINCIAL DE GIPUZKOA DE LIMPIEZA DE EDIFICIOS Y \nLOCALES \n( 2010-2017) \n \n CAPÍTULO PRIMERO \n Ámbitos \n \n \n Artículo 1.º Ámbito territorial.—Las disposiciones del presente Convenio regirán en la \nProvincia de Gipuzkoa. \n Art. 2.º Ámbito funcional.—Quedan sometidas a las disposiciones del presente Convenio \ntodas las empresas dedicadas a la limpieza de edificios y locales, cualquiera que sea la forma \njurídica con la que actúen e independientemente de cuál sea su domicilio y objeto social, \nconstituyendo la causa de sometimiento al Convenio la realización, aunque sea de forma \nparcial, de trabajos de limpieza de edificios y locales en el territorio histórico de Gipuzkoa. \n Art. 3.º Ámbito personal.—Las normas establecidas en el presente Convenio serán de \naplicación a t",
+      "page1_hash": "48c87be46173df1809bed4a29be7c378",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 16,
+      "uuid": "64e21e16-3a44-4b79-ada2-b8b0d6fac136",
+      "title": "Resolución de 13 de novi...",
+      "source_filename": "Resolución_de_13_de_novi....pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 23,
+      "page_count": 23,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 14,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "Resolución novi...",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Resolución_de_13_de_novi....pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 13 de noviembre de 2018, del Delegado Territorial de Trabajo y Seguridad Social, por la que se\ndispone el registro, publicación y depósito del Convenio Colectivo de Limpieza de Edificios y Locales de\nGipuzkoa para el año 2018\nBOG 19 Noviembre 2018\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 20000785011981; 2000785;\nÁmbito territorial: Gipuzkoa\nSector de actividad: Limpieza de edificios y locales\nDuración temporal: del 1 enero 2018 hasta 31 diciembre 2018\nINTRODUCCIÓN\nANTECEDENTES\nPrimero. El día 15 de octubre de 2018 se suscribió el convenio citado por Aspel, en representación de las empresas, y ELA, LAB,\nCC.OO., UGT, y ESK en representación de la parte trabajadora.\nSegundo. El día 16 de octubre de 2018 se presentó en esta Delegación Territorial",
+      "page1_hash": "9937bed792f900a5e29b85f549a20abf",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 17,
+      "uuid": "701d3479-8d24-4325-9985-902347de0b26",
+      "title": "TEXTO-VIII-CONVENIO-COLECTIVO-NO-REGLADA-steilas",
+      "source_filename": "TEXTO-VIII-CONVENIO-COLECTIVO-NO-REGLADA-steilas.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 2,
+      "page_count": 35,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 15,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "TEXTO-VIII-CONVENIO-COLECTIVO-NO-REGLADA-steilas",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "TEXTO-VIII-CONVENIO-COLECTIVO-NO-REGLADA-steilas.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Irakaskuntza Pribatua \nEnseñanza Privada \n \n \n \n \n \n \nLege \ngordailua \nBI-2729/00\n \n \n \n \n \n \n \n \nVIII CONVENIO \nCOLECTIVO \nDE ENSEÑANZA Y \nFORMACIÓN NO \nREGLADA \n2014 – 2018 \n \n \nARABA: Eulogio Serdan, 5 01012 Gasteiz ℡ 945 14 11 04 \u0002 945 14 43 02 araba@stee-eilas.org \nBIZKAIA: Nikolas Alkorta, 3 (Zabalburu) 48003 Bilbao ℡ 944 10 02 98 \u0002 944 10 13 60 bizkaia@stee-eilas.org \nGIPUZKOA: Baso-txiki, 30-34 (atzealdea) 20015 Donostia ℡ 943 46 60 00 \u0002 943 45 36 27 gipuzkoa@stee-eilas.org",
+      "page1_hash": "273943a4a3a120be3e899a8e21f26fe7",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 21,
+      "uuid": "187ddd8b-6eef-4458-aa6a-38bc5b895335",
+      "title": "HOSTELERIA  2008 2010",
+      "source_filename": "HOSTELERIA  2008 2010.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2008-01-01",
+      "validity_end": "2010-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 25,
+      "page_count": 25,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 18,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "convenio",
+              "parsed_value": "HOSTELERIA  2008 2010.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 21 de enero de 2009, de la Delegada Territorial de Gipuzkoa del Departamento de Justicia, Empleo y\nSeguridad Social, por la que se dispone el registro, publicación y depósito del Convenio Colectivo de Hostelería de\nGipuzkoa de 2008-2010\nBOG 5 Febrero 2009\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 2000705\nÁmbito territorial: Gipuzkoa\nSector de actividad: Hostelería y turismo\nDuración temporal: del 1 enero 2008 hasta 31 diciembre 2010\nINTRODUCCIÓN\nANTECEDENTES\nPrimero: El día 11 de diciembre de 2008 se ha presentado en esta delegación el convenio citado, suscrito por la Asociación de Hostelería y ADEGI,\nen representación de los empresarios, y por ELA, LAB, CC.OO. y UGT, en representación de los trabajadores, el pasado 24 de noviembre de 2008.\nSe",
+      "page1_hash": "a2399feacf5ae55afdf93e0830d67a31",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 22,
+      "uuid": "087dc666-e190-4386-8f09-e1b917fcb698",
+      "title": "CONVENIO COLECTIVO BIBLIOTECAS GUIPUZCOA 2022",
+      "source_filename": "CONVENIO COLECTIVO BIBLIOTECAS GUIPUZCOA 2022.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 29,
+      "page_count": 29,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 19,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "CONVENIO COLECTIVO BIBLIOTECAS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "CONVENIO COLECTIVO BIBLIOTECAS GUIPUZCOA 2022.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "EUSKO JAURLARITZA\nLAN ETA ENPLEGU SAILA\nGipuzkoako Lurralde Ordezkaritza\nEBAZPENA, Lan eta Gizarte Segurantzako Lurralde\nor dezkariarena, Gi puz koa ko informazioaren eta do-\nkumentazioaren kudeatzaileentzako sektoreko Lan\nHi tzar menaren erregistro, gordailu eta argitarapena\nagintzen duena (20104415012022 kodea).\nAURREKARiAK\nLehenen goa.    2022ko apirilaren 27an, Asociacion Galdek\nenpresaburuen ordezkapenean, eta LAB sindikatuak langileen\nordezkapenean, sinatu zuten aipatutako hi tzar men kolektiboa.\nBigarrena.    2022ko maiatzaren 2an, aurkeztu zen Lurralde\nOrdezkaritza honetan, adierazitako hi tzar menaren erregistro,\ngordailu eta argitalpen eskaera.\nZUZENBiDEKO OiNARRiAK\nLehenen goa.    Urriaren 23ko 2/2015 Legegintzako Errege\nDekretuak onartutako Langileen Estatutuaren Legearen testu",
+      "page1_hash": "050dbb798fe8fe0ee988f577ddddfc48",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 29,
+      "uuid": "327fe447-24ff-47a8-93c4-56b9e8b97505",
+      "title": "22000175012004 HOSTELERIA HUESCA 2022 2024",
+      "source_filename": "22000175012004_HOSTELERIA HUESCA_2022 2024.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2022-01-01",
+      "validity_end": "2024-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 32,
+      "page_count": 32,
+      "chunk_count": 0,
+      "scope": {
+        "convenio_id": 16,
+        "numero": "22000175012004",
+        "name": "HOSTELERIA Y TURISMO HUESC",
+        "territory": {
+          "id": 3,
+          "code": "22",
+          "name": "Huesca"
+        },
+        "sector": {
+          "id": 14,
+          "name": "HOSTELERIA Y TURISMO HUESC"
+        }
+      },
+      "open_tasks": [
+        {
+          "task_id": 20,
+          "type": "conflict",
+          "kind": "conflict",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "parsed sector HOSTELERIA disagrees with registry",
+              "registry_value": "HOSTELERIA Y TURISMO HUESC",
+              "registry_value_note": "The task stores the sentence only. This is the bound convenio sector DocumentTagger compared (DocumentTagger.php rule 3)."
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "ADMINISTRACIÓN AUTONÓMICA\nGOBIERNO DE ARAGÓN\nDEPARTAMENTO DE ECONOMÍA, PLANIFICACIÓN Y EMPLEO\nSUBDIRECCIÓN PROVINCIAL DE TRABAJO\n4095 \nRESOLUCIÓN\nRESOLUCIÓN de la Subdirección Provincial de Trabajo del Departamento de Economía,\nPlanificación y Empleo en Huesca por la que se dispone la inscripción en el registro y\npublicación del CONVENIO COLECTIVO PROVINCIAL PARA LAS INDUSTRIAS DE\nHOSTELERIA Y TURISMO DE LA PROVINCIA DE HUESCA (código de convenio número\n22000175012004).\n \nVisto el Texto del CONVENIO COLECTIVO PROVINCIAL PARA LAS INDUSTRIAS DE\nHOSTELERIA Y TURISMO DE LA PROVINCIA DE HUESCA (código de convenio número\n22000175012004), suscrito entre los representantes de los empresarios del citado sector y\nsu representación sindical, éstos afiliados a las centrales sindicales de U.G.T. y CC.O",
+      "page1_hash": "823c11176f1f2aedd1c5b8fb6c084b12",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": false,
+      "other_active_prose_count": 0,
+      "employees": {
+        "by_status": {
+          "active": 1
+        },
+        "headcount": 1
+      }
+    },
+    {
+      "id": 37,
+      "uuid": "7fb88aa0-6fc9-4aca-8475-bdd2b266c4a7",
+      "title": "HOSTELERIA 20137 2014",
+      "source_filename": "HOSTELERIA 20137 2014.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 21,
+      "page_count": 21,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 25,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "convenio",
+              "parsed_value": "HOSTELERIA 20137 2014.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución 11 de marzo de 2014, de la Directora General de Trabajo y Prevención de Riesgos, por la que se acuerda el\nregistro, depósito y publicación en el Boletín Oficial de Navarra del Convenio Colectivo del sector Industria de Hostelería\nde Navarra\nBON 8 Abril 2014\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 31003805011981\nÁmbito territorial: Comunidad Foral de Navarra\nSector de actividad: Hostelería y turismo\nDuración temporal: del 1 enero 2013 hasta 31 diciembre 2014\nEfectos económicos: desde 1 enero 2013\nINTRODUCCIÓN\nVisto el texto del Convenio Colectivo del sector Industria de Hostelería de Navarra (código número 31003805011981), que tuvo entrada en este\nRegistro, en fecha 10 de febrero de 2014, que fue suscrito el día 21 de noviembre de 2013 por la re",
+      "page1_hash": "10eff0462196fca782b9518f15c1f583",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 38,
+      "uuid": "a3792e34-8965-49a9-b9d8-ad29a55c1cdc",
+      "title": "oficinas-despachos-navarra2017",
+      "source_filename": "oficinas-despachos-navarra2017.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 25,
+      "page_count": 25,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 26,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "oficinas-despachos-navarra2017",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "oficinas-despachos-navarra2017.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Fecha de entrada en el Registro: 29 de diciembre de 2016\b\nCódigo número: 31005105011984\nBoletín Oficial de Navarra número 51, de 14 de marzo de 2017\nConvenio Colectivo del Sector  \nOficinas y Despachos de Navarra",
+      "page1_hash": "bce87ee7fd4e2fe89dfc5075bf645da4",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 39,
+      "uuid": "0d8bd296-ddd7-4dec-a789-e4f34b4d5c69",
+      "title": "GESTIÓN DEPORTIVA 2012",
+      "source_filename": "GESTIÓN DEPORTIVA 2012.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 13,
+      "page_count": 13,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 27,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "GESTIÓN DEPORTIVA",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "GESTIÓN DEPORTIVA 2012.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "RESOLUCIÓN de 30 de enero de 2013, de la Directora General de Trabajo y Prevención de Riesgos, por la que se acuerda\nel registro, depósito y publicación en el Boletín Oficial de Navarra del Convenio Colectivo del sector Empresas Gestoras de\nServicios y Equipamientos Deportivos de Navarra\nBON 5 Marzo 2013\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 31008235012003\nÁmbito territorial: Comunidad Foral de Navarra\nSector de actividad: Empresas gestoras de servicios y equipamientos deportivos\nDuración temporal: del 1 enero 2012 hasta 31 diciembre 2012\nINTRODUCCIÓN\nVisto el texto del Convenio Colectivo del sector Empresas Gestoras de Servicios y Equipamientos Deportivos de Navarra (código número\n31008235012003), que tuvo entrada en este Registro en fecha 15 de enero ",
+      "page1_hash": "68c3a58af1414248b1cf6d21b5f0122e",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 40,
+      "uuid": "911bb7bc-f78c-4fcd-b486-1f5f44179dae",
+      "title": "31008235012003 DEPORTE NAVARRA 2016 2020",
+      "source_filename": "31008235012003_DEPORTE NAVARRA_2016 2020.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2016-01-01",
+      "validity_end": "2020-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 27,
+      "page_count": 27,
+      "chunk_count": 0,
+      "scope": {
+        "convenio_id": 20,
+        "numero": "31008235012003",
+        "name": "GESTIÓN DEPORTIVA NAVARRA",
+        "territory": {
+          "id": 5,
+          "code": "31",
+          "name": "Navarra"
+        },
+        "sector": {
+          "id": 16,
+          "name": "GESTIÓN DEPORTIVA"
+        }
+      },
+      "open_tasks": [
+        {
+          "task_id": 28,
+          "type": "conflict",
+          "kind": "conflict",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "parsed sector DEPORTE disagrees with registry",
+              "registry_value": "GESTIÓN DEPORTIVA",
+              "registry_value_note": "The task stores the sentence only. This is the bound convenio sector DocumentTagger compared (DocumentTagger.php rule 3)."
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Fecha de entrada en el Registro: 5 de octubre de 2018\b\nCódigo número: 31008235012003\nBoletín Oficial de Navarra número 242, de 18 de diciembre de 2018\nConvenio Colectivo del Sector Empresas \ny Entidades Privadas Gestoras \nde Servicios y Equipamientos Deportivos \nPropiedad de otras Entidades de Navarra",
+      "page1_hash": "8f761a39eed2135b631bb59511f87a0b",
+      "duplicate_first_pages": [],
+      "version_context": [
+        {
+          "id": 50,
+          "title": "CONVENIO DEPORTE NAVARRA 2025 A 2028",
+          "document_type": "convenio_text",
+          "validity_start": "2025-01-01",
+          "validity_end": "2028-12-31",
+          "retrieval_status": "active",
+          "tagging_status": "verified",
+          "authority_level": "official_convenio"
+        }
+      ],
+      "would_confirming_give_only_current_text": false,
+      "other_active_prose_count": 1,
+      "employees": {
+        "by_status": {
+          "active": 6
+        },
+        "headcount": 6
+      }
+    },
+    {
+      "id": 42,
+      "uuid": "8878bc48-2b11-4b3f-820b-ede0f7dc7995",
+      "title": "OFICINAS Y DESPACHOS",
+      "source_filename": "OFICINAS Y DESPACHOS.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 15,
+      "page_count": 15,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 29,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "OFICINAS DESPACHOS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "OFICINAS Y DESPACHOS.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "RESOLUCIÓN de 11 de julio de 2013, de la Directora General de Trabajo y Prevención de Riesgos, por la que se acuerda\nel registro, depósito y publicación en el Boletín Oficial de Navarra del Convenio Colectivo del sector Oficinas y Despachos\nde Navarra, para los años 2010­2014\nBON 21 Agosto 2013\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 31005105011984\nÁmbito territorial: Comunidad Foral de Navarra\nSector de actividad: Oficinas y despachos\nDuración temporal: del 1 enero 2010 hasta 31 diciembre 2014\nEfectos económicos: desde 1 enero 2010\nINTRODUCCIÓN\nVisto el texto del Convenio Colectivo del sector Oficinas y Despachos de Navarra (Código número 31005105011984), que tuvo entrada en este\nRegistro en fecha 2 de julio de 2013, que fue suscrito el día 2 de julio, y",
+      "page1_hash": "bd143f8aea9efb6c0ff6647679d6bfb6",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 44,
+      "uuid": "8cd8eea9-bc18-41f2-9ed2-0ffb09731a54",
+      "title": "convenio hosteleria navarra 2019",
+      "source_filename": "convenio hosteleria navarra 2019.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 29,
+      "page_count": 29,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 30,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "convenio hosteleria",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "convenio hosteleria navarra 2019.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Fecha de entrada en el Registro: 23 de julio de 2019\b\nCódigo número: 31003805011981\nBoletín Oficial de Navarra número 223, de 12 de noviembre de 2019\nConvenio Colectivo del Sector \nde Hostelería de Navarra",
+      "page1_hash": "414049a68f67cb01faade401e8413ba5",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 45,
+      "uuid": "c7ed871a-c3fd-4c44-913f-5d86be65861c",
+      "title": "Convenio Hosteleria 2015 - 2017",
+      "source_filename": "Convenio Hosteleria 2015 - 2017.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 39,
+      "page_count": 39,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 31,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "Convenio Hosteleria",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Convenio Hosteleria 2015 - 2017.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "CONVENIO COLECTIVO \n PARA LA INDUSTRIA DE HOSTELERÍA \n2015-2016-2017 \n \n \n \n \nARTICULO 1º.- ÁMBITO FUNCIONAL Y DETERMINACIÓN DE LAS PARTES \n \nEl presente Convenio Colectivo se concierta por los Representantes designados por la \nAsociación de Empresarios de Hostelería Y Turismo de Navarra (AEHN) y la Asociación \nNavarra de Pequeña empresa de Hostelería (ANAPEH) como parte empresarial y las \nCentrales Sindicales, Unión General de Trabajadores ( U.G.T.)  y  Comisiones Obreras \n(C.C.O.O.) como integrantes de la parte social. \n \nEl presente Convenio es de aplicación a las empresas y trabajadores del sector de hostelería. \nSe incluyen en el sector de hostelería todas las empresas que independientemente de su \ntitularidad y fines perseguidos, realicen en instalaciones fijas o móviles y tanto de f",
+      "page1_hash": "cd41f3d11862aa483765b15a07c0b6e7",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 47,
+      "uuid": "2aa6ad5f-c210-475c-8d33-00ab0355cdf3",
+      "title": "Pacto de la empresa",
+      "source_filename": "Pacto de la empresa.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.75,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 2,
+      "pages_with_text": 2,
+      "page_count": 2,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 33,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "Pacto empresa",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Pacto de la empresa.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [
+        {
+          "facet": "document_type",
+          "value": "partial_agreement",
+          "confidence": 0.95
+        },
+        {
+          "facet": "convenio",
+          "value": "01100635012017",
+          "confidence": 0.85
+        },
+        {
+          "facet": "territory",
+          "value": "31",
+          "confidence": 0.95
+        },
+        {
+          "facet": "sector",
+          "value": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL",
+          "confidence": 0.85
+        },
+        {
+          "facet": "validity",
+          "value": "2019-01-01..2021-12-31",
+          "confidence": 0.75
+        },
+        {
+          "facet": "topic",
+          "value": "retribución",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "bajas médicas",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "permisos retribuidos",
+          "confidence": 0.85
+        }
+      ],
+      "cover_text": "REUNIDOS\n\nACUERDAN\n\nPRIMERO.- AMBITO DE APLICACIÓN\n\nSEGUNDO.-\n\nTERCERO.- INCREMENTO SALARIAL\n\nEn Pamplona a 12 de diciembre de 2019\n\nREUNIDOS\n\nDe una parte: en representación de la empresa SEDENA, Don [nombre], con DNI. [DNI], consejero delegado.\n\nDe otra parte: El comité de empresa de SEDENA, S.L.\n\nACUERDAN\n\nPRIMERO.- AMBITO DE APLICACIÓN: El presente acuerdo será de aplicación a las personas trabajadoras de Sedena S.L , cuyo Convenio Colectivo de aplicación es el ocio educativo y animación socio cultural y prestan servicio en los siguientes centros de trabajo que Sedena gestiona en Navarra:\n\n1. Gestión de servicios socioculturales de la Red Civivox\n2. Casa de la Juventud de Pamplona\n3. Centro Sociocultural Civican\n4. Servicio de Información y Recursos pa",
+      "page1_hash": "3060f93b2e178ced452b30ce88ea9083",
+      "duplicate_first_pages": [
+        {
+          "id": 31,
+          "uuid": "e4dc1595-6c60-4fce-bcbf-55180bc9a33c",
+          "title": "PACTO CULTURA NAVARRA",
+          "source_filename": "PACTO CULTURA NAVARRA.pdf",
+          "document_type": "convenio_text",
+          "retrieval_status": "active",
+          "tagging_status": "under_review"
+        }
+      ],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 48,
+      "uuid": "ae32fc00-2e2a-4338-bd5f-3fd8656c4872",
+      "title": "DEPORTE NAVARRA 2013-2015  S",
+      "source_filename": "DEPORTE NAVARRA 2013-2015 _S_.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 28,
+      "page_count": 28,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 34,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "DEPORTE 2013-2015 S",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "DEPORTE NAVARRA 2013-2015 _S_.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "1 \n \n \nCONVENIO COLECTIVO DE EMPRESAS Y ENTIDADES PRIVADAS GESTORAS DE \nSERVICIOS Y EQUIPAMIENTOS DEPORTIVOS PROPIEDAD DE OTRAS \nENTIDADES, DE NAVARRA \n \nCAPITULO PRELIMINAR: DETERMINACION DE LAS PARTES \n \nArt. 1º- El presente Convenio Colectivo se concierta por la parte económica, por la \nAsociación Navarra de Empresas gestoras de servicios y equipamientos deportivos \npropiedad de entidades públicas y/o privadas (AGEDENA) y por la parte social, por los \nrepresentantes de las centrales sindicales Unión General de los Trabajadores (UGT) y \nComisiones Obreras (CCOO)  \n \nCAPITULO PRIMERO: DISPOSICIONES GENERALES \n \nArt. 2º- AMBITO FUNCIONAL. \nEl presente Convenio es de aplicación a las empresas y entidades privadas que gestionan \nservicios y equipamientos deportivos propiedad de otras entidad",
+      "page1_hash": "ea2db771a837f63c82091bf4a1c49c3e",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 49,
+      "uuid": "c0649ef7-169a-47c8-b9a2-cfe53a371f0a",
+      "title": "oficinas-despachos-navarra revisió salarial",
+      "source_filename": "oficinas-despachos-navarra revisió salarial.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 6,
+      "page_count": 6,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 35,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "oficinas-despachos-navarra revisió salarial",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "oficinas-despachos-navarra revisió salarial.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Página 16 - Número 2\nMartes, 5 de enero de 2021\nArtículo 5.º  Creación de un puesto de trabajo en el Departamento \nde Educación.\nUno.–Creación del puesto de trabajo de Experto en Aprendizaje de \nCompetencias Básicas para Adultos, nivel B, adscrito al Negociado de \nFormación Permanente del Departamento de Educación.\nDos.–A dicho puesto de trabajo se le asigna el complemento de incom-\npatibilidad y un complemento de puesto de trabajo del 6,73% del sueldo \nde su correspondiente nivel, según lo establecido en los Decretos Forales \n318/2004, 11/2007 y 19/2008.\nDISPOSICIONES FINALES\nDisposición final primera.–Habilitación para el desarrollo y ejecución \ndel decreto foral.\nSe faculta al Consejero de Presidencia, Igualdad, Función Pública e \nInterior para dictar las disposiciones precisas en desar",
+      "page1_hash": "09bd4858b6185857511b1af02d815412",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 60,
+      "uuid": "71bf563d-1c9b-4da0-8963-131b4bf8f990",
+      "title": "Subida salarial según convenio 2023",
+      "source_filename": "Subida salarial según convenio 2023.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 2,
+      "page_count": 2,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 40,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "Subida salarial según convenio",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Subida salarial según convenio 2023.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "SUBIDA SALARIAL AÑO 2023\n“IPC2019 + IPC2020 + IPC2021 + IPC2022 + 3 % - 4´5 %”\n•\nIPC de los años 2019 (1´2), 2020 (-0´3), 2021 (6´4) y 2022 (5´4). \n•\nLos IPC negativos no se contarán para la fórmula, por lo que tenemos que excluir el año 2020.\n•\n1'2+6'4+5'4-1'5= 11´5% de subida salarial al salario base del 2022.\nCATEGORÍA\n2022\n2023\nDirector/a gerente\n30.311,80\n33.797'66\nJefe/a de Departamento\n26.745,71\n29.821'47\nDirector de programas y equipamientos\n26.745,71\n29.821'47\nCoordinador/a proyectos pedagógicos\n25.408,43\n28.330'40\nTitulado/a de Grado\n25.408,43\n28.330'40\nTécnico/a de gestión\n25.408,43\n28.330'40\nCoordinador/a de actividades y proyectos de centro/servicios\n24.071,14\n26.839'32\nTécnico/a especialista\n24.071,14\n26.839'32\nTécnico de biblioteca\n24.071,14\n26.839'32\nTécnico/a especialista ",
+      "page1_hash": "89661eb14eea995e2897b3f8d64b5bf7",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 61,
+      "uuid": "d5542180-b359-4284-b2f0-f221b33d9733",
+      "title": "INTERVENCIÓN SOCIAL ALAVA",
+      "source_filename": "INTERVENCIÓN SOCIAL ALAVA.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 20,
+      "page_count": 20,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 41,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "INTERVENCIÓN SOCIAL",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "INTERVENCIÓN SOCIAL ALAVA.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 29 de enero de 2015 del delegado territorial de Trabajo, Empleo y Políticas Sociales de Álava del\nDepartamento de Empleo y Políticas Sociales, por la que se dispone el registro, publicación y depósito del convenio\ncolectivo 2014-2015-2016 para el Sector de Intervención Social de Álava\nBOTHA 11 Febrero 2015\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 01100025012015\nÁmbito territorial: Álava\nSector de actividad: Acción e intervención social\nDuración temporal: del 1 enero 2014 hasta 31 diciembre 2016\nINTRODUCCIÓN\nANTECEDENTES\nEl día 13 de enero de 2015 se ha presentado en esta Delegación el texto del convenio colectivo citado, suscrito por la representación empresarial\nAISA y la representación social ESK, LAB, ELA, UGT y CCOO en la mesa negociadora",
+      "page1_hash": "341cf80c2cb298337264c9cfe87bd70f",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 62,
+      "uuid": "99352d0f-21fc-41c9-93ff-08c5169243ee",
+      "title": "2022 101 02474 C",
+      "source_filename": "2022_101_02474_C.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 33,
+      "page_count": 33,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 42,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "C",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "2022_101_02474_C.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "lunes, 5 de septiembre de 2022  •  Núm. 101\n1/33\n2022-02474\nD.L.: VI-1/1958 ISSN: 2254-8432\nwww.araba.eus\nIII - OTRAS ADMINISTRACIONES PÚBLICAS\nGOBIERNO VASCO\nDEPARTAMENTO DE TRABAJO Y EMPLEO\nDelegación Territorial de Álava\nConvenio colectivo para el sector de empresas que realizan actividades deportivas para ter­\nceros en Álava\nResolución de la delegada territorial de Trabajo y Seguridad Social de Álava del Depar­\ntamento de Trabajo y Empleo, por la que se dispone el registro, publicación y depósito del \nconvenio colectivo 2020-2021-2022-2023 para el sector de empresas que realizan actividades \ndeportivas para terceros en Álava. Código convenio número 01003205012006.\nANTECEDENTES\nEl día 12 de julio de 2022 se ha presentado en esta Delegación el texto del convenio colec­\ntivo citado, suscr",
+      "page1_hash": "f7c3d30eb4f8c2c566ee98e45f01f490",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 66,
+      "uuid": "252e74ef-f77a-4d50-a7b1-dbb88b110b34",
+      "title": "LOCALES Y CAMPOS DEPORTIVOS DE BIZKAIA",
+      "source_filename": "LOCALES Y CAMPOS DEPORTIVOS DE BIZKAIA.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 16,
+      "page_count": 16,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 44,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "LOCALES CAMPOS DEPORTIVOS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "LOCALES Y CAMPOS DEPORTIVOS DE BIZKAIA.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 13 de octubre de 2020, del delegado territorial de Trabajo y Seguridad Social de Bizkaia, del\nDepartamento de Trabajo y Empleo, por la que se dispone el registro, publicación y depósito del Convenio\nColectivo de Locales y Campos Deportivos de Bizkaia, 2018-2022\nBOB 23 Noviembre 2020\nRef. CISS 22493/2020\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 48001455011981; 4801455;\nÁmbito territorial: Bizkaia\nSector de actividad: Locales de espectáculos y deportes\nDuración temporal: del 1 enero 2018 hasta 31 diciembre 2022\nINTRODUCCIÓN\nAntecedentes\nPor vía telemática se ha presentado en esta delegación el convenio citado, suscrito por la representación patronal y la representación\nsindical.\nFundamentos de derecho\nPrimero: La competencia prevista en el artí",
+      "page1_hash": "996e762d482a5fc3ebb4ade8e78adb8f",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 68,
+      "uuid": "c178518e-abf3-425d-8bf7-c90226a81f8f",
+      "title": "CONDICIONES LABORALES DEL PERSONAL SUBROGADO BARAKALDO",
+      "source_filename": "CONDICIONES LABORALES DEL PERSONAL SUBROGADO BARAKALDO.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.7,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 1,
+      "pages_with_text": 1,
+      "page_count": 1,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 45,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "CONDICIONES LABORALES PERSONAL SUBROGADO BARAKALDO",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "CONDICIONES LABORALES DEL PERSONAL SUBROGADO BARAKALDO.pdf",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Convenio Colectivo de Intervención Social de Bizkaia",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [
+        {
+          "facet": "document_type",
+          "value": "reference_source",
+          "confidence": 0.7
+        },
+        {
+          "facet": "convenio",
+          "value": "48006185012006",
+          "confidence": 0.85
+        },
+        {
+          "facet": "territory",
+          "value": "48",
+          "confidence": 0.9
+        },
+        {
+          "facet": "sector",
+          "value": "INTERVENCION SOCIAL",
+          "confidence": 0.85
+        },
+        {
+          "facet": "topic",
+          "value": "jornada",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "bajas médicas",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "retribución",
+          "confidence": 0.75
+        }
+      ],
+      "cover_text": "1.4. CONDICIONES LABORALES DEL PERSONAL\n\nsuspergintza elkartea\n\nedetaldea\n\n1.4. CONDICIONES LABORALES DEL PERSONAL\n\nBásicamente las condiciones laborales que tiene el personal adscrito al programa están regidas por el Convenio Colectivo de Intervención Social de Bizkaia.\n\nLas condiciones especificadas en dicho convenio, están mejoradas en algunos aspectos por condiciones anteriores que colectivamente se han mantenido como práctica y costumbre. Estos elementos son:\n\n– Jornada laboral: todo el personal del programa realiza 1635 horas anuales.\n\n– Cobro durante el periodo de IT: los trabajadores y trabajadoras en situación de IT, tanto por contingencias profesionales como comunes, reciben el complemento necesario para completar el 100% de su base reguladora, durante todo el periodo que dure la",
+      "page1_hash": "7478f7dea67324950277171cff719578",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 69,
+      "uuid": "d4ecc298-2257-4060-adbe-24bfad0026a4",
+      "title": "PACTO",
+      "source_filename": "PACTO.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.85,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 7,
+      "pages_with_text": 7,
+      "page_count": 7,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 46,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "PACTO",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "PACTO.pdf",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Personal subcontratado actividades deportivas Durango Kirolak",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [
+        {
+          "facet": "document_type",
+          "value": "convenio_text",
+          "confidence": 0.95
+        },
+        {
+          "facet": "convenio",
+          "value": "48001455011981",
+          "confidence": 0.85
+        },
+        {
+          "facet": "territory",
+          "value": "48",
+          "confidence": 0.9
+        },
+        {
+          "facet": "sector",
+          "value": "LOCALES Y CAMPOS DEPORTIVOS",
+          "confidence": 0.85
+        },
+        {
+          "facet": "validity",
+          "value": "2018-01-01..2020-12-31",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "retribución",
+          "confidence": 0.95
+        },
+        {
+          "facet": "topic",
+          "value": "jornada",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "permisos retribuidos",
+          "confidence": 0.9
+        },
+        {
+          "facet": "topic",
+          "value": "festivos",
+          "confidence": 0.85
+        },
+        {
+          "facet": "topic",
+          "value": "formación",
+          "confidence": 0.8
+        },
+        {
+          "facet": "topic",
+          "value": "conciliación",
+          "confidence": 0.75
+        },
+        {
+          "facet": "topic",
+          "value": "permisos no retribuidos",
+          "confidence": 0.75
+        },
+        {
+          "facet": "topic",
+          "value": "normativa/derechos",
+          "confidence": 0.7
+        }
+      ],
+      "cover_text": "Articulo 1. Ámbito personal, funcional y territorial\n\nArtículo 2. Vigencia\n\nArtículo 3. Prioridad aplicativa\n\nACUERDO COLECTIVO DE LAS CONDICIONES LABORALES\n\nDEL PERSONAL SUBCONTRATADO, QUE IMPARTE ACTIVIDADES DEPORTIVAS EN EL \"O.A. DURANGO KIROLAK\" DEL AYUNTAMIENTO DE DURANGO\n\nArticulo 1. Ámbito personal, funcional y territorial\n\nEl presente acuerdo colectivo afecta a todos/as los/as trabajadores/as, presentes y futuros, con independencia de su categoría profesional que, durante su vigencia, presten servicios bajo dependencia y por cuenta y órdenes de la empresa adjudicataria de la gestión de las actividades deportivas municipales del Organismo Autónomo Durango Kirolak, perteneciente al Ayuntamiento de Durango\n\nArtículo 2. Vigencia\n\nLa vigencia del presente acuerdo colectivo se extenderá ",
+      "page1_hash": "4bb7f7a90adcd5e972efda3ed46baed6",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 70,
+      "uuid": "92062f97-6a2e-4f29-9b02-99d61309e201",
+      "title": "ACCIÓN E INTERVENCIÓN SOCIAL VIZCAYA",
+      "source_filename": "ACCIÓN E INTERVENCIÓN SOCIAL VIZCAYA.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 22,
+      "page_count": 22,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 47,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "ACCIÓN E INTERVENCIÓN SOCIAL",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "ACCIÓN E INTERVENCIÓN SOCIAL VIZCAYA.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 17 de diciembre de 2018, del delegado territorial de Trabajo y Seguridad Social de Bizkaia del\nDepartamento de Trabajo y Justicia, por la que se dispone el registro, publicación y depósito del Convenio Colectivo\ndel sector de Intervención Social 2017-2021 de Bizkaia\nBOB 15 Enero 2019\nRef. CISS 22148/2018\nTipo de convenio: Convenio colectivo de trabajo\nCódigo convenio colectivo: 48006185012006; 4806185;\nÁmbito territorial: Bizkaia\nSector de actividad: Acción e intervención social\nDuración temporal: del 1 enero 2017 hasta 31 diciembre 2021\nINTRODUCCIÓN\nAntecedentes\nPor vía telemática se ha presentado en esta delegación el acuerdo citado, suscrito por la representación empresarial y sindical.\nFundamentos de derecho\nPrimero: La competencia prevista en el artículo 90.2 de la Ley d",
+      "page1_hash": "178957d1fd37a4c1699d00fec969d4d0",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 71,
+      "uuid": "be8cedde-d587-4b9b-961a-20520d33fd00",
+      "title": "LOCALES Y CAMPOS DEPORTIVOS",
+      "source_filename": "LOCALES Y CAMPOS DEPORTIVOS.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 23,
+      "page_count": 23,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 48,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "LOCALES CAMPOS DEPORTIVOS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "LOCALES Y CAMPOS DEPORTIVOS.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "cve: BOB-2020a225\nBOLETÍN OFICIAL DE BIZKAIA\nBOB\nLunes, 23 de noviembre de 2020\nNúm. 225\nPág. 11\nSECCIÓN III\nADMINISTRACIÓN AUTONÓMICA DEL PAÍS VASCO\nDepartamento de Trabajo y Empleo\nResolución del Delegado Territorial de Trabajo, y Seguridad Social de Bizkaia \ndel Departamento de Trabajo y Empleo, por la que se dispone el registro, \npublicación y depósito del Convenio Colectivo de Locales y Campos Depor-\ntivos de Bizkaia (código de convenio 48001455011981).\nAntecedentes\nPor vía telemática se ha presentado en esta delegación el convenio citado, suscrito \npor la representación patronal y la representación sindical.\nFundamentos de derecho\nPrimero: La competencia prevista en el artículo 90.2 de la Ley del Estatuto de los Tra-\nbajadores, Real Decreto Legislativo 2/2015 de 23 de octubre («BOE» ",
+      "page1_hash": "250b9d81d55cbd848157abaa70fbdee1",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 72,
+      "uuid": "c134618f-ec1f-4104-a3da-2e5e24d7fc3f",
+      "title": "V Convenio Intervención social 2017-2021",
+      "source_filename": "V Convenio Intervención social 2017-2021.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 33,
+      "page_count": 33,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 49,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "V Convenio Intervención social 2017-2021",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "V Convenio Intervención social 2017-2021.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "cve: BOB-2019a010-(III-2)\nBOLETÍN OFICIAL DE BIZKAIA\nBOB\nMartes, 15 de enero de 2019\nNúm. 10\nPág. 32\nSECCIÓN III\nADMINISTRACIÓN AUTONÓMICA DEL PAÍS VASCO\nDepartamento de Trabajo y Justicia\nResolución del delegado territorial de Trabajo, y Seguridad Social de Bizkaia \ndel Departamento de Trabajo y Justicia, por la que se dispone el registro, \npublicación y depósito del Convenio Colectivo del sector de Intervención \nSocial de Bizkaia (código de convenio 48006185012006).\nAntecedentes\nPor vía telemática se ha presentado en esta delegación el acuerdo citado, suscrito \npor la representación empresarial y sindical.\nFundamentos de derecho\nPrimero: La competencia prevista en el artículo 90.2 de la Ley del Estatuto de los Tra-\nbajadores, Real Decreto Legislativo 2/2015 de 23 de octubre («BOE» de 24 ",
+      "page1_hash": "7dfabebc5be7c7cf68e6c30e3b5c8bb7",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 73,
+      "uuid": "5ff35bef-698a-4726-ae02-9f8b07102542",
+      "title": "99015105012005 Deporte Estatal 2023 2025",
+      "source_filename": "99015105012005_Deporte Estatal_2023 2025.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2023-01-01",
+      "validity_end": "2025-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 43,
+      "page_count": 43,
+      "chunk_count": 0,
+      "scope": {
+        "convenio_id": 9,
+        "numero": "99015105012005",
+        "name": "INSTALACIONES DEPORTIVAS Y GIMNASIO",
+        "territory": {
+          "id": 12,
+          "code": "99",
+          "name": "Estatal"
+        },
+        "sector": {
+          "id": 8,
+          "name": "INSTALACIONES DEPORTIVAS Y GIMNASIO"
+        }
+      },
+      "open_tasks": [
+        {
+          "task_id": 50,
+          "type": "conflict",
+          "kind": "conflict",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "parsed sector DEPORTE disagrees with registry",
+              "registry_value": "INSTALACIONES DEPORTIVAS Y GIMNASIO",
+              "registry_value_note": "The task stores the sentence only. This is the bound convenio sector DocumentTagger compared (DocumentTagger.php rule 3)."
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "III. OTRAS DISPOSICIONES\nMINISTERIO DE TRABAJO Y ECONOMÍA SOCIAL\n1506\nResolución de 16 de enero de 2024, de la Dirección General de Trabajo, por \nla que se registra y publica el V Convenio colectivo estatal de instalaciones \ndeportivas y gimnasios.\nVisto el texto del V Convenio colectivo estatal de instalaciones deportivas y \ngimnasios (Código de convenio número 99015105012005), que fue suscrito con fecha 20 \nde octubre de 2023, y finalmente subsanado mediante acta de fecha 22 de diciembre \nde 2023, de una parte por las organizaciones empresariales Federación Nacional de \nEmpresarios de Instalaciones Deportivas (FNEID) y Asociación Española de Campos de \nGolf (AECG), en representación de las empresas del sector y, de otra, por las \norganizaciones sindicales FeSMC-UGT y FSC-CC.OO., en repre",
+      "page1_hash": "512ffc10be4b3a2cce290d40f981ea10",
+      "duplicate_first_pages": [],
+      "version_context": [
+        {
+          "id": 85,
+          "title": "CONVENIO DEPORTE ESTATAL",
+          "document_type": "partial_agreement",
+          "validity_start": "2023-09-26",
+          "validity_end": null,
+          "retrieval_status": "active",
+          "tagging_status": "verified",
+          "authority_level": "official_convenio"
+        }
+      ],
+      "would_confirming_give_only_current_text": false,
+      "other_active_prose_count": 1,
+      "employees": {
+        "by_status": {
+          "active": 1
+        },
+        "headcount": 1
+      }
+    },
+    {
+      "id": 78,
+      "uuid": "d85479e2-ea34-424d-b449-67bfc0fc6411",
+      "title": "deporte estatal 2023",
+      "source_filename": "deporte estatal 2023.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 17,
+      "page_count": 17,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 54,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "convenio",
+              "parsed_value": "deporte estatal 2023.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "III. OTRAS DISPOSICIONES\nMINISTERIO DE TRABAJO Y ECONOMÍA SOCIAL\n20101\nResolución de 11 de septiembre de 2023, de la Dirección General de Trabajo, \npor la que se registra y publica el Acuerdo de modificación parcial del IV \nConvenio colectivo estatal de instalaciones deportivas y gimnasios.\nVisto el texto del Acta de la Comisión Negociadora del IV Convenio colectivo estatal \nde instalaciones deportivas y gimnasios mediante la que se acuerda la modificación \nparcial del IV Convenio colectivo del sector, que fue publicado en el «Boletín Oficial del \nEstado» de 11 de junio de 2018 (código de convenio n.º 99015105012005), Acta que ha \nsido suscrita con fecha 22 de junio de 2023 por la Federación Nacional de Empresarios \nde Instalaciones Deportivas (FNEID) y la Asociación Española de Campos de ",
+      "page1_hash": "6644fe46b4b4a9381d0b67803cc94690",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 82,
+      "uuid": "265d73f4-c37f-40c9-9b5b-480b65962e25",
+      "title": "acción e intervención",
+      "source_filename": "acción e intervención.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 58,
+      "page_count": 58,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 55,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "acción e intervención",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "acción e intervención.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "BOLETÍN OFICIAL DEL ESTADO\nNúm. 158\t\nViernes 3 de julio de 2015\t\nSec. III.   Pág. 54664\nIII. OTRAS DISPOSICIONES\nMINISTERIO DE EMPLEO Y SEGURIDAD SOCIAL\n7435\nResolución de 22 de junio de 2015, de la Dirección General de Empleo, por la \nque se registra y publica el Convenio colectivo estatal de acción e intervención \nsocial 2015-2017.\nVisto el texto del Convenio colectivo estatal de acción e intervención social 2015-2017, \n(código de Convenio número 99016085012007) que fue suscrito con fecha 13 de mayo de \n2015, de una parte por la Asociación Española de Empresas de Iniciativa Social y Servicios \nSociales (AEEISSS), la Asociación Estatal de Organizaciones y Acción e Intervención \nSocial (OEIS) y la Asociación de Empresas de Servicios de Atención a la Persona \n(AESAP), en representación de l",
+      "page1_hash": "918558772850638803aa38c82e2254c1",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 83,
+      "uuid": "8f81b08b-b965-48e9-aa42-f2dd010d3480",
+      "title": "II CC OCIO EDUCATIVO Y ANIMACION SOCIOCULTURAL PDF DEFINITIVO - FIRMADO",
+      "source_filename": "II_CC_OCIO_EDUCATIVO_Y_ANIMACION_SOCIOCULTURAL_PDF_DEFINITIVO_-_FIRMADO_.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 79,
+      "page_count": 79,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 56,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "II CC OCIO EDUCATIVO ANIMACION SOCIOCULTURAL FIRMADO",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "II_CC_OCIO_EDUCATIVO_Y_ANIMACION_SOCIOCULTURAL_PDF_DEFINITIVO_-_FIRMADO_.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Usuario \n \n0 \n \n \nII CC marco Estatal Ocio \nEducativo y Animacio n \nSociocultural \n \n \nMadrid, 21 de mayo de 2015",
+      "page1_hash": "9c8a05cc0c7baa974aa7cee9a1a3b30b",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 87,
+      "uuid": "db6e2072-0e55-439f-be5e-6768bea32443",
+      "title": "99100055012011 COEAS Estatal 2020 2023",
+      "source_filename": "99100055012011_COEAS Estatal_2020 2023.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2020-01-01",
+      "validity_end": "2023-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 62,
+      "page_count": 62,
+      "chunk_count": 0,
+      "scope": {
+        "convenio_id": 11,
+        "numero": "99100055012011",
+        "name": "OCIO EDUCATIVO Y ANIMACIÓN SOCIOCUL",
+        "territory": {
+          "id": 12,
+          "code": "99",
+          "name": "Estatal"
+        },
+        "sector": {
+          "id": 3,
+          "name": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL"
+        }
+      },
+      "open_tasks": [
+        {
+          "task_id": 59,
+          "type": "conflict",
+          "kind": "conflict",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "parsed sector COEAS disagrees with registry",
+              "registry_value": "OCIO EDUCATIVO Y ANIMACION SOCIOCUL",
+              "registry_value_note": "The task stores the sentence only. This is the bound convenio sector DocumentTagger compared (DocumentTagger.php rule 3)."
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "BOLETÍN OFICIAL DEL ESTADO\nNúm. 69\t\nLunes 22 de marzo de 2021\t\nSec. III.   Pág. 32574\nIII. OTRAS DISPOSICIONES\nMINISTERIO DE TRABAJO Y ECONOMÍA SOCIAL\n4476\nResolución de 10 de marzo de 2021, de la Dirección General de Trabajo, por \nla que se registra y publica el III Convenio colectivo marco estatal del sector \nocio educativo y animación sociocultural.\nVisto el texto del III Convenio colectivo marco estatal del sector Ocio Educativo y \nAnimación Sociocultural (Código Convenio 99100055012011), que fue suscrito con fecha \n20 de enero de 2021, de una parte por la Federación Estatal de Organizaciones \nEmpresariales de Ocio Educativo y Sociocultural (FOESC), la Fundación Catalana De \nL’Ésplai (AEISS) y la Asociación Nacional De Empresas Socioculturales (ANESOC), en \nrepresentación de las empres",
+      "page1_hash": "59fedb3445134f6ad62b87cf83e0f3ce",
+      "duplicate_first_pages": [],
+      "version_context": [
+        {
+          "id": 6,
+          "title": "TABLAS SALARIALES COEAS Estatal",
+          "document_type": "salary_tables",
+          "validity_start": null,
+          "validity_end": null,
+          "retrieval_status": "active",
+          "tagging_status": "verified",
+          "authority_level": "official_convenio"
+        },
+        {
+          "id": 76,
+          "title": "99100055012011 COEAS Estatal 2025 2027",
+          "document_type": "convenio_text",
+          "validity_start": "2025-01-01",
+          "validity_end": "2027-12-31",
+          "retrieval_status": "active",
+          "tagging_status": "under_review",
+          "authority_level": "official_convenio"
+        }
+      ],
+      "would_confirming_give_only_current_text": false,
+      "other_active_prose_count": 1,
+      "employees": {
+        "by_status": {
+          "active": 3
+        },
+        "headcount": 3
+      }
+    },
+    {
+      "id": 98,
+      "uuid": "f80f80b6-bd4c-4830-bc7c-413eb298ba23",
+      "title": "I Convenio Ocio Educativo y Animacion Sociocultural de la Comunidad de Madrid",
+      "source_filename": "I Convenio Ocio Educativo y Animacion Sociocultural de la Comunidad de Madrid.pdf",
+      "document_type": "convenio_text",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 47,
+      "page_count": 47,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 67,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "I Convenio Ocio Educativo Animacion Sociocultural Comunidad",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "I Convenio Ocio Educativo y Animacion Sociocultural de la Comunidad de Madrid.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "SÁBADO 7 DE JULIO DE 2018\nB.O.C.M. Núm. 161\nPág. 5\nBOCM-20180707-2\nBOLETÍN OFICIAL DE LA COMUNIDAD DE MADRID\nBOCM\nI. COMUNIDAD DE MADRID\nD) Anuncios\nConsejería de Economía, Empleo y Hacienda\n2\nRESOLUCIÓN de 11 de junio de 2018, de la Dirección General de Trabajo de la\nConsejería de Economía, Empleo y Hacienda, sobre registro, depósito y publi-\ncación del Convenio Colectivo del Sector de Ocio Educativo y Animación Socio-\ncultural, suscrito por la Asociación de Empresas de Educación Cultura y Tiem-\npo Libre de la Comunidad de Madrid (Educatia-Madrid), la Asociación\nMadrileña de Empresas de Enseñanza, Formación y Animación Sociocultural\n(AMESOC), y la Federación de Empleados de Servicios Públicos de UGT\n(FeSP-UGT Madrid) (Código número 28102145012018).\nExaminado el texto del Convenio Colectiv",
+      "page1_hash": "3605ec9b6de00a2cb0ee71a68d32073c",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 8,
+      "uuid": "96d4b2ab-3446-4561-81af-c2c697b54a09",
+      "title": "TABLAS SALARIALES 2021 2022 COEAS",
+      "source_filename": "TABLAS SALARIALES 2021 2022 COEAS.xlsx",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": "2021-01-01",
+      "validity_end": "2022-12-31",
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 0,
+      "page_count": 0,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 57,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "SALARIALES COEAS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "TABLAS SALARIALES 2021 2022 COEAS.xlsx",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": null,
+      "page1_hash": null,
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 20,
+      "uuid": "01217b2a-179e-49e8-80bc-0af8576f062e",
+      "title": "TABLAS SALARIALES HOSTELERIA",
+      "source_filename": "TABLAS SALARIALES HOSTELERIA.pdf",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 2,
+      "page_count": 2,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 17,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "SALARIALES HOSTELERIA",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "TABLAS SALARIALES HOSTELERIA.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 9 de febrero de 2010, del Delegado Territorial de Gipuzkoa del Departamento de Empleo y Asuntos\nSociales, por la que se dispone el registro, publicación y depósito de la revisión salarial para 2010 del Convenio Colectivo\nde Hostelería de 2008­10\nBOG 18 Febrero 2010\nTipo de convenio: Revisión salarial\nCódigo convenio colectivo: 2000705\nÁmbito territorial: Gipuzkoa\nSector de actividad: Hostelería y turismo\nDuración temporal: del 1 enero 2010 hasta 31 diciembre 2010\nINTRODUCCIÓN\nANTECEDENTES\nPrimero. El día 3 de febrero de 2010 la comisión negociadora del convenio colectivo de Hostelería (código convenio n.º 2000705) ha presentado la\nrevisión salarial para 2010, prevista en el Anexo II del convenio.\nSegundo. La vigencia de dicha revisión salarial se establece del 1 de enero al 3",
+      "page1_hash": "819ac7525e17a3b61d8824638518d0fc",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 46,
+      "uuid": "24c12894-7ce7-4cbb-97b5-02445916bdd4",
+      "title": "TABLAS OFICINAS Y DESPACHOS",
+      "source_filename": "TABLAS OFICINAS Y DESPACHOS.pdf",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 1,
+      "page_count": 1,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 32,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "OFICINAS DESPACHOS",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "TABLAS OFICINAS Y DESPACHOS.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 30 de abril de 2014, de la Directora General de Trabajo y Prevención de Riesgos, por la que se acuerda el\nregistro, depósito y publicación en el Boletín Oficial de Navarra del Acuerdo de revisión salarial del Convenio Colectivo del\nsector Oficinas y Despachos de Navarra\nBON 22 Mayo 2014\nTipo de convenio: Revisión salarial\nCódigo convenio colectivo: 31005105011984\nÁmbito territorial: Comunidad Foral de Navarra\nSector de actividad: Oficinas y despachos\nDuración temporal: del 1 enero 2014 hasta 31 diciembre 2014\nINTRODUCCIÓN\nVisto el texto del Acuerdo de revisión salarial del Convenio Colectivo del sector Oficinas y Despachos de Navarra (Código número 31005105011984),\ncorrespondiente al año 2014, que tuvo entrada en este Registro en fecha 19 de abril de 2014, y que fue suscrito ",
+      "page1_hash": "27d32970d85ffdb407c455b3c4a46c95",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 88,
+      "uuid": "81ed8aa0-053a-4665-aff9-ced196e60849",
+      "title": "Tablas salariales Accion e intervencion Social",
+      "source_filename": "Tablas salariales Accion e intervencion Social.pdf",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 7,
+      "page_count": 7,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 60,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "salariales Accion e intervencion Social",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "Tablas salariales Accion e intervencion Social.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "BOLETÍN OFICIAL DEL ESTADO\nNúm. 28\t\nViernes 1 de febrero de 2019\t\nSec. III.   Pág. 9141\nIII. OTRAS DISPOSICIONES\nMINISTERIO DE TRABAJO, MIGRACIONES\nY SEGURIDAD SOCIAL\n1327\nResolución de 15 de enero de 2019, de la Dirección General de Trabajo, por la \nque se registra y publica el Acta del acuerdo relativo a las tablas salariales \npara los años 2018, 2019, 2020 y 2021 del Convenio colectivo estatal del \nsector de acción e intervención social.\nVisto el texto del Acta en la que se contiene el acuerdo relativo a las tablas salariales \npara los años 2018, 2019, 2020 y 2021 del Convenio colectivo estatal del sector de acción e \nintervención social (código de convenio número 99100155012015), Acta que fue suscrita, \ncon fecha 15 de noviembre de 2018, de una parte por la Asociación Estatal de Organi",
+      "page1_hash": "dc1ca3281d2f4db9996db59c8b4eef0f",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 97,
+      "uuid": "cd01e383-5fca-4b3d-9114-4ce3068e2d47",
+      "title": "tablas salariales ocio educativo 21 23",
+      "source_filename": "tablas salariales ocio educativo 21 23.pdf",
+      "document_type": "salary_tables",
+      "authority_level": "official_convenio",
+      "retrieval_status": "historical",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 5,
+      "page_count": 5,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 66,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "sector",
+              "parsed_value": "salariales ocio educativo",
+              "registry_value": null
+            },
+            {
+              "facet": "convenio",
+              "parsed_value": "tablas salariales ocio educativo 21 23.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resolución de 2 de agosto de 2021, de la Dirección General de Trabajo de la Consejería de Economía,\nHacienda y Empleo, sobre registro, depósito y publicación del Acta de 14 de junio de 2021, de la Comisión\nNegociadora del Convenio Colectivo del sector de Ocio Educativo y Animación Sociocultural de la Comunidad\nde Madrid (código 28102145012018)\nBOCM 21 Agosto 2021\nTipo de convenio: Revisión salarial\nCódigo convenio colectivo: 28102145012018;\nÁmbito territorial: Comunidad de Madrid\nSector de actividad: Ocio educativo y sociocultural\nDuración temporal: del 1 octubre 2021 hasta 30 septiembre 2023\nINTRODUCCIÓN\nExaminada el Acta de la Comisión Negociadora del Convenio Colectivo de Ocio Educativo y Animación Sociocultural de la Comunidad de\nMadrid, de fecha 14 de junio de 2021, por la que llegan ",
+      "page1_hash": "56f360bee6ab5e08994829e9333a7703",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    },
+    {
+      "id": 54,
+      "uuid": "c0648dc3-2e53-4ab4-83b4-984d3e996328",
+      "title": "Resumen",
+      "source_filename": "Resumen.pdf",
+      "document_type": "summary",
+      "authority_level": "official_convenio",
+      "retrieval_status": "active",
+      "tagging_status": "under_review",
+      "tagging_confidence": 0.5,
+      "validity_start": null,
+      "validity_end": null,
+      "language": "es",
+      "ocr_pages": 0,
+      "pages_with_text": 3,
+      "page_count": 3,
+      "chunk_count": 0,
+      "scope": null,
+      "open_tasks": [
+        {
+          "task_id": 38,
+          "type": "tag_review",
+          "kind": "unresolved",
+          "items": [
+            {
+              "facet": "convenio",
+              "parsed_value": "Resumen.pdf",
+              "registry_value": null
+            }
+          ]
+        }
+      ],
+      "ai_suggestions": [],
+      "cover_text": "Resumen del contrato \nTipo de contrato \nConvenio Colectivo del Sector de Contratos Públicos \nde Servicios Deportivos  \nID del contrato \nCódigo: 39100935012024  \nPartes \nAsociación Española de Empresarios de Servicios \nDeportivos a las Administraciones Públicas \n(AEESDAP) en representación de las empresas del \nsector.  \n, Organizaciones Sindicales \nFSO-CCOO y FeSMC-UGT en \nrepresentación del colectivo \nlaboral afectado. \n \nFecha de inicio \n21 de marzo de 2024  \nFecha de finalización \n31 de diciembre de 2028  \nFecha de entrada en vigor \n21 de marzo de 2024  \nTérmino del contrato \nDesde su publicación oficial en el Boletín Oficial de \nCantabria hasta el 31 de diciembre de 2028, con \nposibilidad de prórrogas anuales hasta un máximo de \ndos años si no se denuncia el convenio.  \nCláusula de term",
+      "page1_hash": "15ec5167d8d2ee1f140894d07a88179f",
+      "duplicate_first_pages": [],
+      "version_context": [],
+      "would_confirming_give_only_current_text": null,
+      "other_active_prose_count": null,
+      "employees": null
+    }
+  ]
+}
