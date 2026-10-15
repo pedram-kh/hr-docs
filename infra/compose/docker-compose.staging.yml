@@ -158,6 +158,11 @@ services:
       - --
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=120"]
     environment:
+      # Same name and cache store as hr-backend. ShouldBeUnique locks are taken
+      # by the web process and released by this worker; a different APP_NAME
+      # makes a different cache prefix, so the release misses the lock and a
+      # finished embed blocks the next one until uniqueFor expires.
+      APP_NAME: "HR Platform"
       APP_ENV: staging
       APP_DEBUG: "false"
       LOG_CHANNEL: stack
@@ -169,6 +174,7 @@ services:
       DB_USERNAME: hr_staging_admin
       FILESYSTEM_DISK: s3
       QUEUE_CONNECTION: database
+      CACHE_STORE: database
       AWS_DEFAULT_REGION: ${AWS_REGION}
       AWS_BUCKET: ${S3_DOCUMENTS_BUCKET}
       HR_AI_URL: http://hr-ai:8001
@@ -210,6 +216,9 @@ services:
       - --
     command: ["php", "artisan", "schedule:work"]
     environment:
+      # Same name and cache store as hr-backend and the worker. Schedule locks
+      # and any unique job this process dispatches must share that cache prefix.
+      APP_NAME: "HR Platform"
       APP_ENV: staging
       APP_DEBUG: "false"
       LOG_CHANNEL: stack
